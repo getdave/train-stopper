@@ -1,4 +1,3 @@
-# SPA App Boilerplate
+# Train Stopper
 
-A simple starter for Single Page App. Includes basic scaffolding of a Express server with a React-based frontend powered by `create-react-app`.
-
+Because you need to know when to get off...
