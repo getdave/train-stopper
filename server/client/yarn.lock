@@ -5367,6 +5367,10 @@ reduce-function-call@^1.0.1:
   dependencies:
     balanced-match "^0.4.2"
 
+redux-create-action-types@^2.1.0:
+  version "2.1.0"
+  resolved "https://registry.yarnpkg.com/redux-create-action-types/-/redux-create-action-types-2.1.0.tgz#039780a6f6bafdc8b9ff3edcfa27aa35750535fb"
+
 redux-form@^7.0.4:
   version "7.0.4"
   resolved "https://registry.yarnpkg.com/redux-form/-/redux-form-7.0.4.tgz#2297b6bed40fda8bb58132e261ba0976fb4e530c"

@@ -1,9 +1,12 @@
 import axios from 'axios';
+// import { SubmissionError } from 'redux-form'
+
 
 import { 
     FETCHING_STATIONS,
     FETCHING_STATIONS_SUCCESS,
-    FETCHING_STATIONS_FAILED
+    FETCHING_STATIONS_FAILED,
+    SETTING_STATIONS_SUCCESS
 } from './types';
 
 
@@ -34,4 +37,21 @@ export function fetchStations(query) {
             });
         }); 
     }
+}
+
+
+export function setStations({originStation, destinationStation}) {
+
+    // if (originStation === destinationStation) {
+    //     return Promise.reject( 
+    //         new SubmissionError({
+    //             username: 'User does not exist',
+    //             _error: 'Login failed!'
+    //         })
+    //     );
+    // }
+
+    return { 
+        type: SETTING_STATIONS_SUCCESS,
+    };
 }

@@ -5,23 +5,19 @@ import AutoSuggest from '../../components/AutoSuggest';
 import * as actions from './actions';
 import * as selectors from './reducers';
 
-console.log(selectors);
 
 class StationForm extends Component {
 
 
 	constructor(props) {
 		super(props);
-
 		this.handleFormSubmit 	= this.handleFormSubmit.bind(this);
 		this.handleInputChanged = this.handleInputChanged.bind(this);
-
 	}
 
 	
-	
-	handleFormSubmit() {
-		console.log("Form submitted");
+	handleFormSubmit(formData) {
+		this.props.setStations(formData);
 	}
 
 	handleInputChanged(val) {
@@ -33,13 +29,14 @@ class StationForm extends Component {
 		// Redux Form injected props
 		const { handleSubmit, pristine, reset, submitting } = this.props;		
 		
-	   
+	   	console.log(this.props);
 	    return (
 	    	<div>    		
 	    		<form onSubmit={handleSubmit(this.handleFormSubmit)}>
 					<div>
-						<label>Origin Station</label>
+						
 						<Field
+							labelName="Origin Station"
 							name="originStation"
 							component={AutoSuggest}
 							data={this.props.stations}
@@ -51,8 +48,8 @@ class StationForm extends Component {
 					</div>
 
 					<div>
-						<label>Destination Station</label>
 						<Field
+							labelName="Destination Station"
 							name="destinationStation"
 							component={AutoSuggest}
 							data={this.props.stations}
@@ -84,8 +81,28 @@ function mapStateToProps(state) {
     }
 }
 
+function validate(formProps) {
+    const errors = {};
+    const { originStation, destinationStation } = formProps;
+
+    if (!originStation) {
+        errors.originStation = 'Please choose a origin station';
+    }
+
+    if (!destinationStation) {
+        errors.destinationStation = 'Please choose a destination station';
+    } else {
+	    if (destinationStation === originStation) {
+	    	errors.destinationStation = 'Destination cannot be the same as origin. Please check your selections';
+	    }
+    }
+
+    return errors;
+}
+
 StationForm = reduxForm({
-  form: 'stationForm'  // a unique identifier for this form
+  form: 'stationForm',  // a unique identifier for this form,
+  validate
 })(StationForm)
 
 StationForm = connect(mapStateToProps, actions)(StationForm);

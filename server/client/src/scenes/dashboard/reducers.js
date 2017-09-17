@@ -8,19 +8,37 @@ import createReducer from '../../utils/create-reducer';
 import {
     FETCHING_STATIONS,
     FETCHING_STATIONS_SUCCESS,
-    FETCHING_STATIONS_FAILED
+    FETCHING_STATIONS_FAILED,
+    SETTING_STATIONS,
+    SETTING_STATIONS_SUCCESS,
+    SETTING_STATIONS_FAILED
 } from './types';
 
 
 /**
- * DATA
+ * STATIONS API
  */
 function updateStations(state, action) {
     return action.payload;
 }
 
-const dataReducer = createReducer([], {
+const stationsReducer = createReducer([], {
     [FETCHING_STATIONS_SUCCESS]: updateStations,
+});
+
+
+/**
+ * SET STATIONS
+ */
+function setSelectedStations(state, action) {
+    return action.payload;
+}
+
+const selectedStationsReducer = createReducer({
+    origin: '',
+    destination: ''
+}, {
+    [SETTING_STATIONS_SUCCESS]: setSelectedStations,
 });
 
 
@@ -68,11 +86,12 @@ export const selectIsFetching = state => state.stations.ui.isFetching;
 
 export const selectIsError = state => state.stations.ui.isError;
 
-export const selectStations = state => state.stations.data;
+export const selectStations = state => state.stations.stations;
 
 // Export combined reducer
 export default combineReducers({
-    data: dataReducer,
+    stations: stationsReducer,
+    selected: selectedStationsReducer,
     ui: uiReducer
 });
 
