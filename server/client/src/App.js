@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { BrowserRouter, Route } from 'react-router-dom';
 
 // Pages
-import Dashboard from './pages/Dashboard';
+import DashboardPage from './scenes/dashboard/DashboardPage';
 
 
 
@@ -14,7 +14,7 @@ class App extends Component {
             <div className="container">
                 <BrowserRouter>
                   <div>
-                    <Route exact path="/" component={Dashboard} />
+                    <Route exact path="/" component={DashboardPage} />
                   </div>
                 </BrowserRouter>
             </div>

@@ -37,7 +37,15 @@ exports.stations = async (req, res) => {
 		const data = [
 			{
 				label: "Frome",
-				value: "fro"
+				value: "FRO"
+			},
+			{
+				label: "Fromey Land",
+				value: "FML"
+			},
+			{
+				label: "Frankensteinville",
+				value: "FNK"
 			}
 		];
 

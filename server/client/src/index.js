@@ -1,6 +1,5 @@
 import 'bootstrap/dist/css/bootstrap.css';
-import 'react-select/dist/react-select.css';
-
+import 'react-widgets/dist/css/react-widgets.css';
 
 import React from 'react';
 import ReactDOM from 'react-dom';
