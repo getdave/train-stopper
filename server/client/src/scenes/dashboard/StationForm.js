@@ -1,6 +1,9 @@
 import React, { Component } from 'react';
+import { compose } from 'redux';
 import { Field, reduxForm } from 'redux-form';
 import { connect } from 'react-redux';
+import { withRouter } from 'react-router-dom';
+
 import AutoSuggest from '../../components/AutoSuggest';
 import * as actions from './actions';
 import * as selectors from './reducers';
@@ -16,8 +19,9 @@ class StationForm extends Component {
 	}
 
 	
-	handleFormSubmit(formData) {
-		this.props.setStations(formData);
+	handleFormSubmit({originStation, destinationStation}) {
+		this.props.history.push(`/journey/${encodeURIComponent(originStation.toLowerCase())}/${encodeURIComponent(destinationStation.toLowerCase())}`)
+		
 	}
 
 	handleInputChanged(val) {
@@ -27,16 +31,15 @@ class StationForm extends Component {
 
 	render() {
 		// Redux Form injected props
-		const { handleSubmit, pristine, reset, submitting } = this.props;		
+		const { valid, handleSubmit, pristine, reset, submitting } = this.props;		
 		
-	   	console.log(this.props);
 	    return (
 	    	<div>    		
 	    		<form onSubmit={handleSubmit(this.handleFormSubmit)}>
-					<div>
-						
+					<div className="form-group">				
 						<Field
 							labelName="Origin Station"
+							placeholder="eg: Bristol..."
 							name="originStation"
 							component={AutoSuggest}
 							data={this.props.stations}
@@ -47,9 +50,10 @@ class StationForm extends Component {
 				         />
 					</div>
 
-					<div>
+					<div className="form-group">	
 						<Field
 							labelName="Destination Station"
+							placeholder="eg: Bath Spa..."
 							name="destinationStation"
 							component={AutoSuggest}
 							data={this.props.stations}
@@ -62,9 +66,9 @@ class StationForm extends Component {
 
 					
 			      
-					<div>
-						<button type="submit" disabled={pristine || submitting}>Submit</button>
-						<button type="button" disabled={pristine || submitting} onClick={reset}>Reset Values
+					<div className="form-group">	
+						<button className="btn btn-primary mr-2" type="submit" disabled={pristine || !valid || submitting}>Submit</button>
+						<button className="btn btn-default" type="button" disabled={pristine || submitting} onClick={reset}>Reset Values
 						</button>
 					</div>
 			    </form>
@@ -100,12 +104,14 @@ function validate(formProps) {
     return errors;
 }
 
-StationForm = reduxForm({
-  form: 'stationForm',  // a unique identifier for this form,
-  validate
-})(StationForm)
+const enchance = compose(
+    withRouter,
+    reduxForm({
+	  form: 'stationForm',  // a unique identifier for this form,
+	  validate
+	}),
+	connect(mapStateToProps, actions)
+);
 
-StationForm = connect(mapStateToProps, actions)(StationForm);
 
-
-export default StationForm;
+export default enchance(StationForm);

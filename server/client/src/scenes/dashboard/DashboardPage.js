@@ -6,9 +6,12 @@ class DashboardPage extends Component {
 
 
 	render() {
-		    
 	    return (
-	    	<StationForm />
+	    	<div>
+		    	<h1>Choose your Stations</h1>
+		    	<p>Tell us about where you are travelling to and from.</p>
+		    	<StationForm />
+		    </div>
 	    )
 	}
 };

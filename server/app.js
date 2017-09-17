@@ -46,6 +46,8 @@ app.use(bodyParser.json({type: '*/*'}));
 app.use('/', routes);
 
 
+
+
 // Express only serves static assets in production as webpack handles locally
 if (process.env.NODE_ENV === 'production') {    
 

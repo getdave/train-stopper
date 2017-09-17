@@ -6,12 +6,13 @@ export const ucFirst = function (string) {
 };
 
 const AutoSuggest = props => {
-	const { labelName, input, data, valueField, textField, busy, meta: { touched, error } } = props;
+	const { labelName, placeholder, input, data, valueField, textField, busy, meta: { touched, error } } = props;
 
 	return (
 		<div className={ error ? 'has-danger' : ''}>
 			<label htmlFor={input.id} className="">{labelName}</label>
 			<Combobox {...input}
+				placeholder={placeholder}
 		    	data={data}
 		    	valueField={valueField}
 		    	textField={textField}

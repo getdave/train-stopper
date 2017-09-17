@@ -9,9 +9,6 @@ import {
     FETCHING_STATIONS,
     FETCHING_STATIONS_SUCCESS,
     FETCHING_STATIONS_FAILED,
-    SETTING_STATIONS,
-    SETTING_STATIONS_SUCCESS,
-    SETTING_STATIONS_FAILED
 } from './types';
 
 
@@ -25,22 +22,6 @@ function updateStations(state, action) {
 const stationsReducer = createReducer([], {
     [FETCHING_STATIONS_SUCCESS]: updateStations,
 });
-
-
-/**
- * SET STATIONS
- */
-function setSelectedStations(state, action) {
-    return action.payload;
-}
-
-const selectedStationsReducer = createReducer({
-    origin: '',
-    destination: ''
-}, {
-    [SETTING_STATIONS_SUCCESS]: setSelectedStations,
-});
-
 
 
 /**
@@ -91,7 +72,6 @@ export const selectStations = state => state.stations.stations;
 // Export combined reducer
 export default combineReducers({
     stations: stationsReducer,
-    selected: selectedStationsReducer,
     ui: uiReducer
 });
 
