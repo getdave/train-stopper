@@ -64,8 +64,8 @@ exports.stations = async (req, res) => {
 
 
 /**
- * STATIONS
- * returns information about a given station 
+ * JOURNEYS
+ * returns services that pass through origin and destination stations 
  */
 exports.journeys = async (req, res) => {
 	
@@ -127,6 +127,42 @@ exports.journeys = async (req, res) => {
 		        }
 		    }
         ];
+
+		return res.json(data);
+	} catch(e) {
+		winston.info(e);
+		return res.status(500).send({ error: e })
+	}
+};
+
+
+
+/**
+ * SERVICES
+ * returns services that pass through origin and destination stations 
+ */
+exports.services = async (req, res) => {
+	
+	const train_uid = req.query.train_uid;
+	
+	const url = `https://transportapi.com/v3/uk/train/service/train_uid:${train_uid}///timetable.json`;
+
+	try {		
+		const response = await axios.get(url, {
+			params: {
+				app_id: process.env.TRANSPORT_API_ID,
+				app_key: process.env.TRANSPORT_API_KEY,
+				darwin: true,
+				live: true,
+				train_status: 'passenger'
+			}
+		});
+
+		if (response.status !== 200) {
+			throw new Error(response.statusText);
+		}
+		
+		const data = response.data;
 
 		return res.json(data);
 	} catch(e) {
