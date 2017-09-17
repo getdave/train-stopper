@@ -3,6 +3,9 @@ import { Field, reduxForm } from 'redux-form';
 import { connect } from 'react-redux';
 import AutoSuggest from '../../components/AutoSuggest';
 import * as actions from './actions';
+import * as selectors from './reducers';
+
+console.log(selectors);
 
 class StationForm extends Component {
 
@@ -39,7 +42,20 @@ class StationForm extends Component {
 						<Field
 							name="originStation"
 							component={AutoSuggest}
-							data={this.props.originStations}
+							data={this.props.stations}
+							valueField="value"
+							textField="label"
+							onChange={this.handleInputChanged}
+							busy={this.props.isFetching}
+				         />
+					</div>
+
+					<div>
+						<label>Destination Station</label>
+						<Field
+							name="destinationStation"
+							component={AutoSuggest}
+							data={this.props.stations}
 							valueField="value"
 							textField="label"
 							onChange={this.handleInputChanged}
@@ -61,11 +77,10 @@ class StationForm extends Component {
 };
 
 function mapStateToProps(state) {
-	console.info(state);
     return {
-        originStations: state.stations.data,
-        isError: state.stations.ui.isError,
-        isFetching: state.stations.ui.isFetching,
+        stations: selectors.selectStations(state),
+        isError: selectors.selectIsError(state),
+        isFetching: selectors.selectIsFetching(state),
     }
 }
 

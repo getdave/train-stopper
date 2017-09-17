@@ -60,6 +60,16 @@ const uiReducer = createReducer({
 
 
 
+/**
+ * SELECTORS
+ */
+
+export const selectIsFetching = state => state.stations.ui.isFetching;
+
+export const selectIsError = state => state.stations.ui.isError;
+
+export const selectStations = state => state.stations.data;
+
 // Export combined reducer
 export default combineReducers({
     data: dataReducer,
