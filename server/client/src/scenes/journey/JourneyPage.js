@@ -2,8 +2,8 @@ import React, { Component } from 'react';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
-import * as actions from './actions';
-import * as selectors from './reducers';
+import * as actions from '../../journey/actions';
+import * as selectors from '../../journey/reducers';
 
 import { ListGroup, ListGroupItem, ListGroupItemHeading, ListGroupItemText } from 'reactstrap';
 

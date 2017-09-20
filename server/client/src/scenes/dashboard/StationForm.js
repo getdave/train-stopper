@@ -5,8 +5,8 @@ import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 
 import AutoSuggest from '../../components/AutoSuggest';
-import * as actions from './actions';
-import * as selectors from './reducers';
+import * as actions from '../../stations/actions';
+import * as selectors from '../../stations/reducers';
 
 
 class StationForm extends Component {
@@ -19,8 +19,10 @@ class StationForm extends Component {
 	}
 
 	
-	handleFormSubmit({originStation, destinationStation}) {
-		this.props.history.push(`/journey/${encodeURIComponent(originStation.toLowerCase())}/${encodeURIComponent(destinationStation.toLowerCase())}`)
+	handleFormSubmit(formData) {
+		const { originStation, destinationStation } = formData;
+		
+		this.props.history.push(`/journey/${encodeURIComponent(originStation.value)}/${encodeURIComponent(destinationStation.value)}`)
 		
 	}
 

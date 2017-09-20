@@ -3,7 +3,7 @@
  */
 
 import { combineReducers } from 'redux';
-import createReducer from '../../utils/create-reducer';
+import createReducer from '../utils/create-reducer';
 
 import {
     // SETTING_STATIONS,
@@ -87,15 +87,15 @@ const uiReducer = createReducer({
  * SELECTORS
  */
 
-export const selectIsFetching = state => state.journeys.ui.isFetching;
+export const selectIsFetching = state => state.journey.ui.isFetching;
 
-export const selectIsError = state => state.journeys.ui.isError;
+export const selectIsError = state => state.journey.ui.isError;
 
-export const selectOrigin = state => state.journeys.stations.origin;
+export const selectOrigin = state => state.journey.stations.origin;
 
-export const selectDestination = state => state.journeys.stations.destination;
+export const selectDestination = state => state.journey.stations.destination;
 
-export const selectJourneys = state => state.journeys.journeys;
+export const selectJourneys = state => state.journey.journeys;
 
 // Export combined reducer
 export default combineReducers({

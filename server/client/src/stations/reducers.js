@@ -3,7 +3,7 @@
  */
 
 import { combineReducers } from 'redux';
-import createReducer from '../../utils/create-reducer';
+import createReducer from '../utils/create-reducer';
 
 import {
     FETCHING_STATIONS,

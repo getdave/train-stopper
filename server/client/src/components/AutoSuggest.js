@@ -1,5 +1,5 @@
 import React from 'react';
-import Combobox from 'react-widgets/lib/Combobox';
+import DropdownList from 'react-widgets/lib/DropdownList';
 
 export const ucFirst = function (string) {
     return string.charAt(0).toUpperCase() + string.slice(1);
@@ -11,13 +11,17 @@ const AutoSuggest = props => {
 	return (
 		<div className={ error ? 'has-danger' : ''}>
 			<label htmlFor={input.id} className="">{labelName}</label>
-			<Combobox {...input}
+			<DropdownList {...input}
 				placeholder={placeholder}
 		    	data={data}
 		    	valueField={valueField}
 		    	textField={textField}
-		    	onChange={input.onChange}
+		    	onSearch={input.onChange}
 		    	busy={busy}
+		    	caseSensitive={false}
+			    minLength={3}
+			    filter='contains'
+		   		suggest={true}
 		   	/>
 		   	{touched &&
 	        error &&
