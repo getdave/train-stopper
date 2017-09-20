@@ -2,8 +2,8 @@ import React, { Component } from 'react';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
-import * as actions from '../../journey/actions';
-import * as selectors from '../../journey/reducers';
+import * as journeyActions from '../../journey/actions';
+import * as journeySelectors from '../../journey/reducers';
 
 import { ListGroup, ListGroupItem, ListGroupItemHeading, ListGroupItemText } from 'reactstrap';
 
@@ -38,15 +38,15 @@ class JourneyPage extends Component {
 		if (this.props.isError) {
 			return (
 				<p className="alert alert-warning">
-					Unable to find any journeys.
+					We encountered an error when attempting to load train journeys.
 				</p>
 			)
 		}
 
 		if (this.props.isFetching) {
 			return (
-				<p className="alert alert-warning">
-					Unable to find any journeys.
+				<p className="alert alert-info">
+					Loading Train journey times...
 				</p>
 			)
 		}
@@ -75,17 +75,17 @@ class JourneyPage extends Component {
 function mapStateToProps(state) {
 	console.log(state);
 	return {
-		originStation: selectors.selectOrigin(state),
-		journeys: selectors.selectJourneys(state),
-		isError: selectors.selectIsError(state),
-        isFetching: selectors.selectIsFetching(state),
+		originStation: journeySelectors.selectOrigin(state),
+		journeys: journeySelectors.selectJourneys(state),
+		isError: journeySelectors.selectIsError(state),
+        isFetching: journeySelectors.selectIsFetching(state),
 	}
 }
 
 
 const enchance = compose(
     withRouter,
-	connect(mapStateToProps, actions)
+	connect(mapStateToProps, journeyActions)
 );
 
 

@@ -5,8 +5,8 @@ import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 
 import AutoSuggest from '../../components/AutoSuggest';
-import * as actions from '../../stations/actions';
-import * as selectors from '../../stations/reducers';
+import * as stationsActions from '../../stations/actions';
+import * as stationsSelectors from '../../stations/reducers';
 
 
 class StationForm extends Component {
@@ -81,9 +81,9 @@ class StationForm extends Component {
 
 function mapStateToProps(state) {
     return {
-        stations: selectors.selectStations(state),
-        isError: selectors.selectIsError(state),
-        isFetching: selectors.selectIsFetching(state),
+        stations: stationsSelectors.selectStations(state),
+        isError: stationsSelectors.selectIsError(state),
+        isFetching: stationsSelectors.selectIsFetching(state),
     }
 }
 
@@ -112,7 +112,7 @@ const enchance = compose(
 	  form: 'stationForm',  // a unique identifier for this form,
 	  validate
 	}),
-	connect(mapStateToProps, actions)
+	connect(mapStateToProps, stationsActions)
 );
 
 

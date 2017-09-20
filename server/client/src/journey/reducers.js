@@ -99,8 +99,10 @@ export const selectJourneys = state => state.journey.journeys;
 
 // Export combined reducer
 export default combineReducers({
-    stations: stationsReducer,
-    journeys: journeysReducer,
+    stations: stationsReducer, // origin and destination stations for this trip
+    journeys: journeysReducer, // refers to list of possible journeys loaded from train API
+    // service: serviceReducer, // stores exact service user will be traveling on
+    // timetable: timetableReducer, // stores exact timetable for selected service (above)
     ui: uiReducer
 });
 
