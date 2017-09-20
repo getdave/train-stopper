@@ -12,16 +12,10 @@ const controllers 	= require('../controllers');
 const router 		= express.Router();
 
 
-// Simple Example
-// router.get('/', (req, res) => {
-//   res.send('Hey! It works!');
-// });
-
-
 // Controller Example
 router.get('/api/transport/stations', controllers.transport.stations);
 router.get('/api/transport/journeys', controllers.transport.journeys);
-router.get('/api/transport/services', controllers.transport.services);
+router.get('/api/transport/service', controllers.transport.service);
 
 
 

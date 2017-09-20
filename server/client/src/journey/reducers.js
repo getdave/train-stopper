@@ -11,7 +11,10 @@ import {
     // SETTING_STATIONS_FAILED,
     FETCHING_JOURNEYS,
     FETCHING_JOURNEYS_SUCCESS,
-    FETCHING_JOURNEYS_FAILED
+    FETCHING_JOURNEYS_FAILED,
+    FETCHING_SERVICE,
+    FETCHING_SERVICE_SUCCESS,
+    FETCHING_SERVICE_FAILED
 } from './types';
 
 
@@ -45,6 +48,23 @@ function setJourneys(state, action) {
 
 const journeysReducer = createReducer([], {
     [FETCHING_JOURNEYS_SUCCESS]: setJourneys,
+});
+
+/**
+ * FETCH SERVICE
+ */
+function handleService(state, action) {
+    return {
+        origin: action.payload[0],
+        destination: action.payload[1]
+    }
+}
+
+const serviceReducer = createReducer({
+    origin: '',
+    destination: ''
+}, {
+    [FETCHING_SERVICE_SUCCESS]: handleService,
 });
 
 
@@ -97,12 +117,17 @@ export const selectDestination = state => state.journey.stations.destination;
 
 export const selectJourneys = state => state.journey.journeys;
 
+export const selectService = state => state.journey.service;
+
+
 // Export combined reducer
 export default combineReducers({
+    // active: activeReducer,
     stations: stationsReducer, // origin and destination stations for this trip
     journeys: journeysReducer, // refers to list of possible journeys loaded from train API
     // service: serviceReducer, // stores exact service user will be traveling on
     // timetable: timetableReducer, // stores exact timetable for selected service (above)
+    service: serviceReducer,
     ui: uiReducer
 });
 

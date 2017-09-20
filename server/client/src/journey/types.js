@@ -5,3 +5,8 @@ export const SETTING_STATIONS_FAILED = 'setting_stations_failed';
 export const FETCHING_JOURNEYS = 'fetching_journeys';
 export const FETCHING_JOURNEYS_SUCCESS = 'fetching_journeys_success';
 export const FETCHING_JOURNEYS_FAILED = 'fetching_journeys_failed';
+
+
+export const FETCHING_SERVICE = 'fetching_service';
+export const FETCHING_SERVICE_SUCCESS = 'fetching_service_success';
+export const FETCHING_SERVICE_FAILED = 'fetching_journeys_failed';

@@ -53,7 +53,7 @@ class JourneyPage extends Component {
 
 		const journeysItems = this.props.journeys.map( journey => {
 			return (
-				<ListGroupItem key={journey.train_uid} tag="a" href="#">
+				<ListGroupItem key={journey.train_uid} tag="a" href={`/journey/${this.props.originStation}/${this.props.destinationStation}/${journey.train_uid}`}>
 					<ListGroupItemHeading>{journey.origin_name} - {journey.destination_name}</ListGroupItemHeading>
 					<ListGroupItemText>
 					This train departs from <strong>{this.props.originStation}</strong> at {journey.aimed_departure_time}
@@ -76,6 +76,7 @@ function mapStateToProps(state) {
 	console.log(state);
 	return {
 		originStation: journeySelectors.selectOrigin(state),
+		destinationStation: journeySelectors.selectDestination(state),
 		journeys: journeySelectors.selectJourneys(state),
 		isError: journeySelectors.selectIsError(state),
         isFetching: journeySelectors.selectIsFetching(state),

@@ -138,14 +138,14 @@ exports.journeys = async (req, res) => {
 
 
 /**
- * SERVICES
+ * SERVICE
  * returns services that pass through origin and destination stations 
  */
-exports.services = async (req, res) => {
+exports.service = async (req, res) => {
 	
-	const train_uid = req.query.train_uid;
+	const { train_uid, origin, destination } = req.query;
 	
-	const url = `https://transportapi.com/v3/uk/train/service/train_uid:${train_uid}///timetable.json`;
+	const url = `https://transportapi.com/v3/uk/train/service/train_uid:${train_uid}/2017-09-21//timetable.json`;
 
 	try {		
 		const response = await axios.get(url, {
@@ -161,8 +161,14 @@ exports.services = async (req, res) => {
 		if (response.status !== 200) {
 			throw new Error(response.statusText);
 		}
-		
-		const data = response.data;
+	
+		// Just get the stops		
+		let data = response.data.stops;
+
+		// Filter out all but origin and destination
+		data = data.filter(stop => stop.station_code.toLowerCase() === origin.toLowerCase() || stop.station_code.toLowerCase() === destination.toLowerCase());
+
+		// TODO - handle error case where we end up with only 1 station...it can happen!
 
 		return res.json(data);
 	} catch(e) {

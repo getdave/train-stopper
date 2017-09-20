@@ -22,7 +22,7 @@ class StationForm extends Component {
 	handleFormSubmit(formData) {
 		const { originStation, destinationStation } = formData;
 		
-		this.props.history.push(`/journey/${encodeURIComponent(originStation.value)}/${encodeURIComponent(destinationStation.value)}`)
+		this.props.history.push(`/journey/${encodeURIComponent(originStation.value.toLowerCase())}/${encodeURIComponent(destinationStation.value.toLowerCase())}`)
 		
 	}
 

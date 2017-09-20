@@ -5,6 +5,9 @@ import {
     FETCHING_JOURNEYS,
     FETCHING_JOURNEYS_SUCCESS,
     FETCHING_JOURNEYS_FAILED,
+    FETCHING_SERVICE,
+    FETCHING_SERVICE_SUCCESS,
+    FETCHING_SERVICE_FAILED,
 } from './types';
 
 
@@ -33,6 +36,36 @@ export function fetchJourneys(origin, destination) {
         }).catch(function (error) {
             dispatch({ 
                 type: FETCHING_JOURNEYS_FAILED,
+            });
+        }); 
+    }
+}
+
+export function fetchService(train_uid, origin, destination) {
+    return (dispatch, getState) => { 
+        const url = `/api/transport/service`;
+        
+        dispatch({ 
+            type: FETCHING_SERVICE,
+        });
+        
+        return axios.get(url, {
+            params: {
+                train_uid: train_uid,
+                origin: origin,
+                destination: destination
+            }
+        }).then(response => {
+            if (response.status !== 200) {
+                throw new Error(`Transport API: ${response.statusText}`);
+            }
+            dispatch({ 
+                type: FETCHING_SERVICE_SUCCESS,
+                payload: response.data
+            });       
+        }).catch(function (error) {
+            dispatch({ 
+                type: FETCHING_SERVICE_FAILED,
             });
         }); 
     }
