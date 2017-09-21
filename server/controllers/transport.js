@@ -18,41 +18,26 @@ exports.stations = async (req, res) => {
 	const url = `https://transportapi.com/v3/uk/places.json`;
 	
 	try {		
-		// const response = await axios.get(url, {
-		// 	params: {
-		// 		app_id: process.env.TRANSPORT_API_ID,
-		// 		app_key: process.env.TRANSPORT_API_KEY,
-		// 		query: req.query.query,
-		// 		type: 'train_station'
-		// 	}
-		// });
-		
-		// if (response.status !== 200) {
-		// 	throw new Error(response.statusText);
-		// }
-
-		// const data = response.data.member.map(station => {
-		// 	return {
-		// 		value: station.station_code.toLowerCase(),
-		// 		label: station.name
-		// 	};
-		// })
-		
-		// Testing only
-		const data = [
-			{
-				label: "Frome",
-				value: "FRO"
-			},
-			{
-				label: "Fromey Land",
-				value: "FML"
-			},
-			{
-				label: "Frankensteinville",
-				value: "FNK"
+		const response = await axios.get(url, {
+			params: {
+				app_id: process.env.TRANSPORT_API_ID,
+				app_key: process.env.TRANSPORT_API_KEY,
+				query: req.query.query,
+				type: 'train_station'
 			}
-		];
+		});
+		
+		if (response.status !== 200) {
+			throw new Error(response.statusText);
+		}
+
+		const data = response.data.member.map( (station, index) => {
+			return {
+				id: index,
+				value: station.station_code.toLowerCase(),
+				label: station.name
+			};
+		})
 
 		return res.json(data);
 	} catch(e) {
@@ -69,64 +54,28 @@ exports.stations = async (req, res) => {
  */
 exports.journeys = async (req, res) => {
 	
+	const { date, time, origin, destination } = req.query;
 	
-	const url = `https://transportapi.com/v3/uk/train/station/${req.query.origin}/2017-09-17/14:00/timetable.json`;
+	const url = `https://transportapi.com/v3/uk/train/station/${origin}/${date}/${time}/timetable.json`;
 
 	try {		
-		// const response = await axios.get(url, {
-		// 	params: {
-		// 		app_id: process.env.TRANSPORT_API_ID,
-		// 		app_key: process.env.TRANSPORT_API_KEY,
-		// 		calling_at: req.query.destination,
-		// 		darwin: true,
-		// 		train_status: 'passenger'
-		// 	}
-		// });
+		const response = await axios.get(url, {
+			params: {
+				app_id: process.env.TRANSPORT_API_ID,
+				app_key: process.env.TRANSPORT_API_KEY,
+				calling_at: destination,
+				darwin: true,
+				train_status: 'passenger',
+				date: date,
+				time: time,
+			}
+		});
 
-		// if (response.status !== 200) {
-		// 	throw new Error(response.statusText);
-		// }
+		if (response.status !== 200) {
+			throw new Error(response.statusText);
+		}
 		
-		// const data = response.data;
-		
-		const data = [
-            {
-                "mode": "train",
-                "service": "25471001",
-                "train_uid": "P01330",
-                "platform": null,
-                "operator": "GW",
-                "operator_name": "Great Western Railway",
-                "aimed_departure_time": "15:37",
-                "aimed_arrival_time": "15:37",
-                "aimed_pass_time": null,
-                "origin_name": "Weymouth",
-                "source": "ATOC",
-                "destination_name": "Bristol Temple Meads",
-                "category": "OO",
-                "service_timetable": {
-                    "id": "https://transportapi.com/v3/uk/train/service/train_uid:P01330/2017-09-17/timetable.json?app_id=a2560ce6&app_key=c331f54ce5ebd37d11f0aba0d491e79b&darwin=true"
-                }
-            },
-            {
-		        "mode": "train",
-		        "service": "25471001",
-		        "train_uid": "C20543",
-		        "platform": null,
-		        "operator": "GW",
-		        "operator_name": "Great Western Railway",
-		        "aimed_departure_time": "14:41",
-		        "aimed_arrival_time": "14:40",
-		        "aimed_pass_time": null,
-		        "origin_name": "Weymouth",
-		        "source": "ATOC",
-		        "destination_name": "Gloucester",
-		        "category": "OO",
-		        "service_timetable": {
-		          "id": "https://transportapi.com/v3/uk/train/service/train_uid:C20543/2017-09-18/timetable.json?app_id=a2560ce6&app_key=c331f54ce5ebd37d11f0aba0d491e79b"
-		        }
-		    }
-        ];
+		const data = response.data;
 
 		return res.json(data);
 	} catch(e) {
@@ -143,9 +92,9 @@ exports.journeys = async (req, res) => {
  */
 exports.service = async (req, res) => {
 	
-	const { train_uid, origin, destination } = req.query;
+	const { train_uid, origin, destination, date } = req.query;
 	
-	const url = `https://transportapi.com/v3/uk/train/service/train_uid:${train_uid}/2017-09-21//timetable.json`;
+	const url = `https://transportapi.com/v3/uk/train/service/train_uid:${train_uid}/${date}/timetable.json`;
 
 	try {		
 		const response = await axios.get(url, {
@@ -165,10 +114,12 @@ exports.service = async (req, res) => {
 		// Just get the stops		
 		let data = response.data.stops;
 
+		if (!data || !data.length) {
+			throw new Error('No stops data returned from transport API');
+		}
+
 		// Filter out all but origin and destination
 		data = data.filter(stop => stop.station_code.toLowerCase() === origin.toLowerCase() || stop.station_code.toLowerCase() === destination.toLowerCase());
-
-		// TODO - handle error case where we end up with only 1 station...it can happen!
 
 		return res.json(data);
 	} catch(e) {
