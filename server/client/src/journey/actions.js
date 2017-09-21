@@ -12,7 +12,7 @@ import {
 
 
 
-export function fetchJourneys(origin, destination) {
+export function fetchJourneys(origin, destination, date, time) {
     return (dispatch, getState) => { 
         const url = `/api/transport/journeys`;
         
@@ -23,9 +23,12 @@ export function fetchJourneys(origin, destination) {
         return axios.get(url, {
             params: {
                 origin: origin,
-                destination: destination
+                destination: destination, 
+                date: date,
+                time: time
             }
         }).then(response => {
+            debugger;
             if (response.status !== 200) {
                 throw new Error(`Transport API: ${response.statusText}`);
             }

@@ -63,6 +63,8 @@ exports.journeys = async (req, res) => {
 	
 	const url = `https://transportapi.com/v3/uk/train/station/${origin}/${date}/${time}/timetable.json`;
 
+
+
 	try {		
 		const response = await axios.get(url, {
 			params: {

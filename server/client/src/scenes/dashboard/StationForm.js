@@ -20,9 +20,9 @@ class StationForm extends Component {
 
 	
 	handleFormSubmit(formData) {
-		const { originStation, destinationStation } = formData;
+		const { originStation, destinationStation, date, time } = formData;
 		
-		this.props.history.push(`/journey/${encodeURIComponent(originStation.value.toLowerCase())}/${encodeURIComponent(destinationStation.value.toLowerCase())}`)
+		this.props.history.push(`/journey/${encodeURIComponent(originStation.value.toLowerCase())}/${encodeURIComponent(destinationStation.value.toLowerCase())}/${date}/${time}`)
 		
 	}
 

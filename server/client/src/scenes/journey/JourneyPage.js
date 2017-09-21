@@ -13,7 +13,7 @@ class JourneyPage extends Component {
 	componentDidMount() {
 		
 		// Pull origin and dest from Route params
-		const { originStation, destinationStation } = this.props.match.params;
+		const { originStation, destinationStation, date, time } = this.props.match.params;
 		
 		// TODO handle error where neither are defined
 		this.props.setStations({
@@ -21,7 +21,7 @@ class JourneyPage extends Component {
 			destinationStation
 		});
 
-		this.props.fetchJourneys(originStation, destinationStation);		
+		this.props.fetchJourneys(originStation, destinationStation, date, time);		
 	}
 
 	render() {
