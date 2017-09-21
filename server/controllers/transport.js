@@ -8,6 +8,7 @@ const uid 			= require('uid');
 const Promise 		= require('promise');
 const axios 		= require('axios');
 const winston 		= require('winston');
+const format 		= require('date-fns/format')
 
 /**
  * STATIONS
@@ -54,7 +55,11 @@ exports.stations = async (req, res) => {
  */
 exports.journeys = async (req, res) => {
 	
-	const { date, time, origin, destination } = req.query;
+	const { origin, destination } = req.query;
+
+
+	const date = ( req.query.date !== undefined ) ? req.query.date : format(Date.now(), 'YYYY-MM-DD');
+	const time = ( req.query.time !== undefined ) ? req.query.time : format(Date.now(), 'HH:mm');
 	
 	const url = `https://transportapi.com/v3/uk/train/station/${origin}/${date}/${time}/timetable.json`;
 
@@ -70,6 +75,8 @@ exports.journeys = async (req, res) => {
 				time: time,
 			}
 		});
+
+
 
 		if (response.status !== 200) {
 			throw new Error(response.statusText);
