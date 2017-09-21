@@ -47,7 +47,7 @@ class StationForm extends Component {
 							data={this.props.stations}
 							valueField="value"
 							textField="label"
-							onChange={this.handleInputChanged}
+							handleInputChanged={this.handleInputChanged}
 							busy={this.props.isFetching}
 				         />
 					</div>
@@ -61,9 +61,17 @@ class StationForm extends Component {
 							data={this.props.stations}
 							valueField="value"
 							textField="label"
-							onChange={this.handleInputChanged}
+							handleInputChanged={this.handleInputChanged}
 							busy={this.props.isFetching}
 				         />
+					</div>
+
+					<div className="form-group">	
+						<Field name="date" component="input" type="text" placeholder="YYYY-MM-DD"/>
+					</div>
+
+					<div className="form-group">	
+						<Field name="time" component="input" type="text" placeholder="HH:MM" />
 					</div>
 
 					

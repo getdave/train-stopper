@@ -6,7 +6,8 @@ export const ucFirst = function (string) {
 };
 
 const AutoSuggest = props => {
-	const { labelName, placeholder, input, data, valueField, textField, busy, meta: { touched, error } } = props;
+	const { handleInputChanged, labelName, placeholder, input, data, valueField, textField, busy, meta: { touched, error } } = props;
+
 
 	return (
 		<div className={ error ? 'has-danger' : ''}>
@@ -16,7 +17,7 @@ const AutoSuggest = props => {
 		    	data={data}
 		    	valueField={valueField}
 		    	textField={textField}
-		    	onSearch={input.onChange}
+		    	onSearch={handleInputChanged}
 		    	busy={busy}
 		    	caseSensitive={false}
 			    minLength={3}
