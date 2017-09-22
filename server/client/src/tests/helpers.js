@@ -12,3 +12,12 @@ export function createStoreWithFakeAPI(fakeAPI={}) {
 	const middlewares = [ reduxThunk.withExtraArgument(fakeAPI) ]
 	return configureMockStore(middlewares)
 }
+
+
+/**
+ * Curried factory to abstract away repeated test logic
+ */
+export const makeDispatchWithStore = (actions, action, ...rest) => store => {
+	return store.dispatch(actions[action](rest));
+}
+

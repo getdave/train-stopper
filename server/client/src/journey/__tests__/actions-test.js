@@ -1,4 +1,8 @@
-import { createStoreWithFakeAPI } from '../../tests/helpers';
+import { 
+	createStoreWithFakeAPI,
+	makeDispatchWithStore
+} from '../../tests/helpers';
+
 import * as actions from '../actions';
 import * as types from '../types';
 
@@ -23,68 +27,186 @@ const fakeJourneysData = [
     }
 ];
 
-function fetchJourneysSuccess() {
-	return Promise.resolve({
-		status: 200,
-		data: fakeJourneysData
-	})
-}
+const fakeServiceData = [
+    {
+        "station_code": "FRO",
+        "tiploc_code": "FROME",
+        "station_name": "Frome",
+        "stop_type": "LI",
+        "platform": null,
+        "aimed_departure_date": "2017-09-22",
+        "aimed_departure_time": "08:02",
+        "aimed_arrival_date": "2017-09-22",
+        "aimed_arrival_time": "08:02",
+        "aimed_pass_date": null,
+        "aimed_pass_time": null,
+        "expected_departure_date": null,
+        "expected_departure_time": null,
+        "expected_arrival_date": null,
+        "expected_arrival_time": null,
+        "expected_pass_date": null,
+        "expected_pass_time": null,
+        "status": null
+    },
+    {
+        "station_code": "BRI",
+        "tiploc_code": "BRSTLTM",
+        "station_name": "Bristol Temple Meads",
+        "stop_type": "LI",
+        "platform": "5",
+        "aimed_departure_date": "2017-09-22",
+        "aimed_departure_time": "09:10",
+        "aimed_arrival_date": "2017-09-22",
+        "aimed_arrival_time": "09:06",
+        "aimed_pass_date": null,
+        "aimed_pass_time": null,
+        "expected_departure_date": null,
+        "expected_departure_time": null,
+        "expected_arrival_date": null,
+        "expected_arrival_time": null,
+        "expected_pass_date": null,
+        "expected_pass_time": null,
+        "status": null
+    }
+];
 
-function fetchJourneysError() {
+
+function rejectedPromise() {
 	return Promise.reject()
 }
 
-
 describe('journey action creators', () => {
 
-	const mockSuccessStore   = createStoreWithFakeAPI({
-	  	fetchJourneys: fetchJourneysSuccess
+	describe('fetchJourneys', () => {
+
+		const mockSuccessStore   = createStoreWithFakeAPI({
+		  	fetchJourneys: () => {
+		  		return Promise.resolve({
+					status: 200,
+					data: fakeJourneysData
+				})
+		  	}
+		});
+
+		const mockErrorStore   = createStoreWithFakeAPI({
+		  	fetchJourneys: rejectedPromise
+		});
+
+		
+		const dispatchWithStore = makeDispatchWithStore(actions, 'fetchJourneys', ['FRO', 'BRI', '2017-09-23','08:00']);
+
+
+		it('should create FETCHING_JOURNEYS_LIST when fetching Journeys is started', () => {
+
+			const expectedActions = [
+				{ 
+					type: types.FETCHING_JOURNEYS_LIST
+				}
+			]
+			const store = mockSuccessStore()
+
+
+
+			// Note: we are testing the actual action here not a fake action!
+			return dispatchWithStore(store).then(() => {
+				expect(store.getActions()).toEqual(expect.arrayContaining(expectedActions))
+			})
+		})
+
+		it('should create FETCHING_JOURNEYS_LIST_SUCCESS when fetching Journeys is successful', () => {
+
+			const expectedActions = [
+				{ 
+					type: types.FETCHING_JOURNEYS_LIST_SUCCESS, 
+					payload: fakeJourneysData 
+				}
+			]
+			const store = mockSuccessStore()
+
+			return dispatchWithStore(store).then(() => {
+				expect(store.getActions()).toEqual(expect.arrayContaining(expectedActions))
+			})
+		})
+
+		it('should create FETCHING_JOURNEYS_LIST_FAILED when fetching Journeys is unsuccessful', () => {
+
+			const expectedActions = [
+				{ 
+					type: types.FETCHING_JOURNEYS_LIST_FAILED, 
+				}
+			]
+			const store = mockErrorStore()
+
+			return dispatchWithStore(store).then(() => {
+				expect(store.getActions()).toEqual(expect.arrayContaining(expectedActions))
+			})
+		})
+
+	})
+
+	describe('fetchService', () => {
+
+		const mockSuccessStore   = createStoreWithFakeAPI({
+		  	fetchService: () => {
+		  		return Promise.resolve({
+					status: 200,
+					data: fakeServiceData
+				})
+		  	}
+		});
+
+		const mockErrorStore   = createStoreWithFakeAPI({
+		  	fetchService: rejectedPromise
+		});
+
+
+		const dispatchWithStore = makeDispatchWithStore(actions, 'fetchService', ['C29442', 'FRO', 'BRI', '2017-09-23']);
+
+
+		it('should create FETCHING_SERVICE when fetching a Service is started', () => {
+
+			const expectedActions = [
+				{ 
+					type: types.FETCHING_SERVICE
+				}
+			]
+			const store = mockSuccessStore()
+
+			// Note: we are testing the actual action here not a fake action!
+			return dispatchWithStore(store).then(() => {
+				expect(store.getActions()).toEqual(expect.arrayContaining(expectedActions))
+			})
+		})
+
+		it('should create FETCHING_SERVICE_SUCCESS when fetching a Service is successful', () => {
+
+			const expectedActions = [
+				{ 
+					type: types.FETCHING_SERVICE_SUCCESS,
+					payload: fakeServiceData
+				}
+			]
+			const store = mockSuccessStore()
+
+			// Note: we are testing the actual action here not a fake action!
+			return dispatchWithStore(store).then(() => {
+				expect(store.getActions()).toEqual(expect.arrayContaining(expectedActions))
+			})
+		})
+
+		it('should create FETCHING_SERVICE_ERROR when fetching a Service is unsuccessful', () => {
+
+			const expectedActions = [
+				{ 
+					type: types.FETCHING_SERVICE_FAILED,
+				}
+			]
+			const store = mockErrorStore()
+
+			// Note: we are testing the actual action here not a fake action!
+			return dispatchWithStore(store).then(() => {
+				expect(store.getActions()).toEqual(expect.arrayContaining(expectedActions))
+			})
+		})
 	});
-
-	const mockErrorStore   = createStoreWithFakeAPI({
-	  	fetchJourneys: fetchJourneysError
-	});
-
-	it('should create FETCHING_JOURNEYS_LIST when fetching Journeys is started', () => {
-
-		const expectedActions = [
-			{ 
-				type: types.FETCHING_JOURNEYS_LIST
-			}
-		]
-		const store = mockSuccessStore()
-
-		return store.dispatch(actions.fetchJourneys('FRO', 'BRI', '2017-09-23','08:00')).then(() => {
-			expect(store.getActions()).toEqual(expect.arrayContaining(expectedActions))
-		})
-	})
-
-	it('should create FETCHING_JOURNEYS_LIST_SUCCESS when fetching Journeys is successful', () => {
-
-		const expectedActions = [
-			{ 
-				type: types.FETCHING_JOURNEYS_LIST_SUCCESS, 
-				payload: fakeJourneysData 
-			}
-		]
-		const store = mockSuccessStore()
-
-		return store.dispatch(actions.fetchJourneys('FRO', 'BRI', '2017-09-23','08:00')).then(() => {
-			expect(store.getActions()).toEqual(expect.arrayContaining(expectedActions))
-		})
-	})
-
-	it('should create FETCHING_JOURNEYS_LIST_FAILED when fetching Journeys is unsuccessful', () => {
-
-		const expectedActions = [
-			{ 
-				type: types.FETCHING_JOURNEYS_LIST_FAILED, 
-			}
-		]
-		const store = mockErrorStore()
-
-		return store.dispatch(actions.fetchJourneys('FRO', 'BRI', '2017-09-23','08:00')).then(() => {
-			expect(store.getActions()).toEqual(expect.arrayContaining(expectedActions))
-		})
-	})
 })

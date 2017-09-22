@@ -1,5 +1,3 @@
-import axios from 'axios';
-
 import { 
     FETCHING_JOURNEYS_LIST,
     FETCHING_JOURNEYS_LIST_SUCCESS,
@@ -14,8 +12,7 @@ import {
 
 
 export function fetchJourneys(origin, destination, date, time) {
-    return (dispatch, getState, api) => { 
-        
+    return (dispatch, getState, api) => {         
         dispatch({ 
             type: FETCHING_JOURNEYS_LIST,
         });
@@ -37,21 +34,13 @@ export function fetchJourneys(origin, destination, date, time) {
 }
 
 export function fetchService(train_uid, origin, destination, date) {
-    return (dispatch, getState) => { 
-        const url = `/api/transport/service`;
+    return (dispatch, getState, api) => { 
         
         dispatch({ 
             type: FETCHING_SERVICE,
         });
         
-        return axios.get(url, {
-            params: {
-                train_uid: train_uid,
-                origin: origin,
-                destination: destination,
-                date: date
-            }
-        }).then(response => {
+        return api.fetchService(train_uid, origin, destination, date).then(response => {
             if (response.status !== 200) {
                 throw new Error(`Transport API: ${response.statusText}`);
             }
