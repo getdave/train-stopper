@@ -83,8 +83,8 @@ exports.journeys = async (req, res) => {
 		if (response.status !== 200) {
 			throw new Error(response.statusText);
 		}
-		
-		const data = response.data;
+
+		const data = response.data.departures.all;
 
 		return res.json(data);
 	} catch(e) {
