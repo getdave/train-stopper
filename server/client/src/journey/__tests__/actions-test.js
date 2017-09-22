@@ -77,6 +77,49 @@ function rejectedPromise() {
 
 describe('journey action creators', () => {
 
+	describe('setStations', () => {
+		it('should create SETTING_STATIONS_SUCCESS ', () => {
+
+			const originStation 		= 'FRO';
+			const destinationStation 	= 'BRI';
+
+			const expectedAction = {
+				type: types.SETTING_STATIONS_SUCCESS,
+				payload: {
+		            origin: originStation,
+		            destination: destinationStation
+		        }
+			};
+
+			expect(actions.setStations({
+				originStation,
+				destinationStation
+			})).toEqual(expectedAction)
+		})
+	})
+
+
+	describe('setDatetime', () => {
+		it('should create SETTING_DATETIME_SUCCESS ', () => {
+
+			const date 	= '2017-09-23';
+			const time 	= '08:00';
+
+			const expectedAction = {
+				type: types.SETTING_DATETIME_SUCCESS,
+				payload: {
+		            date,
+		            time
+		        }
+			};
+
+			expect(actions.setDatetime({
+				date,
+				time
+			})).toEqual(expectedAction)
+		})
+	})
+
 	describe('fetchJourneys', () => {
 
 		const mockSuccessStore   = createStoreWithFakeAPI({
