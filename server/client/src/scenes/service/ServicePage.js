@@ -14,7 +14,7 @@ class ServicePage extends Component {
 	componentDidMount() {
 
 		// Pull origin and dest from Route params
-		const { originStation, destinationStation, trainUId } = this.props.match.params;
+		const { originStation, destinationStation, trainUId, date } = this.props.match.params;
 		
 		//  TODO handle error where neither are defined
 		this.props.setStations({
@@ -22,7 +22,7 @@ class ServicePage extends Component {
 			destinationStation
 		});
 
-		this.props.fetchService(trainUId, originStation, destinationStation);		
+		this.props.fetchService(trainUId, originStation, destinationStation, date);		
 	}
 
 	render() {

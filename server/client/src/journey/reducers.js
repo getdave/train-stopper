@@ -14,7 +14,8 @@ import {
     FETCHING_JOURNEYS_FAILED,
     FETCHING_SERVICE,
     FETCHING_SERVICE_SUCCESS,
-    FETCHING_SERVICE_FAILED
+    FETCHING_SERVICE_FAILED,
+    SETTING_DATETIME_SUCCESS
 } from './types';
 
 
@@ -22,7 +23,7 @@ import {
 
 
 /**
- * SET STATIONS
+ * STATIONS
  */
 function setSelectedStations(state, action) {
     return {
@@ -40,7 +41,7 @@ const stationsReducer = createReducer({
 
 
 /**
- * FETCH JOURNEYS
+ * JOURNEYS
  */
 function setJourneys(state, action) {
     return action.payload;
@@ -51,7 +52,7 @@ const journeysReducer = createReducer([], {
 });
 
 /**
- * FETCH SERVICE
+ * SERVICE
  */
 function handleService(state, action) {
     return {
@@ -65,6 +66,25 @@ const serviceReducer = createReducer({
     destination: ''
 }, {
     [FETCHING_SERVICE_SUCCESS]: handleService,
+});
+
+
+
+/**
+ * DATE TIME
+ */
+function handleDatetime(state, action) {
+    return {
+        date: action.payload.date,
+        time: action.payload.time
+    }
+}
+
+const datetimeReducer = createReducer({
+    date: '',
+    time: ''
+}, {
+    [SETTING_DATETIME_SUCCESS]: handleDatetime,
 });
 
 
@@ -119,15 +139,15 @@ export const selectJourneys = state => state.journey.journeys;
 
 export const selectService = state => state.journey.service;
 
+export const selectDatetime = state => state.journey.datetime;
 
 // Export combined reducer
 export default combineReducers({
     // active: activeReducer,
+    datetime: datetimeReducer, // desired date and time entered by the user into form 
     stations: stationsReducer, // origin and destination stations for this trip
+    service: serviceReducer, // specific details about the specific train journey "service"
     journeys: journeysReducer, // refers to list of possible journeys loaded from train API
-    // service: serviceReducer, // stores exact service user will be traveling on
-    // timetable: timetableReducer, // stores exact timetable for selected service (above)
-    service: serviceReducer,
     ui: uiReducer
 });
 

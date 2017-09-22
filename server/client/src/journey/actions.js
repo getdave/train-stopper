@@ -1,13 +1,14 @@
 import axios from 'axios';
 
 import { 
-    SETTING_STATIONS_SUCCESS,
-    FETCHING_JOURNEYS,
-    FETCHING_JOURNEYS_SUCCESS,
-    FETCHING_JOURNEYS_FAILED,
+    FETCHING_JOURNEYS_LIST,
+    FETCHING_JOURNEYS_LIST_SUCCESS,
+    FETCHING_JOURNEYS_LIST_FAILED,
     FETCHING_SERVICE,
     FETCHING_SERVICE_SUCCESS,
     FETCHING_SERVICE_FAILED,
+    SETTING_STATIONS_SUCCESS,
+    SETTING_DATETIME_SUCCESS
 } from './types';
 
 
@@ -17,7 +18,7 @@ export function fetchJourneys(origin, destination, date, time) {
         const url = `/api/transport/journeys`;
         
         dispatch({ 
-            type: FETCHING_JOURNEYS,
+            type: FETCHING_JOURNEYS_LIST,
         });
         
         return axios.get(url, {
@@ -28,23 +29,22 @@ export function fetchJourneys(origin, destination, date, time) {
                 time: time
             }
         }).then(response => {
-            debugger;
             if (response.status !== 200) {
                 throw new Error(`Transport API: ${response.statusText}`);
             }
             dispatch({ 
-                type: FETCHING_JOURNEYS_SUCCESS,
+                type: FETCHING_JOURNEYS_LIST_SUCCESS,
                 payload: response.data
             });       
         }).catch(function (error) {
             dispatch({ 
-                type: FETCHING_JOURNEYS_FAILED,
+                type: FETCHING_JOURNEYS_LIST_FAILED,
             });
         }); 
     }
 }
 
-export function fetchService(train_uid, origin, destination) {
+export function fetchService(train_uid, origin, destination, date) {
     return (dispatch, getState) => { 
         const url = `/api/transport/service`;
         
@@ -56,7 +56,8 @@ export function fetchService(train_uid, origin, destination) {
             params: {
                 train_uid: train_uid,
                 origin: origin,
-                destination: destination
+                destination: destination,
+                date: date
             }
         }).then(response => {
             if (response.status !== 200) {
@@ -81,6 +82,16 @@ export function setStations({originStation, destinationStation}) {
         payload: {
             origin: originStation,
             destination: destinationStation
+        }
+    };
+}
+
+export function setDatetime({date, time}) {
+    return { 
+        type: SETTING_DATETIME_SUCCESS,
+        payload: {
+            date,
+            time
         }
     };
 }

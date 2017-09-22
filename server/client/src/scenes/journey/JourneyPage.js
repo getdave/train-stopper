@@ -12,16 +12,31 @@ class JourneyPage extends Component {
 
 	componentDidMount() {
 		
+		// Capture data from url and store in state
+		this.storeRouteData();
+
 		// Pull origin and dest from Route params
 		const { originStation, destinationStation, date, time } = this.props.match.params;
 		
+		this.props.fetchJourneys(originStation, destinationStation, date, time);		
+	}
+
+
+	storeRouteData() {
+
+		// Pull origin and dest from Route params
+		const { originStation, destinationStation, date, time } = this.props.match.params;
+
 		// TODO handle error where neither are defined
 		this.props.setStations({
 			originStation,
 			destinationStation
 		});
 
-		this.props.fetchJourneys(originStation, destinationStation, date, time);		
+		this.props.setDatetime({
+			date,
+			time
+		});
 	}
 
 	render() {
