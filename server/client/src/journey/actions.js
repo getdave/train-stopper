@@ -14,21 +14,13 @@ import {
 
 
 export function fetchJourneys(origin, destination, date, time) {
-    return (dispatch, getState) => { 
-        const url = `/api/transport/journeys`;
+    return (dispatch, getState, api) => { 
         
         dispatch({ 
             type: FETCHING_JOURNEYS_LIST,
         });
         
-        return axios.get(url, {
-            params: {
-                origin: origin,
-                destination: destination, 
-                date: date,
-                time: time
-            }
-        }).then(response => {
+        return api.fetchJourneys(origin, destination, date, time).then(response => {
             if (response.status !== 200) {
                 throw new Error(`Transport API: ${response.statusText}`);
             }

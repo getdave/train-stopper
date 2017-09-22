@@ -3,8 +3,7 @@ import { compose } from 'redux';
 import { connect } from 'react-redux';
 import { withRouter, Link } from 'react-router-dom';
 import * as journeyActions from '../../journey/actions';
-import * as journeySelectors from '../../journey/reducers';
-import { Button } from 'reactstrap';
+import * as journeySelectors from '../../journey/reducer';
 
 
 

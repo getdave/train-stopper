@@ -1,7 +1,7 @@
 import { combineReducers } from 'redux';
 import { reducer as reduxForm } from 'redux-form';
-import stationsReducer from './stations/reducers';
-import journeyReducer from './journey/reducers';
+import stationsReducer from './stations/reducer';
+import journeyReducer from './journey/reducer';
 
 
 export default combineReducers({

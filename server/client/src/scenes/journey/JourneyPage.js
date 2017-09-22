@@ -3,7 +3,7 @@ import { compose } from 'redux';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import * as journeyActions from '../../journey/actions';
-import * as journeySelectors from '../../journey/reducers';
+import * as journeySelectors from '../../journey/reducer';
 
 import { ListGroup, ListGroupItem, ListGroupItemHeading, ListGroupItemText } from 'reactstrap';
 

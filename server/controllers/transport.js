@@ -9,6 +9,7 @@ const Promise 		= require('promise');
 const axios 		= require('axios');
 const winston 		= require('winston');
 const format 		= require('date-fns/format')
+const _has			= require('lodash.has');
 
 /**
  * STATIONS
@@ -84,6 +85,10 @@ exports.journeys = async (req, res) => {
 			throw new Error(response.statusText);
 		}
 
+		if(!_has(response, 'data.departures.all')) {
+			throw new Error('Journeys data is empty');
+		}
+		
 		const data = response.data.departures.all;
 
 		return res.json(data);

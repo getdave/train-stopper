@@ -6,7 +6,7 @@ import { withRouter } from 'react-router-dom';
 
 import AutoSuggest from '../../components/AutoSuggest';
 import * as stationsActions from '../../stations/actions';
-import * as stationsSelectors from '../../stations/reducers';
+import * as stationsSelectors from '../../stations/reducer';
 
 
 class StationForm extends Component {

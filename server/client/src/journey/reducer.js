@@ -6,15 +6,11 @@ import { combineReducers } from 'redux';
 import createReducer from '../utils/create-reducer';
 
 import {
-    // SETTING_STATIONS,
     SETTING_STATIONS_SUCCESS,
-    // SETTING_STATIONS_FAILED,
-    FETCHING_JOURNEYS,
-    FETCHING_JOURNEYS_SUCCESS,
-    FETCHING_JOURNEYS_FAILED,
-    FETCHING_SERVICE,
+    FETCHING_JOURNEYS_LIST,
+    FETCHING_JOURNEYS_LIST_SUCCESS,
+    FETCHING_JOURNEYS_LIST_FAILED,
     FETCHING_SERVICE_SUCCESS,
-    FETCHING_SERVICE_FAILED,
     SETTING_DATETIME_SUCCESS
 } from './types';
 
@@ -48,7 +44,7 @@ function setJourneys(state, action) {
 }
 
 const journeysReducer = createReducer([], {
-    [FETCHING_JOURNEYS_SUCCESS]: setJourneys,
+    [FETCHING_JOURNEYS_LIST_SUCCESS]: setJourneys,
 });
 
 /**
@@ -116,9 +112,9 @@ const uiReducer = createReducer({
     isFetching: false,
     isError: false
 }, {
-    [FETCHING_JOURNEYS] : handleUIFetching,
-    [FETCHING_JOURNEYS_SUCCESS]: handleUISuccess,
-    [FETCHING_JOURNEYS_FAILED] : handleUIError,
+    [FETCHING_JOURNEYS_LIST] : handleUIFetching,
+    [FETCHING_JOURNEYS_LIST_SUCCESS]: handleUISuccess,
+    [FETCHING_JOURNEYS_LIST_FAILED] : handleUIError,
 });
 
 
