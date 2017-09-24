@@ -1,6 +1,7 @@
 import { 
 	createStoreWithFakeAPI,
-	makeDispatchWithStore
+	makeDispatchWithStore,
+		rejectedPromise
 } from '../../tests/helpers';
 
 import * as actions from '../actions';
@@ -69,11 +70,6 @@ const fakeServiceData = [
         "status": null
     }
 ];
-
-
-function rejectedPromise() {
-	return Promise.reject()
-}
 
 describe('journey action creators', () => {
 
