@@ -101,26 +101,6 @@ describe('journey action creators', () => {
 	})
 
 
-	// describe('setDatetime', () => {
-	// 	it('should create SETTING_DATETIME_SUCCESS ', () => {
-
-	// 		const date 	= '2017-09-23';
-	// 		const time 	= '08:00';
-
-	// 		const expectedAction = {
-	// 			type: types.SETTING_DATETIME_SUCCESS,
-	// 			payload: {
-	// 	            date,
-	// 	            time
-	// 	        }
-	// 		};
-
-	// 		expect(actions.setDatetime({
-	// 			date,
-	// 			time
-	// 		})).toEqual(expectedAction)
-	// 	})
-	// })
 
 	describe('fetchStationServices', () => {
 
