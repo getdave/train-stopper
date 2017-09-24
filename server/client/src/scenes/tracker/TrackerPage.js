@@ -1,10 +1,11 @@
 import React, { Component } from 'react';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
-import { withRouter } from 'react-router-dom';
+import { withRouter, Redirect } from 'react-router-dom';
+import differenceInMilliseconds from 'date-fns/difference_in_milliseconds'
 import * as journeyActions from '../../journey/actions';
 import * as journeySelectors from '../../journey/reducer';
-
+import TrackerDetail from './TrackerDetail';
 
 
 class ServicePage extends Component {
@@ -13,84 +14,89 @@ class ServicePage extends Component {
 		super(props);
 
 		this.state = {
-			timeTillArrival: {}
+			timeDiffMs: ''
 		}
+
+		this.checkTime = this.checkTime.bind(this);
+
 	}
 
 
 	componentDidMount() {
+		const { origin, destination } = this.props.service;
 
-        this.interval = setInterval(this.checkTime.bind(this), 1000);
+		// Start only if we have key data
+		if(origin && destination) {
+        	this.arrivalCheckerTimer = setInterval(this.checkTime, 1000);
+		}
     }
 
     componentWillUnmount() {
-        clearInterval(this.interval);
+        clearInterval(this.arrivalCheckerTimer);
     }
 
     checkTime() {
-    	console.log(this.state);
-    	const arrivalTime = this.props.service.destination.aimed_arrival_time;
-    	const arrivalDate = this.props.service.destination.aimed_arrival_date;
-
-    	const arrivalTS = Date.parse(`${arrivalTime} ${arrivalDate}`);
-
-    	const diff = this.timeBetweenDates(arrivalTS);
+    	const arrivalTime 	= this.props.service.destination.aimed_arrival_time;
+    	const arrivalDate 	= this.props.service.destination.aimed_arrival_date;
+    	const arrivalTS 	= Date.parse(`${arrivalTime} ${arrivalDate}`);
+		const now 			= new Date();    	
+		debugger;
+		// Difference in m/s between arrival datetime and now
+		const diff 			= differenceInMilliseconds(arrivalTS, now);
 
   		this.setState({
-  			timeTillArrival: diff
+  			timeDiffMs: diff
   		});
+
+  		if (diff <= 0) {
+			clearInterval(this.arrivalCheckerTimer);
+  		}
     }
 
-    timeBetweenDates(toDate) {
-	  var dateEntered = new Date(toDate);
-	  var now = new Date();
-	  var difference = dateEntered.getTime() - now.getTime();
+ //    timeBetweenDates(toDate) {
+	//   var dateEntered = new Date(toDate);
+	//   var now = new Date();
+	//   var difference = dateEntered.getTime() - now.getTime();
 
-	  if (difference <= 0) {
+	//   if (difference <= 0) {
 
-	    // Timer done
-	    clearInterval(this.interval);
+	//     // Timer done
+	//     clearInterval(this.arrivalCheckerTimer);
 	  
-	  } else {
+	//   } else {
 	    
-	    var seconds = Math.floor(difference / 1000);
-	    var minutes = Math.floor(seconds / 60);
-	    var hours = Math.floor(minutes / 60);
-	    var days = Math.floor(hours / 24);
+	//     var seconds = Math.floor(difference / 1000);
+	//     var minutes = Math.floor(seconds / 60);
+	//     var hours = Math.floor(minutes / 60);
+	//     var days = Math.floor(hours / 24);
 
-	    hours %= 24;
-	    minutes %= 60;
-	    seconds %= 60;
+	//     hours %= 24;
+	//     minutes %= 60;
+	//     seconds %= 60;
 
-	    return {
-	    	days,
-	    	hours,
-	    	minutes,
-	    	seconds
-	    };
+	//     return {
+	//     	days,
+	//     	hours,
+	//     	minutes,
+	//     	seconds
+	//     };
 	    
-	  }
-	}
+	//   }
+	// }
 
 
 	render() {
 
-		const originDetail = this.props.service.origin;
-		const destinationDetail = this.props.service.destination;
+		const originData 		= this.props.service.origin;
+		const destinationData 	= this.props.service.destination;
+
+		// Todo - pass state on redirect to indicate what data was missing
+		if (originData === '' || destinationData === '') {
+			return <Redirect to="/" />
+		}
 
 	    return (
-	    	<div>
-		    	<h1>{originDetail.station_name} to {destinationDetail.station_name}</h1>
-		    			    	
-		    	<p>Your train is leaving {originDetail.station_name} at {originDetail.aimed_departure_time} and arriving at {destinationDetail.station_name} at {destinationDetail.aimed_arrival_time}.</p>
-
-		    	<h5>Time till arrival</h5>
-		    	<p>{this.state.timeTillArrival.days} days</p>
-		    	<p>{this.state.timeTillArrival.hours} hours</p>
-		    	<p>{this.state.timeTillArrival.minutes} minutes</p>
-		    	<p>{this.state.timeTillArrival.seconds} seconds</p>
-
-		    </div>
+	    	<TrackerDetail originData={originData} destinationData={destinationData} />
 	    )
 	}
 
@@ -99,7 +105,6 @@ class ServicePage extends Component {
 
 
 function mapStateToProps(state) {
-	console.log(state);
 	return {
 		service: journeySelectors.selectService(state)
 	}
