@@ -77,47 +77,7 @@ describe('journeys reducer', () => {
         })
     });
 
-    // describe('datetime', () => {
-    //     it('handles SETTING_DATETIME_SUCCESS', () => {
-
-    //         const payload = {
-    //             date: '2017-10-23',
-    //             time: '08:00'
-    //         };
-
-    //         const expected  = Object.assign({}, INITIAL_STATE, {
-    //             datetime: payload
-    //         });            
-
-    //         const result = reducer(INITIAL_STATE, {
-    //             type: SETTING_DATETIME_SUCCESS,
-    //             payload: payload
-    //         });
-        
-    //         expect(result).toEqual(expected);
-    //     })
-    // });
-
-    // describe('stations', () => {
-    //     it('handles SETTING_STATIONS_SUCCESS', () => {
-
-    //         const payload = {
-    //             origin: 'FRO',
-    //             destination: 'BRI'
-    //         };
-
-    //         const expected  = Object.assign({}, INITIAL_STATE, {
-    //             stations: payload
-    //         });            
-
-    //         const result = reducer(INITIAL_STATE, {
-    //             type: SETTING_STATIONS_SUCCESS,
-    //             payload: payload
-    //         });
-        
-    //         expect(result).toEqual(expected);
-    //     })
-    // });
+    
 
     describe('station services', () => {
         it('handles FETCHING_STATION_SERVICES_SUCCESS type', () => {
