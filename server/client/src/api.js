@@ -6,8 +6,10 @@
  */
 
 import * as journey from './journey/api';
+import * as stations from './stations/api';
 
 
 export default {
 	...journey,
+	...stations
 }

@@ -203,7 +203,7 @@ describe('journey action creators', () => {
 		});
 
 
-		const dispatchWithStore = makeDispatchWithStore(actions, 'fetchService', ['C29442', 'FRO', 'BRI', '2017-09-23']);
+		const dispatchFetchService = makeDispatchWithStore(actions, 'fetchService', ['C29442', 'FRO', 'BRI', '2017-09-23']);
 
 
 		it('should create FETCHING_SERVICE when fetching a Service is started', () => {
@@ -216,7 +216,7 @@ describe('journey action creators', () => {
 			const store = mockSuccessStore()
 
 			// Note: we are testing the actual action here not a fake action!
-			return dispatchWithStore(store).then(() => {
+			return dispatchFetchService(store).then(() => {
 				expect(store.getActions()).toEqual(expect.arrayContaining(expectedActions))
 			})
 		})
@@ -232,7 +232,7 @@ describe('journey action creators', () => {
 			const store = mockSuccessStore()
 
 			// Note: we are testing the actual action here not a fake action!
-			return dispatchWithStore(store).then(() => {
+			return dispatchFetchService(store).then(() => {
 				expect(store.getActions()).toEqual(expect.arrayContaining(expectedActions))
 			})
 		})
@@ -247,7 +247,7 @@ describe('journey action creators', () => {
 			const store = mockErrorStore()
 
 			// Note: we are testing the actual action here not a fake action!
-			return dispatchWithStore(store).then(() => {
+			return dispatchFetchService(store).then(() => {
 				expect(store.getActions()).toEqual(expect.arrayContaining(expectedActions))
 			})
 		})

@@ -1,7 +1,3 @@
-import axios from 'axios';
-// import { SubmissionError } from 'redux-form'
-
-
 import { 
     FETCHING_STATIONS,
     FETCHING_STATIONS_SUCCESS,
@@ -9,20 +5,15 @@ import {
 } from './types';
 
 
-
 export function fetchStations(query) {
-    return (dispatch, getState) => { 
+    return (dispatch, getState, api) => { 
         const url = `/api/transport/stations`;
         
         dispatch({ 
             type: FETCHING_STATIONS,
         });
         
-        return axios.get(url, {
-            params: {
-                query: query
-            }
-        }).then(response => {
+        return api.fetchStations(query).then(response => {
             if (response.status !== 200) {
                 throw new Error(`Transport API: ${response.statusText}`);
             }

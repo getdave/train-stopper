@@ -21,3 +21,8 @@ export const makeDispatchWithStore = (actions, action, ...rest) => store => {
 	return store.dispatch(actions[action](rest));
 }
 
+
+
+export function rejectedPromise() {
+	return Promise.reject()
+}
