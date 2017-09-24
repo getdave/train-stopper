@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
-import { withRouter } from 'react-router-dom';
+import { withRouter, Link } from 'react-router-dom';
 import * as journeyActions from '../../journey/actions';
 import * as journeySelectors from '../../journey/reducer';
 
@@ -36,6 +36,7 @@ class JourneyPage extends Component {
 	}
 
 	render() {
+
 	    return (
 	    	<div>
 		    	<h1>Select a Journey</h1>
@@ -63,15 +64,17 @@ class JourneyPage extends Component {
 		}
 
 		const stationServices = this.props.stationServices.map( service => {
+
 			return (
-				<ListGroupItem key={service.train_uid} tag="a" href={`/service/${this.props.originStation}/${this.props.destinationStation}/${service.train_uid}`}>
-					<ListGroupItemHeading>{service.origin_name} - {service.destination_name}</ListGroupItemHeading>
-					<ListGroupItemText>
-					This train departs from <strong>{this.props.originStation}</strong> at {service.aimed_departure_time}
-					</ListGroupItemText>
-				</ListGroupItem>
-				
-			)
+				<Link key={service.train_uid} to={`/journey/service/${service.train_uid}`} className="list-group-item list-group-item-action flex-column align-items-start active">
+					<div className="d-flex w-100 justify-content-between">
+						<h5 className="mb-1">{service.origin_name} - {service.destination_name}</h5>
+					</div>
+					<p className="mb-1">his train departs from <strong>{this.props.originStation}</strong> at {service.aimed_departure_time}</p>
+				</Link>
+			);
+
+			
 		});
 
 		return (
