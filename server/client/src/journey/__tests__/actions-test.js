@@ -7,7 +7,7 @@ import {
 import * as actions from '../actions';
 import * as types from '../types';
 
-const fakeJourneysData = [
+const fakeStationServicesData = [
     {
         "mode": "train",
         "service": "25471001",
@@ -116,30 +116,30 @@ describe('journey action creators', () => {
 		})
 	})
 
-	describe('fetchJourneys', () => {
+	describe('fetchStationServices', () => {
 
 		const mockSuccessStore   = createStoreWithFakeAPI({
-		  	fetchJourneys: () => {
+		  	fetchStationServices: () => {
 		  		return Promise.resolve({
 					status: 200,
-					data: fakeJourneysData
+					data: fakeStationServicesData
 				})
 		  	}
 		});
 
 		const mockErrorStore   = createStoreWithFakeAPI({
-		  	fetchJourneys: rejectedPromise
+		  	fetchStationServices: rejectedPromise
 		});
 
 		
-		const dispatchWithStore = makeDispatchWithStore(actions, 'fetchJourneys', ['FRO', 'BRI', '2017-09-23','08:00']);
+		const dispatchWithStore = makeDispatchWithStore(actions, 'fetchStationServices', ['FRO', 'BRI', '2017-09-23','08:00']);
 
 
-		it('should create FETCHING_JOURNEYS_LIST when fetching Journeys is started', () => {
+		it('should create FETCHING_STATION_SERVICES when fetching Journeys is started', () => {
 
 			const expectedActions = [
 				{ 
-					type: types.FETCHING_JOURNEYS_LIST
+					type: types.FETCHING_STATION_SERVICES
 				}
 			]
 			const store = mockSuccessStore()
@@ -152,12 +152,12 @@ describe('journey action creators', () => {
 			})
 		})
 
-		it('should create FETCHING_JOURNEYS_LIST_SUCCESS when fetching Journeys is successful', () => {
+		it('should create FETCHING_STATION_SERVICES_SUCCESS when fetching Journeys is successful', () => {
 
 			const expectedActions = [
 				{ 
-					type: types.FETCHING_JOURNEYS_LIST_SUCCESS, 
-					payload: fakeJourneysData 
+					type: types.FETCHING_STATION_SERVICES_SUCCESS, 
+					payload: fakeStationServicesData 
 				}
 			]
 			const store = mockSuccessStore()
@@ -167,11 +167,11 @@ describe('journey action creators', () => {
 			})
 		})
 
-		it('should create FETCHING_JOURNEYS_LIST_FAILED when fetching Journeys is unsuccessful', () => {
+		it('should create FETCHING_STATION_SERVICES_FAILED when fetching Journeys is unsuccessful', () => {
 
 			const expectedActions = [
 				{ 
-					type: types.FETCHING_JOURNEYS_LIST_FAILED, 
+					type: types.FETCHING_STATION_SERVICES_FAILED, 
 				}
 			]
 			const store = mockErrorStore()

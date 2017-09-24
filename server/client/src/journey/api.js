@@ -3,9 +3,9 @@ import axios from 'axios';
 /**
  * FETCH JOURNEYS
  */
-export const fetchJourneys = (origin, destination, date, time) => {
+export const fetchStationServices = (origin, destination, date, time) => {
 
-	const url = `/api/transport/journeys`;
+	const url = `/api/transport/station-services`;
   
     return axios.get(url, {
         params: {

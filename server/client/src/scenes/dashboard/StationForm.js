@@ -3,27 +3,41 @@ import { compose } from 'redux';
 import { Field, reduxForm } from 'redux-form';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
+import _bindAll from 'lodash.bindall';
+import strictUriEncode from 'strict-uri-encode';
 
 import AutoSuggest from '../../components/AutoSuggest';
 import * as stationsActions from '../../stations/actions';
 import * as stationsSelectors from '../../stations/reducer';
-
+import { uriEncodeAll } from '../../helpers';
 
 class StationForm extends Component {
 
 
 	constructor(props) {
 		super(props);
-		this.handleFormSubmit 	= this.handleFormSubmit.bind(this);
-		this.handleInputChanged = this.handleInputChanged.bind(this);
+
+		_bindAll(this, [
+			'handleFormSubmit',
+			'handleInputChanged'
+		]);
 	}
+
+	
 
 	
 	handleFormSubmit(formData) {
 		const { originStation, destinationStation, date, time } = formData;
 		
-		this.props.history.push(`/journey/${encodeURIComponent(originStation.value.toLowerCase())}/${encodeURIComponent(destinationStation.value.toLowerCase())}/${date}/${time}`)
-		
+		// Destructuring reassigns `let` declared vars above
+		const encoded = uriEncodeAll([
+			originStation.value,
+			destinationStation.value,
+			date,
+			time
+		]);
+
+		this.props.history.push(`/journey/${encoded[0]}/${encoded[1]}/${encoded[2]}/${encoded[3]}`)		
 	}
 
 	handleInputChanged(val) {

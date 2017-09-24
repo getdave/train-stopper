@@ -1,7 +1,7 @@
 import { 
-    FETCHING_JOURNEYS_LIST,
-    FETCHING_JOURNEYS_LIST_SUCCESS,
-    FETCHING_JOURNEYS_LIST_FAILED,
+    FETCHING_STATION_SERVICES,
+    FETCHING_STATION_SERVICES_SUCCESS,
+    FETCHING_STATION_SERVICES_FAILED,
     FETCHING_SERVICE,
     FETCHING_SERVICE_SUCCESS,
     FETCHING_SERVICE_FAILED,
@@ -11,23 +11,23 @@ import {
 
 
 
-export function fetchJourneys(origin, destination, date, time) {
+export function fetchStationServices(origin, destination, date, time) {
     return (dispatch, getState, api) => {         
         dispatch({ 
-            type: FETCHING_JOURNEYS_LIST,
+            type: FETCHING_STATION_SERVICES,
         });
         
-        return api.fetchJourneys(origin, destination, date, time).then(response => {
+        return api.fetchStationServices(origin, destination, date, time).then(response => {
             if (response.status !== 200) {
                 throw new Error(`Transport API: ${response.statusText}`);
             }
             dispatch({ 
-                type: FETCHING_JOURNEYS_LIST_SUCCESS,
+                type: FETCHING_STATION_SERVICES_SUCCESS,
                 payload: response.data
             });       
         }).catch(function (error) {
             dispatch({ 
-                type: FETCHING_JOURNEYS_LIST_FAILED,
+                type: FETCHING_STATION_SERVICES_FAILED,
             });
         }); 
     }

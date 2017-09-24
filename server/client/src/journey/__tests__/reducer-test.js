@@ -3,16 +3,16 @@ import reducer, {
     selectIsError,
     selectOrigin,
     selectDestination,
-    selectJourneys,
+    selectStationServices,
     selectService,
     selectDatetime
 } from '../reducer';
 
 import {
     SETTING_STATIONS_SUCCESS,
-    FETCHING_JOURNEYS_LIST,
-    FETCHING_JOURNEYS_LIST_SUCCESS,
-    FETCHING_JOURNEYS_LIST_FAILED,
+    FETCHING_STATION_SERVICES,
+    FETCHING_STATION_SERVICES_SUCCESS,
+    FETCHING_STATION_SERVICES_FAILED,
     FETCHING_SERVICE,
     FETCHING_SERVICE_SUCCESS,
     FETCHING_SERVICE_FAILED,
@@ -32,7 +32,7 @@ const INITIAL_STATE = {
         origin: '',
         destination: ''
     }, 
-    journeys: [], 
+    stationServices: [], 
     ui: {
         isFetching: false,
         isError: false
@@ -96,8 +96,8 @@ describe('journeys reducer', () => {
         })
     });
 
-    describe('journeys', () => {
-        it('handles FETCHING_JOURNEYS_LIST_SUCCESS type', () => {
+    describe('station services', () => {
+        it('handles FETCHING_STATION_SERVICES_SUCCESS type', () => {
 
             const payload = [
                 {
@@ -118,17 +118,19 @@ describe('journeys reducer', () => {
             ];
 
             const expected  = Object.assign({}, INITIAL_STATE, {
-                journeys: payload
+                stationServices: payload
             });            
 
             const result = reducer(INITIAL_STATE, {
-                type: FETCHING_JOURNEYS_LIST_SUCCESS,
+                type: FETCHING_STATION_SERVICES_SUCCESS,
                 payload: payload
             });
         
             expect(result).toEqual(expected);
         })
     });
+
+
 
     describe('service', () => {
         it('handles FETCHING_SERVICE_SUCCESS type', () => {
@@ -231,9 +233,9 @@ describe('journeys selectors', () => {
         expect(result).toEqual('');
     })
 
-    test('selectJourneys correctly selects from state shape', () => {
+    test('selectStationServices correctly selects from state shape', () => {
 
-        const result = selectJourneys(globalState);
+        const result = selectStationServices(globalState);
 
         expect(result).toEqual([]);
     })

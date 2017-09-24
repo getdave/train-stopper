@@ -13,12 +13,9 @@ class JourneyPage extends Component {
 	componentDidMount() {
 		
 		// Capture data from url and store in state
-		this.storeRouteData();
-
-		// Pull origin and dest from Route params
-		const { originStation, destinationStation, date, time } = this.props.match.params;
+		const { originStation, destinationStation, date, time } = this.storeRouteData();
 		
-		this.props.fetchJourneys(originStation, destinationStation, date, time);		
+		this.props.fetchStationServices(originStation, destinationStation, date, time);		
 	}
 
 
@@ -37,6 +34,8 @@ class JourneyPage extends Component {
 			date,
 			time
 		});
+
+		return this.props.match.params;
 	}
 
 	render() {
@@ -66,12 +65,12 @@ class JourneyPage extends Component {
 			)
 		}
 
-		const journeysItems = this.props.journeys.map( journey => {
+		const stationServices = this.props.stationServices.map( service => {
 			return (
-				<ListGroupItem key={journey.train_uid} tag="a" href={`/journey/${this.props.originStation}/${this.props.destinationStation}/${journey.train_uid}`}>
-					<ListGroupItemHeading>{journey.origin_name} - {journey.destination_name}</ListGroupItemHeading>
+				<ListGroupItem key={service.train_uid} tag="a" href={`/service/${this.props.originStation}/${this.props.destinationStation}/${service.train_uid}`}>
+					<ListGroupItemHeading>{service.origin_name} - {service.destination_name}</ListGroupItemHeading>
 					<ListGroupItemText>
-					This train departs from <strong>{this.props.originStation}</strong> at {journey.aimed_departure_time}
+					This train departs from <strong>{this.props.originStation}</strong> at {service.aimed_departure_time}
 					</ListGroupItemText>
 				</ListGroupItem>
 				
@@ -80,7 +79,7 @@ class JourneyPage extends Component {
 
 		return (
 			<ListGroup>
-			{journeysItems}
+			{stationServices}
         	</ListGroup>
 		)
 	}
@@ -88,11 +87,10 @@ class JourneyPage extends Component {
 
 
 function mapStateToProps(state) {
-	console.log(state);
 	return {
 		originStation: journeySelectors.selectOrigin(state),
 		destinationStation: journeySelectors.selectDestination(state),
-		journeys: journeySelectors.selectJourneys(state),
+		stationServices: journeySelectors.selectStationServices(state),
 		isError: journeySelectors.selectIsError(state),
         isFetching: journeySelectors.selectIsFetching(state),
 	}

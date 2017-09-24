@@ -54,7 +54,7 @@ exports.stations = async (req, res) => {
  * JOURNEYS
  * returns services that pass through origin and destination stations 
  */
-exports.journeys = async (req, res) => {
+exports.stationServices = async (req, res) => {
 	
 	const { origin, destination } = req.query;
 

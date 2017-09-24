@@ -2,9 +2,9 @@ export const SETTING_STATIONS = 'setting_stations';
 export const SETTING_STATIONS_SUCCESS = 'setting_stations_success';
 export const SETTING_STATIONS_FAILED = 'setting_stations_failed';
 
-export const FETCHING_JOURNEYS_LIST = 'fetching_journeys_list';
-export const FETCHING_JOURNEYS_LIST_SUCCESS = 'fetching_journeys_list_success';
-export const FETCHING_JOURNEYS_LIST_FAILED = 'fetching_journeys_list_failed';
+export const FETCHING_STATION_SERVICES = 'fetching_station_services';
+export const FETCHING_STATION_SERVICES_SUCCESS = 'fetching_station_services_success';
+export const FETCHING_STATION_SERVICES_FAILED = 'fetching_station_services_failed';
 
 
 export const FETCHING_SERVICE = 'fetching_service';

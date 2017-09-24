@@ -14,7 +14,7 @@ const router 		= express.Router();
 
 // Controller Example
 router.get('/api/transport/stations', controllers.transport.stations);
-router.get('/api/transport/journeys', controllers.transport.journeys);
+router.get('/api/transport/station-services', controllers.transport.stationServices);
 router.get('/api/transport/service', controllers.transport.service);
 
 

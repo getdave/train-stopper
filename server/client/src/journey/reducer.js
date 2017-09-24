@@ -7,9 +7,9 @@ import createReducer from '../utils/create-reducer';
 
 import {
     SETTING_STATIONS_SUCCESS,
-    FETCHING_JOURNEYS_LIST,
-    FETCHING_JOURNEYS_LIST_SUCCESS,
-    FETCHING_JOURNEYS_LIST_FAILED,
+    FETCHING_STATION_SERVICES,
+    FETCHING_STATION_SERVICES_SUCCESS,
+    FETCHING_STATION_SERVICES_FAILED,
     FETCHING_SERVICE_SUCCESS,
     SETTING_DATETIME_SUCCESS
 } from './types';
@@ -39,12 +39,12 @@ const stationsReducer = createReducer({
 /**
  * JOURNEYS
  */
-function setJourneys(state, action) {
+function setStationServices(state, action) {
     return action.payload;
 }
 
-const journeysReducer = createReducer([], {
-    [FETCHING_JOURNEYS_LIST_SUCCESS]: setJourneys,
+const stationServicesReducer = createReducer([], {
+    [FETCHING_STATION_SERVICES_SUCCESS]: setStationServices,
 });
 
 /**
@@ -112,9 +112,9 @@ const uiReducer = createReducer({
     isFetching: false,
     isError: false
 }, {
-    [FETCHING_JOURNEYS_LIST] : handleUIFetching,
-    [FETCHING_JOURNEYS_LIST_SUCCESS]: handleUISuccess,
-    [FETCHING_JOURNEYS_LIST_FAILED] : handleUIError,
+    [FETCHING_STATION_SERVICES] : handleUIFetching,
+    [FETCHING_STATION_SERVICES_SUCCESS]: handleUISuccess,
+    [FETCHING_STATION_SERVICES_FAILED] : handleUIError,
 });
 
 
@@ -131,7 +131,7 @@ export const selectOrigin = state => state.journey.stations.origin;
 
 export const selectDestination = state => state.journey.stations.destination;
 
-export const selectJourneys = state => state.journey.journeys;
+export const selectStationServices = state => state.journey.stationServices;
 
 export const selectService = state => state.journey.service;
 
@@ -143,7 +143,7 @@ export default combineReducers({
     datetime: datetimeReducer, // desired date and time entered by the user into form 
     stations: stationsReducer, // origin and destination stations for this trip
     service: serviceReducer, // specific details about the specific train journey "service"
-    journeys: journeysReducer, // refers to list of possible journeys loaded from train API
+    stationServices: stationServicesReducer, // refers to list of possible journeys loaded from train API
     ui: uiReducer
 });
 

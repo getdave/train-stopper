@@ -7,8 +7,7 @@ import {
 
 export function fetchStations(query) {
     return (dispatch, getState, api) => { 
-        const url = `/api/transport/stations`;
-        
+       
         dispatch({ 
             type: FETCHING_STATIONS,
         });
