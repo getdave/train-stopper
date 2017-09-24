@@ -10,9 +10,23 @@ class TrackersList extends Component {
 		return this.props.trackers.map( (tracker, index) => {
 			// TODO - remove index as key and use uid
 			return (
-				<Link key={index} to={`/trackers/${index}`} className="list-group-item flex-column align-items-start">
-					TRACKER 
+				<li key={index} className="list-group-item flex-column align-items-start">
+				<Link to={`/trackers/${index}`} className="w-100">
+					
+					<div className="d-flex w-100 justify-content-between">
+				      	<h5 className="mb-1">{tracker.originName} to {tracker.destinationName}</h5>
+				      	<span className="align-right badge badge-default badge-pill">{tracker.status}</span>
+				    </div>
+					<div className="d-flex w-100 justify-content-between">
+						
+
+				    	
+				    	<div>
+				    		<small>Leaving on {tracker.date} at {tracker.time}</small>
+				    	</div>
+				    </div>
 				</Link>
+				</li>
 			);			
 		});
 	}
@@ -20,7 +34,7 @@ class TrackersList extends Component {
 	render() {
 
 	    return (
-	    	<ul>
+	    	<ul className="list-group">
 		    	{this.renderTrackers()}
 		    </ul>
 	    )
@@ -28,3 +42,4 @@ class TrackersList extends Component {
 };
 
 export default withConditionalRender(TrackersList, 'trackers');
+
