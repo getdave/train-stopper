@@ -62,8 +62,11 @@ const uiReducer = createReducer({
  * SELECTORS
  */
 
-// export const selectIsFetching = state => state.journey.ui.isFetching;
+export const selectTrackers = state => state.trackers.data;
 
+export const selectIsFetching = state => state.trackers.ui.isFetching;
+
+export const selectIsError = state => state.trackers.ui.isError;
 
 
 // Export combined reducer

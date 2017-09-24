@@ -1,17 +1,15 @@
 import React from 'react';
-import LoadingSpinner from '../components/LoadingSpinner';
 import { Alert } from 'reactstrap';
 
-function withConditionalRender(Component) {
+function withConditionalRender(Component, dataProp='data') {
   return function EnhancedComponent(props) {
-
-      if (props.loading) {
+      if (props.isFetching) {
           return (
-              <LoadingSpinner />
+              <p>Loading...</p>
           );
       }
 
-      if (props.error) {
+      if (props.isError) {
           return (
               <Alert color="warning">
                   { props.errorMsg }
@@ -21,8 +19,12 @@ function withConditionalRender(Component) {
 
       // Don't allow <Component>'s render() method to be called
       // unless the data prop is available
-      if (!props.data || !props.data.length) {
-          return null;
+      if (!props[dataProp] || !props[dataProp].length) {
+          return ( 
+            <Alert color="info">
+              No data found.
+            </Alert>
+          )
       }
     
       return <Component { ...props } />;

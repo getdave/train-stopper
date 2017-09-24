@@ -1,14 +1,21 @@
 import React, { Component } from 'react';
-import { compose } from 'redux';
+import { compose, bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
 import { withRouter, Link, Redirect } from 'react-router-dom';
 import * as journeyActions from '../../journey/actions';
+import * as trackerActions from '../../trackers/actions';
 import * as journeySelectors from '../../journey/reducer';
 
 
 
 class ServicePage extends Component {
 
+
+	constructor(props) {
+		super(props);
+
+		this.handleSubmit = this.handleSubmit.bind(this);
+	}
 
 	componentDidMount() {
 
@@ -19,9 +26,21 @@ class ServicePage extends Component {
 
 		if (originStation || destinationStation || date) {
 			this.props.fetchService(trainUId, originStation, destinationStation, date);		
-		}
-		
+		}		
 	}
+
+
+	handleSubmit(e) {
+		e.preventDefault(); // stop form submission
+
+		// TODO handle "cancel" button
+
+		this.props.setTracker(this.props.service);
+		
+		this.props.history.push(`/trackers/`);		
+	}
+
+
 
 	render() {
 
@@ -32,15 +51,17 @@ class ServicePage extends Component {
 		if (!this.props.originStation || !this.props.destinationStation || !this.props.date) {
 			return <Redirect to="/" />
 		}
-
+		  
 	    return (
 	    	<div>
 		    	<h1>Confirm your Journey</h1>
 		    			    	
 		    	<p>Your train is leaving {originDetail.station_name} at {originDetail.aimed_departure_time} and arriving at {destinationDetail.station_name} at {destinationDetail.aimed_arrival_time}.</p>
 
-		    	
-		    	<Link to={`/trackers/`} className="btn btn-primary">Correct, start tracking</Link>
+		    	<form onSubmit={this.handleSubmit} action={`/trackers/`}>
+		    		<button name="ok" value="ok" className="btn btn-primary">Correct, start tracking</button>
+		    		<button name="cancel" value="cancel" className="btn btn-link">Cancel</button>
+		    	</form>
 
 		    </div>
 	    )
@@ -51,21 +72,32 @@ class ServicePage extends Component {
 
 
 function mapStateToProps(state) {
-	console.log(state);
 	return {
 		service: journeySelectors.selectService(state),
-		originStation: journeySelectors.selectOrigin(state),
-		destinationStation: journeySelectors.selectDestination(state),
-		date: journeySelectors.selectDate(state),
+		// originStation: journeySelectors.selectOrigin(state),
+		// destinationStation: journeySelectors.selectDestination(state),
+		//date: journeySelectors.selectDate(state),
+		originStation: 'fro',
+		destinationStation: 'bri',
+		date: '2017-09-28',
 		isError: journeySelectors.selectIsError(state),
         isFetching: journeySelectors.selectIsFetching(state),
 	}
 }
 
 
+
+function mapDispatchToProps(dispatch) {
+  return bindActionCreators({
+    ...journeyActions,
+    ...trackerActions
+  }, dispatch);
+}
+
+
 const enchance = compose(
     withRouter,
-	connect(mapStateToProps, journeyActions)
+	connect(mapStateToProps, mapDispatchToProps)
 );
 
 

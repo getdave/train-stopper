@@ -5,7 +5,9 @@ import { BrowserRouter, Route } from 'react-router-dom';
 import StationsPage from './scenes/stations/StationsPage';
 import JourneyPage from './scenes/journey/JourneyPage';
 import ServicePage from './scenes/service/ServicePage';
-import TrackerPage from './scenes/tracker/TrackerPage';
+
+import TrackersPage from './scenes/trackers/TrackersPage';
+import TrackerPage from './scenes/trackers/TrackerPage';
 
 
 
@@ -21,7 +23,7 @@ class App extends Component {
                         <Route exact path="/" component={StationsPage} />
                         <Route exact path="/journey/:originStation/:destinationStation/:date/:time" component={JourneyPage} />
                         <Route exact path="/journey/service/:trainUId" component={ServicePage} />
-                        <Route exact path="/trackers/" component={TrackerPage} />
+                        <Route exact path="/trackers/" component={TrackersPage} />
                     </div>
                 </BrowserRouter>
             </div>
