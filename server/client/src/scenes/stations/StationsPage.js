@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import StationForm from './StationForm';
 
 
-class DashboardPage extends Component {
+class Stations extends Component {
 
 
 	render() {
@@ -17,4 +17,4 @@ class DashboardPage extends Component {
 };
 
 
-export default DashboardPage;
+export default Stations;
