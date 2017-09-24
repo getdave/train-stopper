@@ -6,34 +6,13 @@ import { combineReducers } from 'redux';
 import createReducer from '../utils/create-reducer';
 
 import {
-    SETTING_STATIONS_SUCCESS,
     FETCHING_STATION_SERVICES,
     FETCHING_STATION_SERVICES_SUCCESS,
     FETCHING_STATION_SERVICES_FAILED,
     FETCHING_SERVICE_SUCCESS,
-    SETTING_DATETIME_SUCCESS
+    SETTING_USERINPUT_SUCCESS
 } from './types';
 
-
-
-
-
-/**
- * STATIONS
- */
-function setSelectedStations(state, action) {
-    return {
-        origin: action.payload.origin,
-        destination: action.payload.destination
-    };
-}
-
-const stationsReducer = createReducer({
-    origin: '',
-    destination: ''
-}, {
-    [SETTING_STATIONS_SUCCESS]: setSelectedStations,
-});
 
 
 /**
@@ -67,21 +46,26 @@ const serviceReducer = createReducer({
 
 
 /**
- * DATE TIME
+ * USER INPUT REDUCER
  */
-function handleDatetime(state, action) {
+function handleUserInput(state, action) {
     return {
+        originStation: action.payload.originStation,
+        destinationStation: action.payload.destinationStation,
         date: action.payload.date,
         time: action.payload.time
     }
 }
 
-const datetimeReducer = createReducer({
+const userInputReducer = createReducer({
+    originStation: '',
+    destinationStation: '',
     date: '',
     time: ''
 }, {
-    [SETTING_DATETIME_SUCCESS]: handleDatetime,
+    [SETTING_USERINPUT_SUCCESS]: handleUserInput,
 });
+
 
 
 /**
@@ -127,24 +111,26 @@ export const selectIsFetching = state => state.journey.ui.isFetching;
 
 export const selectIsError = state => state.journey.ui.isError;
 
-export const selectOrigin = state => state.journey.stations.origin;
+export const selectOrigin = state => state.journey.userInput.originStation;
 
-export const selectDestination = state => state.journey.stations.destination;
+export const selectDestination = state => state.journey.userInput.destinationStation;
 
 export const selectStationServices = state => state.journey.stationServices;
 
 export const selectService = state => state.journey.service;
 
-export const selectDatetime = state => state.journey.datetime;
+export const selectDate = state => state.journey.userInput.date;
+
+export const selectTime = state => state.journey.userInput.time;
+
 
 // Export combined reducer
 export default combineReducers({
     // active: activeReducer,
-    datetime: datetimeReducer, // desired date and time entered by the user into form 
-    stations: stationsReducer, // origin and destination stations for this trip
     service: serviceReducer, // specific details about the specific train journey "service"
     stationServices: stationServicesReducer, // refers to list of possible journeys loaded from train API
-    ui: uiReducer
+    ui: uiReducer,
+    userInput: userInputReducer,
 });
 
 

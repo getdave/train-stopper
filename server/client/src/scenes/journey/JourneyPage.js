@@ -25,12 +25,9 @@ class JourneyPage extends Component {
 		const { originStation, destinationStation, date, time } = this.props.match.params;
 
 		// TODO handle error where neither are defined
-		this.props.setStations({
+		this.props.setUserInput({
 			originStation,
-			destinationStation
-		});
-
-		this.props.setDatetime({
+			destinationStation,
 			date,
 			time
 		});

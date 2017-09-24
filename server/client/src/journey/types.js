@@ -13,3 +13,6 @@ export const FETCHING_SERVICE_FAILED = 'fetching_service_failed';
 
 
 export const SETTING_DATETIME_SUCCESS = 'setting_datetime_success';
+
+
+export const SETTING_USERINPUT_SUCCESS = 'setting_userinput_success';

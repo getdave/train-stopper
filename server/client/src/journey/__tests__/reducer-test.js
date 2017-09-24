@@ -5,7 +5,8 @@ import reducer, {
     selectDestination,
     selectStationServices,
     selectService,
-    selectDatetime
+    selectDate,
+    selectTime
 } from '../reducer';
 
 import {
@@ -16,18 +17,17 @@ import {
     FETCHING_SERVICE,
     FETCHING_SERVICE_SUCCESS,
     FETCHING_SERVICE_FAILED,
-    SETTING_DATETIME_SUCCESS
+    SETTING_DATETIME_SUCCESS,
+    SETTING_USERINPUT_SUCCESS
 } from '../types';
 
 const INITIAL_STATE = {
-    datetime: {
+    userInput: {
+        originStation: '',
+        destinationStation: '',
         date: '',
         time: ''
-    }, 
-    stations: {
-        origin: '',
-        destination: ''
-    }, 
+    },
     service: {
         origin: '',
         destination: ''
@@ -54,20 +54,22 @@ describe('journeys reducer', () => {
         expect(result).toEqual(expected);
     })
 
-    describe('datetime', () => {
-        it('handles SETTING_DATETIME_SUCCESS', () => {
+    describe('userInput', () => {
+        it('handles SETTING_USERINPUT_SUCCESS', () => {
 
             const payload = {
+                originStation: 'fro',
+                destinationStation: 'bri',
                 date: '2017-10-23',
                 time: '08:00'
             };
 
             const expected  = Object.assign({}, INITIAL_STATE, {
-                datetime: payload
+                userInput: payload
             });            
 
             const result = reducer(INITIAL_STATE, {
-                type: SETTING_DATETIME_SUCCESS,
+                type: SETTING_USERINPUT_SUCCESS,
                 payload: payload
             });
         
@@ -75,26 +77,47 @@ describe('journeys reducer', () => {
         })
     });
 
-    describe('stations', () => {
-        it('handles SETTING_STATIONS_SUCCESS', () => {
+    // describe('datetime', () => {
+    //     it('handles SETTING_DATETIME_SUCCESS', () => {
 
-            const payload = {
-                origin: 'FRO',
-                destination: 'BRI'
-            };
+    //         const payload = {
+    //             date: '2017-10-23',
+    //             time: '08:00'
+    //         };
 
-            const expected  = Object.assign({}, INITIAL_STATE, {
-                stations: payload
-            });            
+    //         const expected  = Object.assign({}, INITIAL_STATE, {
+    //             datetime: payload
+    //         });            
 
-            const result = reducer(INITIAL_STATE, {
-                type: SETTING_STATIONS_SUCCESS,
-                payload: payload
-            });
+    //         const result = reducer(INITIAL_STATE, {
+    //             type: SETTING_DATETIME_SUCCESS,
+    //             payload: payload
+    //         });
         
-            expect(result).toEqual(expected);
-        })
-    });
+    //         expect(result).toEqual(expected);
+    //     })
+    // });
+
+    // describe('stations', () => {
+    //     it('handles SETTING_STATIONS_SUCCESS', () => {
+
+    //         const payload = {
+    //             origin: 'FRO',
+    //             destination: 'BRI'
+    //         };
+
+    //         const expected  = Object.assign({}, INITIAL_STATE, {
+    //             stations: payload
+    //         });            
+
+    //         const result = reducer(INITIAL_STATE, {
+    //             type: SETTING_STATIONS_SUCCESS,
+    //             payload: payload
+    //         });
+        
+    //         expect(result).toEqual(expected);
+    //     })
+    // });
 
     describe('station services', () => {
         it('handles FETCHING_STATION_SERVICES_SUCCESS type', () => {
@@ -233,6 +256,20 @@ describe('journeys selectors', () => {
         expect(result).toEqual('');
     })
 
+    test('selectDate correctly selects date from state shape', () => {
+
+        const result = selectDate(globalState);
+
+        expect(result).toEqual('');
+    })
+
+    test('selectTime correctly selects date from state shape', () => {
+
+        const result = selectTime(globalState);
+
+        expect(result).toEqual('');
+    })
+    
     test('selectStationServices correctly selects from state shape', () => {
 
         const result = selectStationServices(globalState);
@@ -250,13 +287,4 @@ describe('journeys selectors', () => {
         });
     })
 
-    test('selectDatetime correctly selects from state shape', () => {
-
-        const result = selectDatetime(globalState);
-
-        expect(result).toEqual({
-            date: '',
-            time: ''
-        });
-    })
 })

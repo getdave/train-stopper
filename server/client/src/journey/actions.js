@@ -5,8 +5,7 @@ import {
     FETCHING_SERVICE,
     FETCHING_SERVICE_SUCCESS,
     FETCHING_SERVICE_FAILED,
-    SETTING_STATIONS_SUCCESS,
-    SETTING_DATETIME_SUCCESS
+    SETTING_USERINPUT_SUCCESS,
 } from './types';
 
 
@@ -57,20 +56,12 @@ export function fetchService(train_uid, origin, destination, date) {
 }
 
 
-export function setStations({originStation, destinationStation}) {
+export function setUserInput({originStation, destinationStation, date, time}) {
     return { 
-        type: SETTING_STATIONS_SUCCESS,
+        type: SETTING_USERINPUT_SUCCESS,
         payload: {
-            origin: originStation,
-            destination: destinationStation
-        }
-    };
-}
-
-export function setDatetime({date, time}) {
-    return { 
-        type: SETTING_DATETIME_SUCCESS,
-        payload: {
+            originStation,
+            destinationStation,
             date,
             time
         }
