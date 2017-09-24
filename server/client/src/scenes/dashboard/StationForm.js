@@ -3,8 +3,9 @@ import { compose } from 'redux';
 import { Field, reduxForm } from 'redux-form';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
-import _bindAll from 'lodash.bindall';
-import strictUriEncode from 'strict-uri-encode';
+import bindAll from 'lodash/bindAll';
+import isObject from 'lodash/isObject';
+import { isValid } from 'date-fns';
 
 import AutoSuggest from '../../components/AutoSuggest';
 import * as stationsActions from '../../stations/actions';
@@ -17,7 +18,7 @@ class StationForm extends Component {
 	constructor(props) {
 		super(props);
 
-		_bindAll(this, [
+		bindAll(this, [
 			'handleFormSubmit',
 			'handleInputChanged'
 		]);
@@ -111,10 +112,14 @@ function mapStateToProps(state) {
 
 function validate(formProps) {
     const errors = {};
-    const { originStation, destinationStation } = formProps;
+    const { originStation, destinationStation, date, time } = formProps;
 
     if (!originStation) {
         errors.originStation = 'Please choose a origin station';
+    }
+
+    if (!isObject(originStation)) {
+    	errors.originStation = 'Station invalid. Please choose a valid station from the list';
     }
 
     if (!destinationStation) {
@@ -123,6 +128,22 @@ function validate(formProps) {
 	    if (destinationStation === originStation) {
 	    	errors.destinationStation = 'Destination cannot be the same as origin. Please check your selections';
 	    }
+    }
+
+    if (!isObject(destinationStation)) {
+    	errors.destinationStation = 'Station invalid. Please choose a valid station from the list';
+    }
+
+
+    if (!date || !isValid( new Date(date) ) ) {
+        errors.date = 'Please enter a valid date in the format YYYY-MM-DD';
+    }
+
+    // Test for HH:MM time format
+    const timeRE = /^([0-9]|0[0-9]|1[0-9]|2[0-3]):[0-5][0-9]$/;
+    
+    if (!time || !timeRE.test( time ) ) {
+        errors.time = 'Please enter a valid time in the format HH:MM';
     }
 
     return errors;
