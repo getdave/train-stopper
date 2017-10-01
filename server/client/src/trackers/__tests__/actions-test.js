@@ -102,7 +102,7 @@ describe('tracker action creators', () => {
 	describe('set tracker', () => {
 
 		const mockSuccessStore   = createStoreWithFakeAPI({
-		  	setTracker: () => {
+		  	createTracker: () => {
 		  		return Promise.resolve({
 					status: 200,
 					data: fakeTrackersData
@@ -111,16 +111,16 @@ describe('tracker action creators', () => {
 		});
 
 		const mockErrorStore   = createStoreWithFakeAPI({
-		  	setTracker: rejectedPromise
+		  	createTracker: rejectedPromise
 		});
 
-		const dispatchWithStore = makeDispatchWithStore(ACTIONS, 'setTracker', fakeTrackersData[0]);
+		const dispatchWithStore = makeDispatchWithStore(ACTIONS, 'createTracker', fakeTrackersData[0]);
 
-		it('should create SETTING_TRACKER when setting a Tracker is started', () => {
+		it('should create CREATING_TRACKER when setting a Tracker is started', () => {
 
 			const expectedActions = [
 				{ 
-					type: TYPES.SETTING_TRACKER
+					type: TYPES.CREATING_TRACKER
 				}
 			]
 			const store = mockSuccessStore()
@@ -133,11 +133,11 @@ describe('tracker action creators', () => {
 			})
 		})
 
-		it('should create SETTING_TRACKER_SUCCESS when setting a Tracker is successful', () => {
+		it('should create CREATING_TRACKER_SUCCESS when setting a Tracker is successful', () => {
 
 			const expectedActions = [
 				{ 
-					type: TYPES.SETTING_TRACKER_SUCCESS,
+					type: TYPES.CREATING_TRACKER_SUCCESS,
 					payload: fakeTrackersData
 				}
 			]
@@ -150,11 +150,11 @@ describe('tracker action creators', () => {
 			})
 		})
 
-		it('should create SETTING_TRACKER_FAILED when setting a Tracker is unsuccessful', () => {
+		it('should create CREATING_TRACKER_FAILED when setting a Tracker is unsuccessful', () => {
 
 			const expectedActions = [
 				{ 
-					type: TYPES.SETTING_TRACKER_FAILED
+					type: TYPES.CREATING_TRACKER_FAILED
 				}
 			]
 			const store = mockErrorStore();

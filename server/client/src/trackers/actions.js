@@ -40,7 +40,7 @@ function prepareTrackerEntry(tracker) {
 }
 
 
-export function setTracker(tracker) {
+export function createTracker(tracker) {
     return (dispatch, getState, api) => { 
 
 
@@ -48,16 +48,16 @@ export function setTracker(tracker) {
         const entry = prepareTrackerEntry(tracker);
 
         dispatch({ 
-            type: TYPES.SETTING_TRACKER,
+            type: TYPES.CREATING_TRACKER,
         });
 
-        return api.setTracker(entry).then(response => {
+        return api.createTracker(entry).then(response => {
 
             if (response.status !== 200) {
                 throw new Error(`Transport API: ${response.statusText}`);
             }
             dispatch({ 
-                type: TYPES.SETTING_TRACKER_SUCCESS,
+                type: TYPES.CREATING_TRACKER_SUCCESS,
                 payload: response.data
             });  
 
@@ -65,7 +65,7 @@ export function setTracker(tracker) {
 
         }).catch(function (error) {
             dispatch({ 
-                type: TYPES.SETTING_TRACKER_FAILED,
+                type: TYPES.CREATING_TRACKER_FAILED,
             });
         }); 
     }

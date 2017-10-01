@@ -19,7 +19,7 @@ export const fetchTrackers = () => {
 /**
  * SET TRACKER
  */
-export const setTracker = (tracker) => {
+export const createTracker = (tracker) => {
     return new Promise( (resolve, reject) => {
        let data = JSON.parse( window.localStorage.getItem('ts-journeys') );
        
@@ -35,7 +35,7 @@ export const setTracker = (tracker) => {
        // Return success and new journeys
        return {
             status: 200,
-            tracker,
+            newData,
        }
 
     })

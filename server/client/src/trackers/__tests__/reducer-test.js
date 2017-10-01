@@ -5,14 +5,17 @@ import reducer, {
 import * as TYPES from '../types';
 
 const INITIAL_STATE = {
-    data: [],
+    data: {
+        byId: {},
+        allIds: []
+    },
     ui: {
         isError: false,
         isFetching: false
     }
 };
 
-
+// Approximates fake data from persistent storage
 const fakeTrackersData = [
     {
         uid: '987puofkskdj',
@@ -22,6 +25,17 @@ const fakeTrackersData = [
         uid: '7948709834nbmnbc',
         name: 'My 2nd Tracker'
     }
+];
+
+
+const fakeTrackersById = {
+    '987puofkskdj' : fakeTrackersData[0],
+    '7948709834nbmnbc': fakeTrackersData[1],
+};
+
+const fakeTrackersAllIds = [
+    fakeTrackersData[0]['uid'],
+    fakeTrackersData[1]['uid']
 ];
 
 /**
@@ -59,7 +73,10 @@ describe('trackers reducer', () => {
        
         it('handles FETCHING_TRACKERS_SUCCESS', () => {
             const expected  = Object.assign({}, INITIAL_STATE, {
-                data: fakeTrackersData,
+                data: {
+                    byId: fakeTrackersById,
+                    allIds: fakeTrackersAllIds
+                },
                 ui: {
                     isError: false,
                     isFetching: false
@@ -77,7 +94,10 @@ describe('trackers reducer', () => {
 
         it('handles FETCHING_TRACKERS_FAILED', () => {
             const expected  = Object.assign({}, INITIAL_STATE, {
-                data: [],
+                data: {
+                    byId: {},
+                    allIds: []
+                },
                 ui: {
                     isError: true,
                     isFetching: false
@@ -93,8 +113,8 @@ describe('trackers reducer', () => {
     })
 
 
-    describe('fetching trackers', () => {
-        it('handles SETTING_TRACKER', () => {
+    describe('creating tracker', () => {
+        it('handles CREATING_TRACKER', () => {
 
             const expected  = Object.assign({}, INITIAL_STATE, {
                 ui: {
@@ -104,15 +124,18 @@ describe('trackers reducer', () => {
             });            
 
             const result = reducer(INITIAL_STATE, {
-                type: TYPES.SETTING_TRACKER,
+                type: TYPES.CREATING_TRACKER,
             });
         
             expect(result).toEqual(expected);
         })
 
-        it('handles SETTING_TRACKER_SUCCESS', () => {
+        it('handles CREATING_TRACKER_SUCCESS', () => {
             const expected  = Object.assign({}, INITIAL_STATE, {
-                data: fakeTrackersData,
+                data: {
+                    byId: fakeTrackersById,
+                    allIds: fakeTrackersAllIds
+                },
                 ui: {
                     isError: false,
                     isFetching: false
@@ -120,7 +143,7 @@ describe('trackers reducer', () => {
             });            
 
             const result = reducer(INITIAL_STATE, {
-                type: TYPES.SETTING_TRACKER_SUCCESS,
+                type: TYPES.CREATING_TRACKER_SUCCESS,
                 payload: fakeTrackersData
             });
         
@@ -128,9 +151,12 @@ describe('trackers reducer', () => {
         })
 
 
-        it('handles SETTING_TRACKER_FAILED', () => {
+        it('handles CREATING_TRACKER_FAILED', () => {
             const expected  = Object.assign({}, INITIAL_STATE, {
-                data: [],
+                data: {
+                    byId: {},
+                    allIds: []
+                },
                 ui: {
                     isError: true,
                     isFetching: false
@@ -138,7 +164,7 @@ describe('trackers reducer', () => {
             });            
 
             const result = reducer(INITIAL_STATE, {
-                type: TYPES.SETTING_TRACKER_FAILED,
+                type: TYPES.CREATING_TRACKER_FAILED,
             });
         
             expect(result).toEqual(expected);
