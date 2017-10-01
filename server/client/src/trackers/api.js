@@ -1,12 +1,24 @@
 // import axios from 'axios';
 import { isEmpty, isNull } from 'lodash';
 
+
+function fetchTrackersFromStorage() {
+    let data = JSON.parse( window.localStorage.getItem('ts-journeys') );
+
+    return ( !isEmpty( data ) ) ? data : [];
+}
+
+function persistTrackersToStorage(trackersData) {
+    window.localStorage.setItem('ts-journeys', JSON.stringify(trackersData) );   
+}
+
+
 /**
  * FETCH ALL TRACKERS
  */
 export const fetchTrackers = () => {
     return new Promise( (resolve, reject) => {
-        const data = JSON.parse( window.localStorage.getItem('ts-journeys') );
+        const data = fetchTrackersFromStorage()
         
         resolve({
             status: 200,
@@ -21,7 +33,7 @@ export const fetchTrackers = () => {
  */
 export const fetchTracker = (trackerId) => {
     return new Promise( (resolve, reject) => {
-        const data = JSON.parse( window.localStorage.getItem('ts-journeys') );
+        const data = fetchTrackersFromStorage();
 
         const tracker = data.find( tracker => tracker.uid === trackerId);
           
@@ -38,16 +50,12 @@ export const fetchTracker = (trackerId) => {
  */
 export const createTracker = (tracker) => {
     return new Promise( (resolve, reject) => {
-       let data = JSON.parse( window.localStorage.getItem('ts-journeys') );
-       
-       if( isEmpty( data ) ) {
-          data = [];
-       }
+       let data = fetchTrackersFromStorage();
        
        const newData = data.concat(tracker);
 
        // Update
-       window.localStorage.setItem('ts-journeys', JSON.stringify(newData) );       
+       persistTrackersToStorage(newData);       
 
        // Return success and new journeys
        resolve({
@@ -66,11 +74,7 @@ export const updateTracker = (id, newTracker) => {
     return new Promise( (resolve, reject) => {
       
         // TODO - extract getting of LS data into helper
-        let data = JSON.parse( window.localStorage.getItem('ts-journeys') );
-
-        if( isEmpty( data ) ) {
-            data = [];
-        }
+        let data = fetchTrackersFromStorage();
 
         const targetIndex = data.findIndex(tracker => tracker.uid === id);
 
@@ -84,7 +88,7 @@ export const updateTracker = (id, newTracker) => {
 
         data[targetIndex] = newTracker;
 
-        window.localStorage.setItem('ts-journeys', JSON.stringify(data) );    
+        persistTrackersToStorage(data);    
 
         // Return success and new journeys
         resolve({
