@@ -16,7 +16,6 @@ const getInitialDataState = () => ({
 /**
  * TRACKERS
  */
-
 // FETCHING
 function handFetchingTrackersSuccess(state, action) {
 
@@ -27,15 +26,12 @@ function handFetchingTrackersSuccess(state, action) {
         byId: keyBy(payload, keyByUid),
         allIds: payload.map(keyByUid)
     }
-     debugger;
 
     return newState; // Array
 }
 
-// SETTING
-function handleSettingTrackerSuccess(state, action) {
-    //return action.payload; // Array
-    
+// CREATING
+function handleCreatingTrackerSuccess(state, action) { 
     const { payload } = action;
     const keyByUid = item => item.uid;
 
@@ -45,14 +41,26 @@ function handleSettingTrackerSuccess(state, action) {
     }
 
     return newState; // Array
-
 }
 
 const trackersReducer = createReducer(getInitialDataState(), {
     [TYPES.FETCHING_TRACKERS_SUCCESS]: handFetchingTrackersSuccess,
     [TYPES.FETCHING_TRACKERS_FAILED]: getInitialDataState,
-    [TYPES.CREATING_TRACKER_SUCCESS]: handleSettingTrackerSuccess,
+    [TYPES.CREATING_TRACKER_SUCCESS]: handleCreatingTrackerSuccess,
     [TYPES.CREATING_TRACKER_FAILED]: getInitialDataState,
+});
+
+
+/**
+ * TRACKER
+ * get a single Tracker
+ */
+function handleFetchingTrackerSuccess(state, action) {
+    return action.payload; // the selected tracker object
+}
+
+const currentReducer = createReducer({}, {
+    [TYPES.FETCHING_TRACKER_SUCCESS]: handleFetchingTrackerSuccess,
 });
 
 
@@ -99,21 +107,25 @@ const uiReducer = createReducer({
 /**
  * SELECTORS
  */
-
 export const selectTrackers = state => {
     const trackersState = state.trackers.data;
     return trackersState.allIds.map( id => trackersState.byId[id] );
 };
+
+export const selectTracker = (state, id) => state.trackers.data.byId[id];
 
 export const selectIsFetching = state => state.trackers.ui.isFetching;
 
 export const selectIsError = state => state.trackers.ui.isError;
 
 
+export const selectCurrentTracker = state => state.trackers.current;
+
 // Export combined reducer
 export default combineReducers({
     data: trackersReducer,
     ui: uiReducer,
+    current: currentReducer
 });
 
 

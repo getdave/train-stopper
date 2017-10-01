@@ -1,5 +1,6 @@
 import React from 'react';
 import { Alert } from 'reactstrap';
+import { isEmpty } from 'lodash';
 
 function withConditionalRender(Component, dataProp='data') {
   return function EnhancedComponent(props) {
@@ -18,8 +19,8 @@ function withConditionalRender(Component, dataProp='data') {
       }
 
       // Don't allow <Component>'s render() method to be called
-      // unless the data prop is available
-      if (!props[dataProp] || !props[dataProp].length) {
+      // unless the data prop is available      
+      if ( isEmpty( props[dataProp] ) ) {
           return ( 
             <Alert color="info">
               No data found.

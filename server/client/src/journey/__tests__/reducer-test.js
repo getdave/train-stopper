@@ -246,5 +246,4 @@ describe('journeys selectors', () => {
             destination: ''
         });
     })
-
 })

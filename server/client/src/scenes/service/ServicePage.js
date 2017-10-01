@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { compose, bindActionCreators } from 'redux';
 import { connect } from 'react-redux';
-import { withRouter, Link, Redirect } from 'react-router-dom';
+import { withRouter, Redirect } from 'react-router-dom';
 import * as journeyActions from '../../journey/actions';
 import * as trackerActions from '../../trackers/actions';
 import * as journeySelectors from '../../journey/reducer';

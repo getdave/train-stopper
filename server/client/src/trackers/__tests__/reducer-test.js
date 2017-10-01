@@ -1,10 +1,15 @@
 import reducer, {
-
+    selectTrackers,
+    selectTracker,
+    selectCurrentTracker,
+    selectIsFetching,
+    selectIsError
 } from '../reducer';
 
 import * as TYPES from '../types';
 
 const INITIAL_STATE = {
+    current: {},
     data: {
         byId: {},
         allIds: []
@@ -170,4 +175,97 @@ describe('trackers reducer', () => {
             expect(result).toEqual(expected);
         })
     })
+
+    describe('fetching single tracker', () => {
+        it('handles FETCHING_TRACKER_SUCCESS', () => {
+
+            const selectedTrackerId = '987puofkskdj';
+
+            const expected  = Object.assign({}, INITIAL_STATE, {
+                current: fakeTrackersById[selectedTrackerId] // we expect to get ba
+            });            
+
+            const result = reducer(INITIAL_STATE, {
+                type: TYPES.FETCHING_TRACKER_SUCCESS,
+                payload: fakeTrackersById[selectedTrackerId] // the "id" of the tracker
+            });
+        
+            expect(result).toEqual(expected);
+        })
+    });
+})
+
+
+
+/**
+ * SELECTORS
+ */
+describe('trackers selectors', () => {
+    const globalState  = {
+        trackers: INITIAL_STATE
+    };
+    test('selectIsFetching correctly selects from state', () => {
+        
+        const result = selectIsFetching(globalState);
+
+        expect(result).toBe(false);
+    })
+
+    test('selectIsError correctly selects from state shape', () => {
+
+        const result = selectIsError(globalState);
+
+        expect(result).toBe(false);
+    })
+
+    test('selectTrackers correctly selects all trackers from state shape', () => {
+
+        const state  = {
+            trackers: Object.assign({}, INITIAL_STATE, {
+                data: {
+                    byId: fakeTrackersById,
+                    allIds: fakeTrackersAllIds
+                }
+            })
+        };
+
+        const result = selectTrackers(state);
+
+        expect(result).toEqual(fakeTrackersData);
+    })
+
+    test('selectTracker correctly selects a single tracker from state shape', () => {
+
+        const state  = {
+            trackers: Object.assign({}, INITIAL_STATE, {
+                data: {
+                    byId: fakeTrackersById,
+                    allIds: fakeTrackersAllIds
+                }
+            })
+        };
+
+        const trackerToSelect = fakeTrackersData[0]['uid'];
+
+        const result = selectTracker(state, trackerToSelect);
+
+        expect(result).toEqual(fakeTrackersData[0]);
+    })
+
+    test('selectCurrentTracker correctly selects current tracker from state shape', () => {
+
+        const currentTracker = fakeTrackersData[0];
+
+        const state  = {
+            trackers: Object.assign({}, INITIAL_STATE, {
+                current: currentTracker
+            })
+        };
+
+        const result = selectCurrentTracker(state);
+
+        expect(result).toEqual(currentTracker);
+    })
+
+
 })

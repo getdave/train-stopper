@@ -24,6 +24,7 @@ class App extends Component {
                         <Route exact path="/journey/:originStation/:destinationStation/:date/:time" component={JourneyPage} />
                         <Route exact path="/journey/service/:trainUId" component={ServicePage} />
                         <Route exact path="/trackers/" component={TrackersPage} />
+                        <Route exact path="/trackers/:trackerId" component={TrackerPage} />
                     </div>
                 </BrowserRouter>
             </div>

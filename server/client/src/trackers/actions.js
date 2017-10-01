@@ -11,7 +11,7 @@ export function fetchTrackers() {
         return api.fetchTrackers().then(response => {
 
             if (response.status !== 200) {
-                throw new Error(`Transport API: ${response.statusText}`);
+                throw new Error(`${response.statusText}`);
             }
             dispatch({ 
                 type: TYPES.FETCHING_TRACKERS_SUCCESS,
@@ -20,6 +20,29 @@ export function fetchTrackers() {
         }).catch(function (error) {
             dispatch({ 
                 type: TYPES.FETCHING_TRACKERS_FAILED,
+            });
+        }); 
+    }
+}
+
+export function fetchTracker(trackerId) {
+    return (dispatch, getState, api) => {         
+        dispatch({ 
+            type: TYPES.FETCHING_TRACKER,
+        });
+
+        
+        return api.fetchTracker(trackerId).then(response => {
+            if (response.status !== 200) {
+                throw new Error(`${response.statusText}`);
+            }
+            dispatch({ 
+                type: TYPES.FETCHING_TRACKER_SUCCESS,
+                payload: response.data
+            });       
+        }).catch(function (error) {
+            dispatch({ 
+                type: TYPES.FETCHING_TRACKER_FAILED,
             });
         }); 
     }
@@ -57,7 +80,7 @@ export function createTracker(tracker) {
         return api.createTracker(entry).then(response => {
 
             if (response.status !== 200) {
-                throw new Error(`Transport API: ${response.statusText}`);
+                throw new Error(`${response.statusText}`);
             }
             dispatch({ 
                 type: TYPES.CREATING_TRACKER_SUCCESS,

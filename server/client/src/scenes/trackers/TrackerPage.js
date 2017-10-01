@@ -1,14 +1,16 @@
 import React, { Component } from 'react';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
-import { withRouter, Redirect } from 'react-router-dom';
-import differenceInMilliseconds from 'date-fns/difference_in_milliseconds'
-import * as journeyActions from '../../journey/actions';
-import * as journeySelectors from '../../journey/reducer';
+import { withRouter } from 'react-router-dom';
+import differenceInMilliseconds from 'date-fns/difference_in_milliseconds';
+import isEmpty from 'lodash';
+
+import * as trackersSelectors from '../../trackers/reducer';
+import * as trackersActions from '../../trackers/actions';
 import TrackerDetail from './TrackerDetail';
 
 
-class ServicePage extends Component {
+class TrackerPage extends Component {
 
 	constructor(props) {
 		super(props);
@@ -23,10 +25,12 @@ class ServicePage extends Component {
 
 
 	componentDidMount() {
-		const { origin, destination } = this.props.service;
 
-		// Start only if we have key data
-		if(origin && destination) {
+		// Fetch the tracker passed in the Route params
+		const trackerId = this.props.match.params.trackerId;
+		this.props.fetchTracker(trackerId);
+
+		if(!isEmpty(this.props.tracker)) {
         	this.arrivalCheckerTimer = setInterval(this.checkTime, 1000);
 		}
     }
@@ -36,21 +40,24 @@ class ServicePage extends Component {
     }
 
     checkTime() {
-    	const arrivalTime 	= this.props.service.destination.aimed_arrival_time;
-    	const arrivalDate 	= this.props.service.destination.aimed_arrival_date;
-    	const arrivalTS 	= Date.parse(`${arrivalTime} ${arrivalDate}`);
-		const now 			= new Date();    	
-		debugger;
-		// Difference in m/s between arrival datetime and now
-		const diff 			= differenceInMilliseconds(arrivalTS, now);
+    	return;
 
-  		this.setState({
-  			timeDiffMs: diff
-  		});
 
-  		if (diff <= 0) {
-			clearInterval(this.arrivalCheckerTimer);
-  		}
+  //   	const arrivalTime 	= this.props.tracker.destination.aimed_arrival_time;
+  //   	const arrivalDate 	= this.props.tracker.destination.aimed_arrival_date;
+  //   	const arrivalTS 	= Date.parse(`${arrivalTime} ${arrivalDate}`);
+		// const now 			= new Date();    	
+		// debugger;
+		// // Difference in m/s between arrival datetime and now
+		// const diff 			= differenceInMilliseconds(arrivalTS, now);
+
+  // 		this.setState({
+  // 			timeDiffMs: diff
+  // 		});
+
+  // 		if (diff <= 0) {
+		// 	clearInterval(this.arrivalCheckerTimer);
+  // 		}
     }
 
  //    timeBetweenDates(toDate) {
@@ -86,17 +93,12 @@ class ServicePage extends Component {
 
 
 	render() {
+		const { tracker, isFetching, isError } = this.props;
 
-		const originData 		= this.props.service.origin;
-		const destinationData 	= this.props.service.destination;
-
-		// Todo - pass state on redirect to indicate what data was missing
-		if (originData === '' || destinationData === '') {
-			return <Redirect to="/" />
-		}
-
+		// TODO - if Tracker is in past then show warning
+		// ...and don't track!
 	    return (
-	    	<TrackerDetail originData={originData} destinationData={destinationData} />
+	    	<TrackerDetail isFetching={isFetching} isError={isError} tracker={tracker} />
 	    )
 	}
 
@@ -105,16 +107,19 @@ class ServicePage extends Component {
 
 
 function mapStateToProps(state) {
+
 	return {
-		service: journeySelectors.selectService(state)
+		tracker: trackersSelectors.selectCurrentTracker(state),
+		isError: trackersSelectors.selectIsError(state),
+        isFetching: trackersSelectors.selectIsFetching(state),
 	}
 }
 
 
 const enchance = compose(
     withRouter,
-	connect(mapStateToProps, journeyActions)
+	connect(mapStateToProps, trackersActions)
 );
 
 
-export default enchance(ServicePage);
+export default enchance(TrackerPage);
