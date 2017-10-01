@@ -2,7 +2,7 @@ import React from 'react';
 import { Alert } from 'reactstrap';
 import { isEmpty } from 'lodash';
 
-function withConditionalRender(Component, dataProp='data') {
+function withConditionalRender(Component, dataProp='data', errorMsg='There was a problem. Please try again.') {
   return function EnhancedComponent(props) {
       if (props.isFetching) {
           return (
@@ -13,7 +13,7 @@ function withConditionalRender(Component, dataProp='data') {
       if (props.isError) {
           return (
               <Alert color="warning">
-                  { props.errorMsg }
+                  { errorMsg }
               </Alert>
           );
       }

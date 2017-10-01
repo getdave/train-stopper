@@ -1,5 +1,13 @@
 import * as TYPES from './types';
 import uid from 'uid';
+import differenceInMilliseconds from 'date-fns/difference_in_milliseconds';
+import { cloneDeep } from 'lodash';
+import { 
+    selectTracker,
+    selectTrackers
+} from './reducer';
+
+
 
 export function fetchTrackers() {
     return (dispatch, getState, api) => {         
@@ -17,6 +25,7 @@ export function fetchTrackers() {
                 type: TYPES.FETCHING_TRACKERS_SUCCESS,
                 payload: response.data
             });       
+
         }).catch(function (error) {
             dispatch({ 
                 type: TYPES.FETCHING_TRACKERS_FAILED,
@@ -68,14 +77,25 @@ export function createTracker(tracker) {
 
 
         // Pull out interesting parts of API response for easier access
-        const entry = prepareTrackerEntry(tracker);
-        debugger;
+        const tracker = prepareTrackerEntry(tracker);
+
 
         dispatch({ 
             type: TYPES.CREATING_TRACKER,
         });
 
-        return api.createTracker(entry).then(response => {
+        const arrivalTS = Date.parse(`${tracker.date} ${tracker.time}`);
+        const diff      = differenceInMilliseconds(arrivalTS, new Date());
+
+        if (diff <= 0) {
+            dispatch({ 
+                type: TYPES.CREATING_TRACKER_FAILED,
+                message: `Cannot create Trackers which have arrived in the past`
+            });
+        }
+
+
+        return api.createTracker(tracker).then(response => {
 
             if (response.status !== 200) {
                 throw new Error(`${response.statusText}`);
@@ -96,31 +116,92 @@ export function createTracker(tracker) {
 }
 
 
-
-
-export function updateTracker(trackerId, newTracker) {
-    return (dispatch, getState, api) => {         
+function _updateTracker(dispatch, api, trackerId, newTracker) {
+    dispatch({ 
+        type: TYPES.UPDATING_TRACKER,
+    });
+    
+    return api.updateTracker(trackerId, newTracker).then(response => {
+       
+        if (response.status !== 200) {
+            throw new Error(`${response.statusText}`);
+        }
         dispatch({ 
-            type: TYPES.UPDATING_TRACKER,
+            type: TYPES.UPDATING_TRACKER_SUCCESS,
+            payload: response.data
+        });       
+    }).catch(function (error) {
+
+        dispatch({ 
+            type: TYPES.UPDATING_TRACKER_FAILED,
         });
-        
-        return api.updateTracker(trackerId, newTracker).then(response => {
-           
-            if (response.status !== 200) {
-                throw new Error(`${response.statusText}`);
-            }
-            dispatch({ 
-                type: TYPES.UPDATING_TRACKER_SUCCESS,
-                payload: response.data
-            });       
-        }).catch(function (error) {
-            debugger;
+    }); 
+}
+
+
+
+export function activateTracker(trackerId) {
+    return (dispatch, getState, api) => {     
+
+        const state = getState();
+
+        const tracker = selectTracker(state, trackerId);
+
+        // TODO - dry up date comparison into helper
+        const arrivalTS = Date.parse(`${tracker.date} ${tracker.time}`);
+        const diff      = differenceInMilliseconds(arrivalTS, new Date());
+  
+        if (diff <= 0) {
             dispatch({ 
                 type: TYPES.UPDATING_TRACKER_FAILED,
+                message: `Cannot activate Tracker which arrives in the past`
             });
-        }); 
+            return;
+        }
+
+        const newTracker = cloneDeep(tracker);
+
+        newTracker.status = 'active';
+
+        _updateTracker(dispatch, api, trackerId, newTracker);
     }
 }
+
+export function deActivateTracker(trackerId) {
+    return (dispatch, getState, api) => {     
+
+        const state = getState();
+
+        const tracker = selectTracker(state, trackerId);
+
+        const newTracker = cloneDeep(tracker);
+
+        newTracker.status = 'inactive';
+
+        _updateTracker(dispatch, api, trackerId, newTracker);
+    }
+}
+
+
+export function archiveTracker(trackerId) {
+    return (dispatch, getState, api) => {     
+
+        const state = getState();
+
+        const tracker = selectTracker(state, trackerId);
+
+        const newTracker = cloneDeep(tracker);
+
+        newTracker.status = 'archived';
+
+        _updateTracker(dispatch, api, trackerId, newTracker);
+    }
+}
+
+
+
+
+
 
 
 

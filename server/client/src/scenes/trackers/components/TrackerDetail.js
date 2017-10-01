@@ -10,6 +10,7 @@ const TrackerDetail = props => {
 
 	const btnMethod = (tracker.status !== 'active' ? onStart : onStop);
 
+	const isEnabled = (tracker.status === 'archived' ? true : false);
 
     return (
     	<div>
@@ -19,7 +20,7 @@ const TrackerDetail = props => {
 	    			    	
 	    	<p>Your train is leaving {tracker.originName} at {tracker.data.origin.aimed_departure_time} and arriving at {tracker.destinationName} at {tracker.data.destination.aimed_arrival_time}.</p>
 
-	    	<button className="btn btn-primary" type="button" onClick={btnMethod}>
+	    	<button disabled={isEnabled} className="btn btn-primary" type="button" onClick={btnMethod}>
 	    		{btnText}
 	    	</button>
 

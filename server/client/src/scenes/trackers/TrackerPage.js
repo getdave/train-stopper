@@ -20,7 +20,6 @@ class TrackerPage extends Component {
 		}
 
 		bindAll(this, [
-			'checkTime',
 			'handleTrackerActivation',
 			'handleTrackerDeactivation'
 		]);
@@ -35,14 +34,6 @@ class TrackerPage extends Component {
 
     componentWillReceiveProps(nextProps) {
 		this.doTrackersFetch(nextProps);
-
-		if(!isEmpty(this.props.tracker)) {
-        	this.arrivalCheckerTimer = setInterval(this.checkTime, 1000);
-		}
-    }
-
-    componentWillUnmount() {
-        clearInterval(this.arrivalCheckerTimer);
     }
 
 
@@ -51,82 +42,19 @@ class TrackerPage extends Component {
 		// Fetch the tracker passed in the Route params
 		const trackerId = this.props.match.params.trackerId;
 
-		// Fetch if not already populated (unlikely but...)
-		if (isEmpty(this.props.trackers)) {
-			this.props.fetchTrackers();
-		}
-
     	// We must eagar load all trackers upfront 
 		// just in case we don't have them
 		if (!isEmpty(props.trackers)) {
 			this.props.setCurrentTracker(trackerId);
 		}
 	}
-
-
-    checkTime() {
-    	return;
-
-
-  //   	const arrivalTime 	= this.props.tracker.destination.aimed_arrival_time;
-  //   	const arrivalDate 	= this.props.tracker.destination.aimed_arrival_date;
-  //   	const arrivalTS 	= Date.parse(`${arrivalTime} ${arrivalDate}`);
-		// const now 			= new Date();    	
-		// debugger;
-		// // Difference in m/s between arrival datetime and now
-		// const diff 			= differenceInMilliseconds(arrivalTS, now);
-
-  // 		this.setState({
-  // 			timeDiffMs: diff
-  // 		});
-
-  // 		if (diff <= 0) {
-		// 	clearInterval(this.arrivalCheckerTimer);
-  // 		}
-    }
-
- //    timeBetweenDates(toDate) {
-	//   var dateEntered = new Date(toDate);
-	//   var now = new Date();
-	//   var difference = dateEntered.getTime() - now.getTime();
-
-	//   if (difference <= 0) {
-
-	//     // Timer done
-	//     clearInterval(this.arrivalCheckerTimer);
-	  
-	//   } else {
-	    
-	//     var seconds = Math.floor(difference / 1000);
-	//     var minutes = Math.floor(seconds / 60);
-	//     var hours = Math.floor(minutes / 60);
-	//     var days = Math.floor(hours / 24);
-
-	//     hours %= 24;
-	//     minutes %= 60;
-	//     seconds %= 60;
-
-	//     return {
-	//     	days,
-	//     	hours,
-	//     	minutes,
-	//     	seconds
-	//     };
-	    
-	//   }
-	// }
-	// 
 	
 	handleTrackerActivation(e) {
 		e.preventDefault();
 
 		const {tracker} = this.props;
 
-		const newTracker = cloneDeep(tracker);
-
-		newTracker.status = 'active';
-
-		this.props.updateTracker(newTracker.uid, newTracker);
+		this.props.activateTracker(tracker.uid);
 	}
 
 	handleTrackerDeactivation(e) {
@@ -134,11 +62,7 @@ class TrackerPage extends Component {
 
 		const {tracker} = this.props;
 
-		const newTracker = cloneDeep(tracker);
-
-		newTracker.status = 'inactive';
-
-		this.props.updateTracker(newTracker.uid, newTracker);
+		this.props.deActivateTracker(tracker.uid);
 	}
 
 
