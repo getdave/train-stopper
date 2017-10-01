@@ -3,7 +3,7 @@ import { compose } from 'redux';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import differenceInMilliseconds from 'date-fns/difference_in_milliseconds';
-import { isEmpty, cloneDeep } from 'lodash';
+import { isEmpty, cloneDeep, bindAll } from 'lodash';
 
 import * as trackersSelectors from '../../trackers/reducer';
 import * as trackersActions from '../../trackers/actions';
@@ -19,15 +19,17 @@ class TrackerPage extends Component {
 			timeDiffMs: ''
 		}
 
-		this.checkTime = this.checkTime.bind(this);
-		this.onActivate = this.onActivate.bind(this);
+		bindAll(this, [
+			'checkTime',
+			'handleTrackerActivation',
+			'handleTrackerDeactivation'
+		]);
 
 	}
 
 
 	componentDidMount() {
 
-		
 		// TODO: can we optimise to avoid re-fetching if this is already in memory
 		this.props.fetchTrackers();
 
@@ -107,7 +109,7 @@ class TrackerPage extends Component {
 	// }
 	// 
 	
-	onActivate(e) {
+	handleTrackerActivation(e) {
 		e.preventDefault();
 
 		const {tracker} = this.props;
@@ -117,7 +119,18 @@ class TrackerPage extends Component {
 		newTracker.status = 'active';
 
 		this.props.updateTracker(newTracker.uid, newTracker);
+	}
 
+	handleTrackerDeactivation(e) {
+		e.preventDefault();
+
+		const {tracker} = this.props;
+
+		const newTracker = cloneDeep(tracker);
+
+		newTracker.status = 'inactive';
+
+		this.props.updateTracker(newTracker.uid, newTracker);
 	}
 
 
@@ -127,7 +140,7 @@ class TrackerPage extends Component {
 		// TODO - if Tracker is in past then show warning
 		// ...and don't track!
 	    return (
-	    	<TrackerDetail isFetching={isFetching} isError={isError} tracker={tracker} onStart={this.onActivate} />
+	    	<TrackerDetail isFetching={isFetching} isError={isError} tracker={tracker} onStart={this.handleTrackerActivation} onStop={this.handleTrackerDeactivation} />
 	    )
 	}
 
