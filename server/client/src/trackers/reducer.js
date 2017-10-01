@@ -12,12 +12,20 @@ import * as TYPES from './types';
 /**
  * TRACKERS
  */
+
+// FETCHING
 function handFetchingTrackersSuccess(state, action) {
+    return action.payload; // Array
+}
+
+// SETTING
+function handleSettingTrackerSuccess(state, action) {
     return action.payload; // Array
 }
 
 const trackersReducer = createReducer([], {
     [TYPES.FETCHING_TRACKERS_SUCCESS]: handFetchingTrackersSuccess,
+    [TYPES.SETTING_TRACKER_SUCCESS]: handleSettingTrackerSuccess,
 });
 
 
@@ -54,6 +62,9 @@ const uiReducer = createReducer({
     [TYPES.FETCHING_TRACKERS] : handleUIFetching,
     [TYPES.FETCHING_TRACKERS_SUCCESS]: handleUISuccess,
     [TYPES.FETCHING_TRACKERS_FAILED] : handleUIError,
+    [TYPES.SETTING_TRACKER] : handleUIFetching,
+    [TYPES.SETTING_TRACKER_SUCCESS]: handleUISuccess,
+    [TYPES.SETTING_TRACKER_FAILED] : handleUIError,
 });
 
 

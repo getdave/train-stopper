@@ -150,7 +150,7 @@ describe('tracker action creators', () => {
 			})
 		})
 
-		it('should create FETCHING_TRACKERS_FAILED when setting a Tracker is unsuccessful', () => {
+		it('should create SETTING_TRACKER_FAILED when setting a Tracker is unsuccessful', () => {
 
 			const expectedActions = [
 				{ 
