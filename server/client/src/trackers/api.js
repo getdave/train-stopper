@@ -27,15 +27,15 @@ export const setTracker = (tracker) => {
           data = [];
        }
        
-       data.push(tracker);
+       const newData = data.concat(tracker);
 
        // Update
-       window.localStorage.setItem('ts-journeys', JSON.stringify(data) );       
+       window.localStorage.setItem('ts-journeys', JSON.stringify(newData) );       
 
        // Return success and new journeys
        return {
             status: 200,
-            data,
+            tracker,
        }
 
     })

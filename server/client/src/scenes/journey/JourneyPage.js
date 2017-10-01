@@ -66,11 +66,11 @@ class JourneyPage extends Component {
 		const stationServices = this.props.stationServices.map( service => {
 
 			return (
-				<Link key={service.train_uid} to={`/journey/service/${service.train_uid}`} className="list-group-item list-group-item-action flex-column align-items-start active">
+				<Link key={service.train_uid} to={`/journey/service/${service.train_uid}`} className="list-group-item list-group-item-action flex-column align-items-start">
 					<div className="d-flex w-100 justify-content-between">
 						<h5 className="mb-1">{service.origin_name} - {service.destination_name}</h5>
 					</div>
-					<p className="mb-1">his train departs from <strong>{this.props.originStation}</strong> at {service.aimed_departure_time}</p>
+					<p className="mb-1">this train departs from <strong>{this.props.originStation}</strong> at {service.aimed_departure_time}</p>
 				</Link>
 			);
 

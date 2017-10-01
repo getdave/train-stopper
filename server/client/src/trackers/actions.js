@@ -43,6 +43,7 @@ function prepareTrackerEntry(tracker) {
 export function setTracker(tracker) {
     return (dispatch, getState, api) => { 
 
+
         // Pull out interesting parts of API response for easier access
         const entry = prepareTrackerEntry(tracker);
 

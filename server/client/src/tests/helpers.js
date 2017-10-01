@@ -18,7 +18,9 @@ export function createStoreWithFakeAPI(fakeAPI={}) {
  * Curried factory to abstract away repeated test logic
  */
 export const makeDispatchWithStore = (actions, action, ...rest) => store => {
-	return store.dispatch(actions[action](rest));
+	// ...rest to get any remaining args as an array and then...
+	// ...rest to apply them again as individual args
+	return store.dispatch(actions[action](...rest));
 }
 
 

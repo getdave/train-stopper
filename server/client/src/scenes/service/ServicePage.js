@@ -74,12 +74,12 @@ class ServicePage extends Component {
 function mapStateToProps(state) {
 	return {
 		service: journeySelectors.selectService(state),
-		// originStation: journeySelectors.selectOrigin(state),
-		// destinationStation: journeySelectors.selectDestination(state),
-		//date: journeySelectors.selectDate(state),
-		originStation: 'fro',
-		destinationStation: 'bri',
-		date: '2017-09-28',
+		originStation: journeySelectors.selectOrigin(state),
+		destinationStation: journeySelectors.selectDestination(state),
+		date: journeySelectors.selectDate(state),
+		// originStation: 'fro',
+		// destinationStation: 'bri',
+		// date: '2017-09-28',
 		isError: journeySelectors.selectIsError(state),
         isFetching: journeySelectors.selectIsFetching(state),
 	}

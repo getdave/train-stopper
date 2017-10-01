@@ -1,3 +1,5 @@
+import faker from 'faker';
+
 import { 
 	createStoreWithFakeAPI,
 	makeDispatchWithStore,
@@ -9,15 +11,21 @@ import * as TYPES 	from '../types';
 
 
 const fakeTrackersData = [
-    {
-        uid: '987puofkskdj',
-        name: 'My Tracker'
-    },
-    {
-        uid: '7948709834nbmnbc',
-        name: 'My 2nd Tracker'
-    }
+	{
+		origin: {
+			station_code: 'FRO',
+			station_name: 'Frome',
+		},
+		destination: {
+			station_code: 'BRI',
+			station_name: 'Bristol',
+			aimed_departure_date: '2017-10-29',
+			aimed_departure_time: '08:03'
+		}
+	}
 ];
+
+
 
 describe('tracker action creators', () => {
 
@@ -106,7 +114,7 @@ describe('tracker action creators', () => {
 		  	setTracker: rejectedPromise
 		});
 
-		const dispatchWithStore = makeDispatchWithStore(ACTIONS, 'setTracker');
+		const dispatchWithStore = makeDispatchWithStore(ACTIONS, 'setTracker', fakeTrackersData[0]);
 
 		it('should create SETTING_TRACKER when setting a Tracker is started', () => {
 
