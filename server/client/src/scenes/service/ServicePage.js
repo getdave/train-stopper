@@ -35,7 +35,7 @@ class ServicePage extends Component {
 
 		// TODO handle "cancel" button
 
-		this.props.setTracker(this.props.service);
+		this.props.createTracker(this.props.service);
 		
 		this.props.history.push(`/trackers/`);		
 	}

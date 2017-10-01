@@ -27,6 +27,7 @@ function handFetchingTrackersSuccess(state, action) {
         byId: keyBy(payload, keyByUid),
         allIds: payload.map(keyByUid)
     }
+     debugger;
 
     return newState; // Array
 }
@@ -99,7 +100,10 @@ const uiReducer = createReducer({
  * SELECTORS
  */
 
-export const selectTrackers = state => state.trackers.data;
+export const selectTrackers = state => {
+    const trackersState = state.trackers.data;
+    return trackersState.allIds.map( id => trackersState.byId[id] );
+};
 
 export const selectIsFetching = state => state.trackers.ui.isFetching;
 

@@ -1,5 +1,5 @@
 import * as TYPES from './types';
-
+import uid from 'uid';
 
 export function fetchTrackers() {
     return (dispatch, getState, api) => {         
@@ -9,6 +9,7 @@ export function fetchTrackers() {
 
         
         return api.fetchTrackers().then(response => {
+
             if (response.status !== 200) {
                 throw new Error(`Transport API: ${response.statusText}`);
             }
@@ -28,6 +29,7 @@ export function fetchTrackers() {
 
 function prepareTrackerEntry(tracker) {
     return {
+        uid: uid(),
         status: "inactive",
         data: tracker,
         originCode: tracker.origin.station_code,
@@ -46,6 +48,7 @@ export function createTracker(tracker) {
 
         // Pull out interesting parts of API response for easier access
         const entry = prepareTrackerEntry(tracker);
+        debugger;
 
         dispatch({ 
             type: TYPES.CREATING_TRACKER,

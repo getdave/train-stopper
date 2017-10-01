@@ -7,20 +7,16 @@ class TrackersList extends Component {
 
 
 	renderTrackers() {
-		return this.props.trackers.map( (tracker, index) => {
-			// TODO - remove index as key and use uid
+		return this.props.trackers.map( (tracker ) => {
 			return (
-				<li key={index} className="list-group-item flex-column align-items-start">
-				<Link to={`/trackers/${index}`} className="w-100">
+				<li key={tracker.uid} className="list-group-item flex-column align-items-start">
+				<Link to={`/trackers/${tracker.uid}`} className="w-100">
 					
 					<div className="d-flex w-100 justify-content-between">
 				      	<h5 className="mb-1">{tracker.originName} to {tracker.destinationName}</h5>
 				      	<span className="align-right badge badge-default badge-pill">{tracker.status}</span>
 				    </div>
 					<div className="d-flex w-100 justify-content-between">
-						
-
-				    	
 				    	<div>
 				    		<small>Leaving on {tracker.date} at {tracker.time}</small>
 				    	</div>
