@@ -47,7 +47,6 @@ function handleCreatingTrackerSuccess(state, action) {
 // UPDATING
 function handleUpdatingTrackerSuccess(state, action) { 
     const { payload } = action;
-    const keyByUid = item => item.uid;
 
     const newState = {
         ...state,

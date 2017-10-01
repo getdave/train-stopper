@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 
-import withConditionalRender from '../../hoc/withConditionalRender';
+import withConditionalRender from '../../../hoc/withConditionalRender';
 
 class TrackersList extends Component {
 

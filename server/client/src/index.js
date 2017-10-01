@@ -34,6 +34,10 @@ const store = createStore(
   applyMiddleware(...middlewares) // must be the last in the chain!
 );
 
+if (process.env.NODE_ENV === 'development') {
+	window.store = store;
+}
+
 
 
 /**

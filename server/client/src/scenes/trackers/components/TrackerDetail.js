@@ -1,12 +1,12 @@
 import React from 'react';
 import { Alert } from 'reactstrap';
-import withConditionalRender from '../../hoc/withConditionalRender';
+import withConditionalRender from '../../../hoc/withConditionalRender';
 
 
 const TrackerDetail = props => {
 	const { tracker, onStart, onStop } = props;
 
-	const btnText = (tracker.status !== 'active' ? 'Start Tracking' : 'Stop Tracking');
+	const btnText 	= (tracker.status !== 'active' ? 'Start Tracking' : 'Stop Tracking');
 
 	const btnMethod = (tracker.status !== 'active' ? onStart : onStop);
 

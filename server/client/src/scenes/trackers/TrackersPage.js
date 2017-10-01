@@ -2,16 +2,20 @@ import React, { Component } from 'react';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
+import { isEmpty } from 'lodash';
 
 import * as trackersSelectors from '../../trackers/reducer';
 import * as trackersActions from '../../trackers/actions';
 
-import TrackersList from './TrackersList';
+import TrackersList from './components/TrackersList';
 
 class TrackersPage extends Component {
 
 	componentDidMount() {
-		this.props.fetchTrackers();
+		// Fetch if not already populated (unlikely but...)
+		if (isEmpty(this.props.trackers)) {
+			this.props.fetchTrackers();
+		}
     }
 
 

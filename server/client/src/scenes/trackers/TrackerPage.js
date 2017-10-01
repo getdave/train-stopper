@@ -7,7 +7,7 @@ import { isEmpty, cloneDeep, bindAll } from 'lodash';
 
 import * as trackersSelectors from '../../trackers/reducer';
 import * as trackersActions from '../../trackers/actions';
-import TrackerDetail from './TrackerDetail';
+import TrackerDetail from './components/TrackerDetail';
 
 
 class TrackerPage extends Component {
@@ -29,23 +29,12 @@ class TrackerPage extends Component {
 
 
 	componentDidMount() {
-
-		// TODO: can we optimise to avoid re-fetching if this is already in memory
-		this.props.fetchTrackers();
+		this.doTrackersFetch(this.props);
 
     }
 
     componentWillReceiveProps(nextProps) {
-
-    	// Fetch the tracker passed in the Route params
-		const trackerId = this.props.match.params.trackerId;
-
-    			// We must eagar load all trackers upfront 
-		// just in case we don't have them
-		if (!isEmpty(nextProps.trackers)) {
-			this.props.setCurrentTracker(trackerId);
-		}
-
+		this.doTrackersFetch(nextProps);
 
 		if(!isEmpty(this.props.tracker)) {
         	this.arrivalCheckerTimer = setInterval(this.checkTime, 1000);
@@ -55,6 +44,25 @@ class TrackerPage extends Component {
     componentWillUnmount() {
         clearInterval(this.arrivalCheckerTimer);
     }
+
+
+    doTrackersFetch(props) {
+
+		// Fetch the tracker passed in the Route params
+		const trackerId = this.props.match.params.trackerId;
+
+		// Fetch if not already populated (unlikely but...)
+		if (isEmpty(this.props.trackers)) {
+			this.props.fetchTrackers();
+		}
+
+    	// We must eagar load all trackers upfront 
+		// just in case we don't have them
+		if (!isEmpty(props.trackers)) {
+			this.props.setCurrentTracker(trackerId);
+		}
+	}
+
 
     checkTime() {
     	return;
