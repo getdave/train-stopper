@@ -3,7 +3,7 @@ import { compose } from 'redux';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import differenceInMilliseconds from 'date-fns/difference_in_milliseconds';
-import isEmpty from 'lodash';
+import { isEmpty, cloneDeep } from 'lodash';
 
 import * as trackersSelectors from '../../trackers/reducer';
 import * as trackersActions from '../../trackers/actions';
@@ -20,15 +20,30 @@ class TrackerPage extends Component {
 		}
 
 		this.checkTime = this.checkTime.bind(this);
+		this.onActivate = this.onActivate.bind(this);
 
 	}
 
 
 	componentDidMount() {
 
-		// Fetch the tracker passed in the Route params
+		
+		// TODO: can we optimise to avoid re-fetching if this is already in memory
+		this.props.fetchTrackers();
+
+    }
+
+    componentWillReceiveProps(nextProps) {
+
+    	// Fetch the tracker passed in the Route params
 		const trackerId = this.props.match.params.trackerId;
-		this.props.fetchTracker(trackerId);
+
+    			// We must eagar load all trackers upfront 
+		// just in case we don't have them
+		if (!isEmpty(nextProps.trackers)) {
+			this.props.setCurrentTracker(trackerId);
+		}
+
 
 		if(!isEmpty(this.props.tracker)) {
         	this.arrivalCheckerTimer = setInterval(this.checkTime, 1000);
@@ -90,6 +105,20 @@ class TrackerPage extends Component {
 	    
 	//   }
 	// }
+	// 
+	
+	onActivate(e) {
+		e.preventDefault();
+
+		const {tracker} = this.props;
+
+		const newTracker = cloneDeep(tracker);
+
+		newTracker.status = 'active';
+
+		this.props.updateTracker(newTracker.uid, newTracker);
+
+	}
 
 
 	render() {
@@ -98,7 +127,7 @@ class TrackerPage extends Component {
 		// TODO - if Tracker is in past then show warning
 		// ...and don't track!
 	    return (
-	    	<TrackerDetail isFetching={isFetching} isError={isError} tracker={tracker} />
+	    	<TrackerDetail isFetching={isFetching} isError={isError} tracker={tracker} onStart={this.onActivate} />
 	    )
 	}
 
@@ -107,9 +136,9 @@ class TrackerPage extends Component {
 
 
 function mapStateToProps(state) {
-
 	return {
 		tracker: trackersSelectors.selectCurrentTracker(state),
+		trackers: trackersSelectors.selectTrackers(state),
 		isError: trackersSelectors.selectIsError(state),
         isFetching: trackersSelectors.selectIsFetching(state),
 	}

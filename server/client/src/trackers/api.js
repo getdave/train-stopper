@@ -1,5 +1,5 @@
 // import axios from 'axios';
-import { isEmpty } from 'lodash';
+import { isEmpty, isNull } from 'lodash';
 
 /**
  * FETCH ALL TRACKERS
@@ -34,7 +34,7 @@ export const fetchTracker = (trackerId) => {
 
 
 /**
- * SET TRACKER
+ * CREATE TRACKER
  */
 export const createTracker = (tracker) => {
     return new Promise( (resolve, reject) => {
@@ -50,12 +50,52 @@ export const createTracker = (tracker) => {
        window.localStorage.setItem('ts-journeys', JSON.stringify(newData) );       
 
        // Return success and new journeys
-       return {
+       resolve({
             status: 200,
-            newData,
-       }
+            data: newData,
+       })
 
     })
 };
+
+
+/**
+ * UPDATE TRACKER
+ */
+export const updateTracker = (id, newTracker) => {
+    return new Promise( (resolve, reject) => {
+      
+        // TODO - extract getting of LS data into helper
+        let data = JSON.parse( window.localStorage.getItem('ts-journeys') );
+
+        if( isEmpty( data ) ) {
+            data = [];
+        }
+
+        const targetIndex = data.findIndex(tracker => tracker.uid === id);
+
+
+        if (isNull(targetIndex)) { // because of zero indexing we have to use isNull
+            return {
+                status: 400,
+                message: `No trackers with matching id ${id}`,
+            }
+        }
+
+        data[targetIndex] = newTracker;
+
+        window.localStorage.setItem('ts-journeys', JSON.stringify(data) );    
+
+        // Return success and new journeys
+        resolve({
+            status: 200,
+            data: newTracker,
+        })
+
+    })
+};
+
+
+
 
 

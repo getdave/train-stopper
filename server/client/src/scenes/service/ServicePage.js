@@ -59,7 +59,7 @@ class ServicePage extends Component {
 		    	<p>Your train is leaving {originDetail.station_name} at {originDetail.aimed_departure_time} and arriving at {destinationDetail.station_name} at {destinationDetail.aimed_arrival_time}.</p>
 
 		    	<form onSubmit={this.handleSubmit} action={`/trackers/`}>
-		    		<button name="ok" value="ok" className="btn btn-primary">Correct, start tracking</button>
+		    		<button name="ok" value="ok" className="btn btn-primary">Correct, create Tracker</button>
 		    		<button name="cancel" value="cancel" className="btn btn-link">Cancel</button>
 		    	</form>
 
