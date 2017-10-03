@@ -1,3 +1,6 @@
+import faker from 'faker';
+import { keyBy } from 'lodash';
+
 import reducer, {
     INITIAL_STATE
 } from '../reducer';
@@ -5,29 +8,30 @@ import reducer, {
 import * as TYPES from '../types';
 
 
-
 // Approximates fake data from persistent storage
 const fakeNotifications = [
     {
-        uid: '987puofkskdj',
-        name: 'My Notification'
+        uid: faker.random.uuid(),
+        title: faker.random.word(),
+        icon: faker.random.image(),
+        image: faker.random.image(),
+        badge: faker.random.image(),
+        body: faker.lorem.sentence(),
     },
     {
-        uid: '7948709834nbmnbc',
-        name: 'Some other Notification'
+        uid: faker.random.uuid(),
+        title: faker.random.word(),
+        icon: faker.random.image(),
+        image: faker.random.image(),
+        badge: faker.random.image(),
+        body: faker.lorem.sentence(),
     }
 ];
 
+const fakeNotificationsByID     = keyBy(fakeNotifications, notif => notif.uid);
+const fakeNotificationsAllIds   = fakeNotifications.map(notif => notif.uid);
 
-const fakeNotificationsById = {
-    '987puofkskdj' : fakeNotifications[0],
-    '7948709834nbmnbc': fakeNotifications[1],
-};
 
-const fakeNotificationsAllIds = [
-    fakeNotifications[0]['uid'],
-    fakeNotifications[1]['uid']
-];
 
 /**
  * REDUCERS
@@ -45,8 +49,6 @@ describe('notifications reducer', () => {
 
 
     describe('creating notifications', () => {
-
-
 
         it('handles CREATING_NOTIFICATION_SUCCESS', () => {
 
@@ -68,6 +70,30 @@ describe('notifications reducer', () => {
         
             expect(result).toEqual(expected);
         })   
+        
+    });
+
+    describe('deletomg notifications', () => {
+
+        // it('handles DELETING_NOTIFICATION_SUCCESS', () => {
+
+        //     const notificationToRemove = fakeNotifications[0];
+
+        //     const expected  = Object.assign({}, INITIAL_STATE, {
+        //         byId: {
+        //             [newNotification['uid']]: newNotification
+        //         },
+        //         allIds: [newNotification['uid']]
+                    
+        //     });            
+
+        //     const result = reducer(INITIAL_STATE, {
+        //         type: TYPES.DELETING_NOTIFICATION_SUCCESS,
+        //         payload: newNotification
+        //     });
+        
+        //     expect(result).toEqual(expected);
+        // })   
         
     });
 })
