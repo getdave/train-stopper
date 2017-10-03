@@ -9,7 +9,7 @@ import reducer, {
 import * as TYPES from '../types';
 
 const INITIAL_STATE = {
-    current: {},
+    current: false,
     data: {
         byId: {},
         allIds: []
