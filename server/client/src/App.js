@@ -14,23 +14,21 @@ import FourOhFour from './scenes/FourOhFour';
 import * as trackerActions from './trackers/actions';
 import * as trackersSelectors from './trackers/reducer';
 
-let trackerCheckingStarted    = false;
+
+
 let notificationsAllowed        = false;
 
 class App extends Component {  
 
-
-    fetchAppData() {
-        this.props.fetchTrackers();
-    } 
-
     componentDidMount() {
-        this.fetchAppData();
-       
-        if(this.props.trackers.length && !trackerCheckingStarted) {
-            this.startCheckingTrackers();
-        }        
 
+        // Fetch all Trackers upfront
+        this.props.fetchTrackers();
+       
+        // Start polling Trackers
+        this.props.poller.start();
+
+        // Ask for perms to Notify the user
         if ("Notification" in window) {
             Notification.requestPermission(function (permission) {
               // If the user accepts, let's create a notification
@@ -41,36 +39,8 @@ class App extends Component {
         }
     }
 
-    componentWillReceiveProps(nextProps) {       
-        if(nextProps.trackers.length && !trackerCheckingStarted) {
-            this.startCheckingTrackers();
-        }
-    }
 
-    startCheckingTrackers() {
-        trackerCheckingStarted = true;
 
-        setInterval(() => {
-            const activeTrackers = this.props.trackers.filter(tracker => tracker.status === 'active');
-
-            activeTrackers.forEach(tracker => {
-                // console.log(tracker)
-                const arrivalTS     = Date.parse(`${tracker.date} ${tracker.time}`);
-                const diff = differenceInMilliseconds(arrivalTS, new Date());
-
-                if (diff <= 0) {
-                    new Notification("Tracker done!", {
-                        body: tracker.uid,
-                        vibrate: [200, 100, 200]
-                    });
-
-                    this.props.archiveTracker(tracker.uid);
-
-                }
-            });
-
-        },1000);
-    }
 
     render() {
         
@@ -96,11 +66,7 @@ class App extends Component {
 
 
 
-function mapStateToProps(state) {
-    return {
-        trackers: trackersSelectors.selectTrackers(state)
-    }
-}
 
 
-export default connect(mapStateToProps, trackerActions)(App);
+
+export default connect(null, trackerActions)(App);

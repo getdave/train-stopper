@@ -11,7 +11,7 @@ import registerServiceWorker from './registerServiceWorker';
 import App from './App';
 import reducers from './reducers';
 import api from './api';
-
+import Poller from './services/poller';
 
 
 /**
@@ -34,6 +34,12 @@ const store = createStore(
   applyMiddleware(...middlewares) // must be the last in the chain!
 );
 
+
+const poller = new Poller(store);
+
+
+
+
 if (process.env.NODE_ENV === 'development') {
 	window.store = store;
 }
@@ -44,7 +50,7 @@ if (process.env.NODE_ENV === 'development') {
  * RENDER APP
  */
 ReactDOM.render(
-  <Provider store={store}><App /></Provider>,
+  <Provider store={store}><App poller={poller} /></Provider>,
   document.getElementById('root')
 );
 
