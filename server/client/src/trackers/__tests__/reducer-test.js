@@ -176,18 +176,18 @@ describe('trackers reducer', () => {
         })
     })
 
-    describe('fetching single tracker', () => {
-        it('handles FETCHING_TRACKER_SUCCESS', () => {
+    describe('setting current tracker', () => {
+        it('handles SETTING_CURRENT_TRACKER_SUCCESS', () => {
 
             const selectedTrackerId = '987puofkskdj';
 
             const expected  = Object.assign({}, INITIAL_STATE, {
-                current: fakeTrackersById[selectedTrackerId] // we expect to get ba
+                current: selectedTrackerId // we expect to get ba
             });            
 
             const result = reducer(INITIAL_STATE, {
-                type: TYPES.FETCHING_TRACKER_SUCCESS,
-                payload: fakeTrackersById[selectedTrackerId] // the "id" of the tracker
+                type: TYPES.SETTING_CURRENT_TRACKER_SUCCESS,
+                payload: selectedTrackerId // the "id" of the tracker
             });
         
             expect(result).toEqual(expected);
@@ -258,11 +258,15 @@ describe('trackers selectors', () => {
 
         const state  = {
             trackers: Object.assign({}, INITIAL_STATE, {
-                current: currentTracker
+                current: currentTracker['uid'],
+                data: {
+                    byId: fakeTrackersById // we need this in state to be able to select the current item
+                }
             })
         };
 
         const result = selectCurrentTracker(state);
+
 
         expect(result).toEqual(currentTracker);
     })
