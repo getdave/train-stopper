@@ -9,6 +9,8 @@
 import uuid from 'uuid';
 import { isEmpty } from 'lodash';
 import differenceInMilliseconds from 'date-fns/difference_in_milliseconds';
+import isPast from 'date-fns/is_past';
+
 import distanceInWordsToNow from 'date-fns/distance_in_words'
 import * as trackersSelectors from '../trackers/reducer';
 import * as trackersActions from '../trackers/actions';
@@ -18,16 +20,16 @@ import * as TYPES from '../trackers/types';
 // TODO - extract as this is not testable
 const notificatonTimerConfig = [
 	{
-		threshold: 1000 * 60 * 5, // 5 mins
-		shouldArchive: false
+		threshold: 1000, // 1 sec
+		message: 'has arrived!'
 	},
 	{
 		threshold: 1000 * 60, // 1 min
-		shouldArchive: false 
+		message: 'arriving in 1 min'
 	},
 	{
-		threshold: 1000, // 1 sec
-		shouldArchive: true  // archive the tracker
+		threshold: 1000 * 60 * 5, // 5 mins
+		message: 'arriving in 5 mins'
 	},
 ]
 
@@ -46,41 +48,37 @@ class Poller {
 
 
 	handleTrackerNotifications() {
-		debugger;
+
+
+		// TODO - convert into a selector rather than rewrite
 		const trackers = this.getNonArchivedTrackers();
 
 		trackers.forEach(tracker => {
+
+			const isInPast = isPast( Date.parse(`${tracker.date} ${tracker.time}`) );
+
+			// Get the first config level where the threshold has been exceeded
+			const alertConf = notificatonTimerConfig.find( config => {
+				return this.thresholdExceeded( tracker, config.threshold );
+			});
 			
-			// Get the current alert level on this tracker and extract
-			// the relevant config setting for this level
-			let alertLevel 	= tracker.alertLevel; 
-			const alertConf = notificatonTimerConfig[alertLevel];
+			// If the Tracker journey is not in the past then...
+			if ( !isInPast && !isEmpty(alertConf) ) {
 
-			// If the threshold for this alert level has been exceeded then
-			// 1. Notify the user immediately
-			// 2. Increment the alert level on the tracker
-			if ( !isEmpty(alertConf) && this.thresholdExceeded( tracker, alertConf.threshold ) ) {
-
-				// Only Notify for active Trackers
+				// Notify user for active Trackers only!
 				if(tracker.status === 'active') {
 					this.store.dispatch(
 	                	notificationsActions.createNotification({                		
 					        uid: uuid(),
-					        title: `Alert Level ${alertLevel}: Train Arriving!`,		 
-					        body: `Your train from ${tracker.originName} to ${tracker.destinationName} is arriving in ${alertConf.threshold}`,
+					        title: `Train ${alertConf.message}`,		 
+					        body: `Your train from ${tracker.originName} to ${tracker.destinationName} ${alertConf.message}`,
 	                	})
 	                );
 				}
-				
-				// For both "active" & "inactive" ensure alert level is incremented appropriately
-				this.store.dispatch(			
-					trackersActions.setTrackerAlertLevel( tracker.uid, alertLevel++ )
-				);
 			}
 
-			// If the current alert level config indcates we should archive the Tracker
-			// then do it!			
-			if ( !isEmpty(alertConf) && alertConf.shouldArchive ) { 
+			// Archive any Trackers that are in the past	
+			if ( isInPast ) { 
 				this.store.dispatch(
                 	trackersActions.archiveTracker(tracker.uid)
                 );
@@ -104,7 +102,6 @@ class Poller {
 		const diff = this.msTillArrival(tracker);
 		return (diff <= threshold);
 	}
-
 
 	msTillArrival(tracker) {
 		const arrival = Date.parse(`${tracker.date} ${tracker.time}`);
