@@ -140,6 +140,12 @@ export const selectIsFetching = state => state.trackers.ui.isFetching;
 export const selectIsError = state => state.trackers.ui.isError;
 
 
+export const selectNonArchivedTrackers = state => {
+    const trackers = selectTrackers(state);
+    return trackers.filter(tracker => tracker.status !== 'archived');
+}
+
+
 export const selectCurrentTracker = (state) => {
     const currentTrackerId = state.trackers.current;
     if (!currentTrackerId) {

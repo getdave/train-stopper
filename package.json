@@ -19,6 +19,7 @@
     "lodash.map": "^4.6.0",
     "lodash.mapvalues": "^4.6.0",
     "md5": "^2.2.1",
+    "mockdate": "^2.0.2",
     "node-sass-chokidar": "^0.0.3",
     "nodemon": "^1.11.0",
     "npm-run-all": "^4.1.1",

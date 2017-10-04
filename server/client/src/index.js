@@ -12,7 +12,7 @@ import App from './App';
 import reducers from './reducers';
 import api from './api';
 import Poller from './services/poller';
-
+import TrackerManager from './services/trackerManager';
 
 /**
  * CONFIGURE MIDDLEWARES
@@ -35,7 +35,10 @@ const store = createStore(
 );
 
 
-const poller = new Poller(store);
+const trackerManager 	= new TrackerManager(store);
+const boundHandler 		= trackerManager.handleTrackerNotifications.bind(trackerManager);
+
+const poller = new Poller( boundHandler );
 
 
 

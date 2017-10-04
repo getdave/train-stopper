@@ -227,7 +227,6 @@ function prepareTrackerEntry(tracker) {
     return {
         uid: uid(),
         status: "inactive",
-        alertLevel: 0,
         data: tracker,
         originCode: tracker.origin.station_code,
         originName: tracker.origin.station_name,
