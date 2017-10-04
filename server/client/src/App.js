@@ -11,6 +11,9 @@ import TrackersPage from './scenes/trackers/TrackersPage';
 import TrackerPage from './scenes/trackers/TrackerPage';
 import FourOhFour from './scenes/FourOhFour';
 
+
+import NotificationsContainer from './components/NotificationsContainer';
+
 import * as trackerActions from './trackers/actions';
 import * as trackersSelectors from './trackers/reducer';
 
@@ -46,6 +49,7 @@ class App extends Component {
         
         return (
             <div className="container">
+                <NotificationsContainer />
                 <BrowserRouter>
                     <div>
                         <Switch>

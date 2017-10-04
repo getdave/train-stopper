@@ -8,3 +8,11 @@ export function createNotification(notification) {
         payload: notification
     };
 }
+
+
+export function deleteNotification(id) {        
+    return { 
+        type: TYPES.DELETING_NOTIFICATION_SUCCESS,
+        payload: id
+    };
+}

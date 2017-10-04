@@ -33,7 +33,6 @@ class TrackersPage extends Component {
 
 
 function mapStateToProps(state) {
-	console.log(state)
 	return {
 		trackers: trackersSelectors.selectTrackers(state),
 		isFetching: trackersSelectors.selectIsFetching(state),

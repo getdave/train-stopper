@@ -3,6 +3,7 @@
  */
 
 import { combineReducers } from 'redux';
+import { omit } from 'lodash';
 import createReducer from '../utils/create-reducer';
 import * as TYPES from './types';
 
@@ -14,8 +15,10 @@ export const INITIAL_STATE = {
 
 
 /**
- * CREATE
+ * REDUCER
  */
+
+// CREATE
 function handleCreatingNotificationSuccess(state, action) {
 
 	const notification = action.payload;
@@ -31,20 +34,13 @@ function handleCreatingNotificationSuccess(state, action) {
     return newState; 
 }
 
-/**
- * DELETE
- */
+// DELETE
 function handleDeletingNotificationSuccess(state, action) {
-	const notification = action.payload;
+	const notificationId = action.payload;
 
-	const byId = Object.keys(state.byId).reduce( (acc, curr) => {
-		if(curr.uid !== notification.uid) {
-			acc[curr.uid] = curr;
-		}
-		return acc;
-	},{});
+	const byId 		= omit(state.byId, [notificationId]);
 
-	const allIds = state.allIds.filter( id => id === notification.uid);
+	const allIds 	= state.allIds.filter( id => id === notificationId);
 
     return {
     	byId,
@@ -56,6 +52,15 @@ const dataReducer = createReducer(INITIAL_STATE, {
     [TYPES.CREATING_NOTIFICATION_SUCCESS]: handleCreatingNotificationSuccess,
     [TYPES.DELETING_NOTIFICATION_SUCCESS]: handleDeletingNotificationSuccess,
 });
+
+
+
+/**
+ * SELECTORS
+ */
+
+// Ordered list of Notifications
+export const selectNotifications = (state) => state.notifications.allIds.map( id => state.notifications.byId[id] );
 
 
 

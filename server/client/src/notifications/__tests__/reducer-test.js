@@ -1,8 +1,9 @@
 import faker from 'faker';
-import { keyBy } from 'lodash';
+import { keyBy, omit } from 'lodash';
 
 import reducer, {
-    INITIAL_STATE
+    INITIAL_STATE,
+    selectNotifications
 } from '../reducer';
 
 import * as TYPES from '../types';
@@ -73,27 +74,46 @@ describe('notifications reducer', () => {
         
     });
 
-    describe('deletomg notifications', () => {
+    describe('deleting notifications', () => {
 
-        // it('handles DELETING_NOTIFICATION_SUCCESS', () => {
+        it('handles DELETING_NOTIFICATION_SUCCESS', () => {
 
-        //     const notificationToRemove = fakeNotifications[0];
+            const notificationToRemoveId = fakeNotifications[0]['uid'];
 
-        //     const expected  = Object.assign({}, INITIAL_STATE, {
-        //         byId: {
-        //             [newNotification['uid']]: newNotification
-        //         },
-        //         allIds: [newNotification['uid']]
-                    
-        //     });            
+            const currentState = Object.assign({}, INITIAL_STATE, {
+                byId: fakeNotificationsByID,
+                allIds: fakeNotificationsAllIds                    
+            });            
 
-        //     const result = reducer(INITIAL_STATE, {
-        //         type: TYPES.DELETING_NOTIFICATION_SUCCESS,
-        //         payload: newNotification
-        //     });
+            const expected  = Object.assign({}, INITIAL_STATE, {
+                byId: omit(fakeNotificationsByID, [notificationToRemoveId]), // remove the notification 
+                allIds: fakeNotificationsAllIds.filter(id => id === notificationToRemoveId) // remove the notification      
+            });            
+
+            const result = reducer(currentState, {
+                type: TYPES.DELETING_NOTIFICATION_SUCCESS,
+                payload: notificationToRemoveId
+            });
         
-        //     expect(result).toEqual(expected);
-        // })   
+            expect(result).toEqual(expected);
+        })   
         
     });
+})
+
+describe('notifications selectors', () => {
+
+    test('selectNotifications correctly selects a all notifications from state shape', () => {
+
+        const state  = {
+            notifications: Object.assign({}, INITIAL_STATE, {
+                byId: fakeNotificationsByID,
+                allIds: fakeNotificationsAllIds  
+            })
+        };
+
+        const result = selectNotifications(state);
+
+        expect(result).toEqual(fakeNotifications);
+    })
 })
