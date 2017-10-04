@@ -7,6 +7,7 @@
  */
 
 import uuid from 'uuid';
+import { isEmpty } from 'lodash';
 import differenceInMilliseconds from 'date-fns/difference_in_milliseconds';
 import distanceInWordsToNow from 'date-fns/distance_in_words'
 import * as trackersSelectors from '../trackers/reducer';
@@ -14,6 +15,21 @@ import * as trackersActions from '../trackers/actions';
 import * as notificationsActions from '../notifications/actions';
 import * as TYPES from '../trackers/types';
 
+// TODO - extract as this is not testable
+const notificatonTimerConfig = [
+	{
+		threshold: 1000 * 60 * 5, // 5 mins
+		shouldArchive: false
+	},
+	{
+		threshold: 1000 * 60, // 1 min
+		shouldArchive: false 
+	},
+	{
+		threshold: 1000, // 1 sec
+		shouldArchive: true  // archive the tracker
+	},
+]
 
 class Poller {
 
@@ -24,58 +40,57 @@ class Poller {
 
 	start() {
 		setInterval(() => {
-			this.archiveExpired();			
+			this.handleTrackerNotifications();			
 		}, 3000);
 	}
 
 
-	archiveExpired() {
-		const trackers = this.getExpired();
+	handleTrackerNotifications() {
+		debugger;
+		const trackers = this.getNonArchivedTrackers();
 
 		trackers.forEach(tracker => {
+			
+			// Get the current alert level on this tracker and extract
+			// the relevant config setting for this level
+			let alertLevel 	= tracker.alertLevel; 
+			const alertConf = notificatonTimerConfig[alertLevel];
 
+			// If the threshold for this alert level has been exceeded then
+			// 1. Notify the user immediately
+			// 2. Increment the alert level on the tracker
+			if ( !isEmpty(alertConf) && this.thresholdExceeded( tracker, alertConf.threshold ) ) {
 
-			if ( this.hasNearlyArrived(tracker) ) {
-				const distance = distanceInWordsToNow( Date.parse(`${tracker.date} ${tracker.time}`) );
-                
-                this.store.dispatch(
-                	notificationsActions.createNotification({                		
-				        uid: uuid(),
-				        title: 'Your Station is approaching!',		 
-				        body: `Arriving at ${tracker.destinationName} in ${distance}!`,
-				        //icon: TODO - add icon!!  
-                	})
-                );
+				// Only Notify for active Trackers
+				if(tracker.status === 'active') {
+					this.store.dispatch(
+	                	notificationsActions.createNotification({                		
+					        uid: uuid(),
+					        title: `Alert Level ${alertLevel}: Train Arriving!`,		 
+					        body: `Your train from ${tracker.originName} to ${tracker.destinationName} is arriving in ${alertConf.threshold}`,
+	                	})
+	                );
+				}
+				
+				// For both "active" & "inactive" ensure alert level is incremented appropriately
+				this.store.dispatch(			
+					trackersActions.setTrackerAlertLevel( tracker.uid, alertLevel++ )
+				);
 			}
 
-			
-			// If destination arrival time is in the past...
-			if ( this.hasArrived(tracker) ) {
-                
-                // Archive the tracker
-                this.store.dispatch(
+			// If the current alert level config indcates we should archive the Tracker
+			// then do it!			
+			if ( !isEmpty(alertConf) && alertConf.shouldArchive ) { 
+				this.store.dispatch(
                 	trackersActions.archiveTracker(tracker.uid)
                 );
-
-                // Create a Notification
-                this.store.dispatch(
-                	notificationsActions.createNotification({                		
-				        uid: uuid(),
-				        title: 'Train Arriving!',		 
-				        body: `Your train from ${tracker.originName} to ${tracker.destinationName} is arriving. GET OFF!`,
-				        //icon: TODO - add icon!!  
-                	})
-                );
-
-                
-            }
+			}
 		});
 	}
 
 
 
-	getExpired() {
-		// Get state 
+	getNonArchivedTrackers() {
 		const state = this.store.getState();
 
 		const trackers = trackersSelectors.selectTrackers(state);
@@ -85,18 +100,11 @@ class Poller {
 		return activeTrackers;
 	}
 
-	hasNearlyArrived(tracker) {
+	thresholdExceeded(tracker, threshold) {
 		const diff = this.msTillArrival(tracker);
-
-		const oneMin = 1000 * 60;
-
-		return (diff > 10 && diff <= oneMin);
+		return (diff <= threshold);
 	}
 
-	hasArrived(tracker) {
-		const diff = this.msTillArrival(tracker);
-		return (diff <= 0);
-	}
 
 	msTillArrival(tracker) {
 		const arrival = Date.parse(`${tracker.date} ${tracker.time}`);

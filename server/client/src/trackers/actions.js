@@ -198,6 +198,22 @@ export function archiveTracker(trackerId) {
 }
 
 
+export function setTrackerAlertLevel(trackerId, level) {
+    return (dispatch, getState, api) => {     
+
+        const state = getState();
+
+        const tracker = selectTracker(state, trackerId);
+
+        const newTracker = cloneDeep(tracker);
+
+        newTracker.alertLevel = 1;
+
+        _updateTracker(dispatch, api, trackerId, newTracker);
+    }
+}
+
+
 
 
 
@@ -211,6 +227,7 @@ function prepareTrackerEntry(tracker) {
     return {
         uid: uid(),
         status: "inactive",
+        alertLevel: 0,
         data: tracker,
         originCode: tracker.origin.station_code,
         originName: tracker.origin.station_name,
