@@ -179,6 +179,44 @@ describe('trackerManager service', () => {
 	});
 
 
+	describe('dispatchAction', () => {
+		it('should act as a proxy and dispatch the given action to the store', () => {
+
+			const subject = new TrackerManager(store);
+
+			const action = {
+				type: 'testing_action'
+			};
+
+			subject.dispatchAction(action);
+
+			expect(store.getActions()).toContain(action)
+		})
+	})
+
+	describe('getNearestAlertThresholdConfig', () => {
+		it('should return the nearest alert level config', () => {
+
+			const subject = new TrackerManager(store);
+
+			const mock = subject.thresholdExceeded = jest.fn();
+
+			// Force thresholdExceeded() method to return known values
+			// TODO - this indicates that thresholdExceeded should be a
+			// global helper and needs a refactor out of TM
+			mock.mockReturnValueOnce(false)
+  				.mockReturnValueOnce(false)
+  				.mockReturnValueOnce(true);
+
+
+  			expect(subject.getNearestAlertThresholdConfig(fakeTrackers[0])).toEqual({
+				threshold: 1000 * 60 * 5, // 5 mins
+				message: 'arriving in 5 mins'
+			})
+		})
+	})
+
+
 })
 
 	

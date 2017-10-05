@@ -91,14 +91,13 @@ class TrackerManager {
 	}
 
 
-
 	getNearestAlertThresholdConfig(tracker) {
 		return this.notificatonTimerConfig.find( config => this.thresholdExceeded( tracker, config.threshold ) );
 	}
 
 
 	isInPast(tracker) {
-		return isPast( Date.parse(`${tracker.date} ${tracker.time}`) );
+		return isPast( tracker.date );
 	}
 
 	archiveTracker(uid) {
@@ -120,7 +119,7 @@ class TrackerManager {
 
 	msTillArrival(tracker) {
 		const earlierDate = new Date();
-		const laterDate   = parse(`${tracker.date} ${tracker.time}`); // TODO - this is ridiculous and should be stored as a datetime stramp!
+		const laterDate   = tracker.date; // TODO - this is ridiculous and should be stored as a datetime stramp!
         const diff 	  	  = differenceInMilliseconds(laterDate, earlierDate);
     	return diff;
 	}

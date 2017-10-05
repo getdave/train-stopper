@@ -1,3 +1,5 @@
+import { timeStampFromDateTime } from '../helpers';
+
 import { 
     FETCHING_STATION_SERVICES,
     FETCHING_STATION_SERVICES_SUCCESS,
@@ -57,13 +59,16 @@ export function fetchService(train_uid, origin, destination, date) {
 
 
 export function setUserInput({originStation, destinationStation, date, time}) {
+
+    // TODO - convert data and time into a single timestamp
+    const dateTimeStamp = timeStampFromDateTime(date,time);
+
     return { 
         type: SETTING_USERINPUT_SUCCESS,
         payload: {
             originStation,
             destinationStation,
-            date,
-            time
+            date: dateTimeStamp
         }
     };
 }

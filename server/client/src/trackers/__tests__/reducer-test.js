@@ -79,10 +79,10 @@ const fakeTrackersData = times(5, () => {
 const fakeTrackersById     = keyBy(fakeTrackersData, item => item.uid);
 const fakeTrackersAllIds   = fakeTrackersData.map(item => item.uid);
 
+
 /**
  * REDUCERS
  */
-
 describe('trackers reducer', () => {
     it('returns the initial state', () => {
 

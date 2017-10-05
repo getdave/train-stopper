@@ -21,12 +21,13 @@ import {
     SETTING_USERINPUT_SUCCESS
 } from '../types';
 
+import { timeStampFromDateTime } from '../../helpers';
+
 const INITIAL_STATE = {
     userInput: {
         originStation: '',
         destinationStation: '',
-        date: '',
-        time: ''
+        date: ''
     },
     service: {
         origin: '',
@@ -60,8 +61,8 @@ describe('journeys reducer', () => {
             const payload = {
                 originStation: 'fro',
                 destinationStation: 'bri',
-                date: '2017-10-23',
-                time: '08:00'
+                date: timeStampFromDateTime('2017-10-23','08:00')
+
             };
 
             const expected  = Object.assign({}, INITIAL_STATE, {
@@ -186,7 +187,7 @@ describe('journeys reducer', () => {
  */
 describe('journeys selectors', () => {
     const globalState  = {
-        journey: INITIAL_STATE
+        journey: INITIAL_STATE // TODO generate some real test data
     };
     test('selectIsFetching correctly selects from state', () => {
         
@@ -223,12 +224,12 @@ describe('journeys selectors', () => {
         expect(result).toEqual('');
     })
 
-    test('selectTime correctly selects date from state shape', () => {
+    // test('selectTime correctly selects date from state shape', () => {
 
-        const result = selectTime(globalState);
+    //     const result = selectTime(globalState);
 
-        expect(result).toEqual('');
-    })
+    //     expect(result).toEqual('');
+    // })
     
     test('selectStationServices correctly selects from state shape', () => {
 

@@ -1,3 +1,4 @@
+import parse from 'date-fns/parse';
 import { 
 	createStoreWithFakeAPI,
 	makeDispatchWithStore,
@@ -86,8 +87,7 @@ describe('journey action creators', () => {
 				payload: {
 		            originStation,
 		            destinationStation,
-		            date,
-		            time
+		            date: parse(`${date} ${time}`)
 		        }
 			};
 

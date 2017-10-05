@@ -52,16 +52,14 @@ function handleUserInput(state, action) {
     return {
         originStation: action.payload.originStation,
         destinationStation: action.payload.destinationStation,
-        date: action.payload.date,
-        time: action.payload.time
+        date: action.payload.date
     }
 }
 
 const userInputReducer = createReducer({
     originStation: '',
     destinationStation: '',
-    date: '',
-    time: ''
+    date: ''
 }, {
     [SETTING_USERINPUT_SUCCESS]: handleUserInput,
 });
@@ -121,7 +119,7 @@ export const selectService = state => state.journey.service;
 
 export const selectDate = state => state.journey.userInput.date;
 
-export const selectTime = state => state.journey.userInput.time;
+// export const selectTime = state => state.journey.userInput.time;
 
 
 // Export combined reducer

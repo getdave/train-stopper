@@ -1,5 +1,7 @@
 import * as TYPES from './types';
 import uid from 'uid';
+import { timeStampFromDateTime } from '../helpers';
+import isPast from 'date-fns/is_past';
 import differenceInMilliseconds from 'date-fns/difference_in_milliseconds';
 import { cloneDeep } from 'lodash';
 import { 
@@ -72,6 +74,10 @@ export function setCurrentTracker(trackerId) {
 
 
 
+
+
+
+
 export function createTracker(entry) {
     return (dispatch, getState, api) => { 
         
@@ -83,10 +89,9 @@ export function createTracker(entry) {
             type: TYPES.CREATING_TRACKER,
         });
 
-        const arrivalTS = Date.parse(`${tracker.date} ${tracker.time}`);
-        const diff      = differenceInMilliseconds(arrivalTS, new Date());
+        const arrivalTS = timeStampFromDateTime(tracker.date, tracker.time);
 
-        if (diff <= 0) {
+        if (isPast(arrivalTS)) {
             dispatch({ 
                 type: TYPES.CREATING_TRACKER_FAILED,
                 message: `Cannot create Trackers which have arrived in the past`
@@ -144,23 +149,17 @@ export function activateTracker(trackerId) {
 
         const state = getState();
 
-        const tracker = selectTracker(state, trackerId);
+        const newTracker = makeFreshTrackerWithStatus(state, trackerId, 'active');
 
-        // TODO - dry up date comparison into helper
-        const arrivalTS = Date.parse(`${tracker.date} ${tracker.time}`);
-        const diff      = differenceInMilliseconds(arrivalTS, new Date());
-  
-        if (diff <= 0) {
+        const arrivalTS = timeStampFromDateTime(tracker.date, tracker.time);
+
+        if (isPast(arrivalTS)) {
             dispatch({ 
                 type: TYPES.UPDATING_TRACKER_FAILED,
-                message: `Cannot activate Tracker which arrives in the past`
+                message: `Cannot activate a Tracker which arrives in the past`
             });
-            return;
+            return; // bail out!
         }
-
-        const newTracker = cloneDeep(tracker);
-
-        newTracker.status = 'active';
 
         _updateTracker(dispatch, api, trackerId, newTracker);
     }
@@ -171,11 +170,7 @@ export function deActivateTracker(trackerId) {
 
         const state = getState();
 
-        const tracker = selectTracker(state, trackerId);
-
-        const newTracker = cloneDeep(tracker);
-
-        newTracker.status = 'inactive';
+        const newTracker = makeFreshTrackerWithStatus(state, trackerId, 'inactive');
 
         _updateTracker(dispatch, api, trackerId, newTracker);
     }
@@ -186,54 +181,36 @@ export function archiveTracker(trackerId) {
     return (dispatch, getState, api) => {     
 
         const state = getState();
-
-        const tracker = selectTracker(state, trackerId);
-
-        const newTracker = cloneDeep(tracker);
-
-        newTracker.status = 'archived';
+        
+        const newTracker = makeFreshTrackerWithStatus(state, trackerId, 'archived');
 
         _updateTracker(dispatch, api, trackerId, newTracker);
     }
 }
-
-
-export function setTrackerAlertLevel(trackerId, level) {
-    return (dispatch, getState, api) => {     
-
-        const state = getState();
-
-        const tracker = selectTracker(state, trackerId);
-
-        const newTracker = cloneDeep(tracker);
-
-        newTracker.alertLevel = 1;
-
-        _updateTracker(dispatch, api, trackerId, newTracker);
-    }
-}
-
-
-
-
-
-
-
 
 
 
 // UTILS
+function makeFreshTrackerWithStatus(state, trackerId, status) {
+    const tracker       = selectTracker(state, trackerId);
+
+    const newTracker    = cloneDeep(tracker);
+
+    newTracker.status   = state;
+
+    return newTracker;
+}
+
 function prepareTrackerEntry(tracker) {
     return {
         uid: uid(),
         status: "inactive",
-        data: tracker,
         originCode: tracker.origin.station_code,
         originName: tracker.origin.station_name,
         destinationCode: tracker.destination.station_code,
         destinationName: tracker.destination.station_name,
-        date: tracker.origin.aimed_departure_date,
-        time: tracker.origin.aimed_departure_time
+        date: timeStampFromDateTime( tracker.origin.aimed_arrival_date, tracker.origin.aimed_arrival_time ),
+        // data: tracker, // this is a dump of all the tracker data. Really we should only take what we need...
     };
 }
 
