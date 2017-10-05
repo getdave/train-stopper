@@ -2,10 +2,9 @@ import configureMockStore from 'redux-mock-store';
 import reduxThunk from 'redux-thunk';
 import faker from 'faker';
 import { keyBy, omit, times, filter, get } from 'lodash';
-import format from 'date-fns/format';
-import addHours from 'date-fns/add_hours';
-import addMinutes from 'date-fns/add_minutes'
+import { format, addHours, addMinutes } from 'date-fns';
 import MockDate from 'mockdate';
+
 import * as NOTIFICATION_TYPES from '../../notifications/types';
 import TrackerManager from '../trackerManager';
 
@@ -66,6 +65,12 @@ const fakeTrackers = times(5, () => {
 const fakeTrackersByID     = keyBy(fakeTrackers, item => item.uid);
 const fakeTrackersAllIds   = fakeTrackers.map(item => item.uid);
 
+
+
+/**
+ * TESTS
+ *
+*/
 describe('trackerManager service', () => {
 
 	const middlewares = [ reduxThunk ]
