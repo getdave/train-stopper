@@ -47,41 +47,64 @@ class TrackerManager {
 		
 		const state = this.getStoreState();
 
-
-		// TODO - convert into a selector rather than rewrite
+		// Get all non-archived Trackers
 		const trackers = trackersSelectors.selectNonArchivedTrackers(state);
+
 
 		trackers.forEach(tracker => {
 
-			const isInPast = isPast( Date.parse(`${tracker.date} ${tracker.time}`) );
+			const isInPast = this.isInPast(tracker);
 
 			// Get the first config level where the threshold has been exceeded
-			const alertConf = this.notificatonTimerConfig.find( config => {
-				return this.thresholdExceeded( tracker, config.threshold );
-			});
+			const alertConf = this.getNearestAlertThresholdConfig(tracker);
 			
 			// If the Tracker journey is not in the past then...
 			if ( !isInPast && !isEmpty(alertConf) ) {
 
 				// Notify user for active Trackers only!
 				if(tracker.status === 'active') {
-					this.store.dispatch(
-	                	notificationsActions.createNotification({                		
-					        uid: uuid(),
-					        title: `Train ${alertConf.message}`,		 
-					        body: `Your train from ${tracker.originName} to ${tracker.destinationName} ${alertConf.message}`,
-	                	})
-	                );
+					this.createTrackerNotification(tracker, alertConf);  
 				}
 			}
 
 			// Archive any Trackers that are in the past	
 			if ( isInPast ) { 
-				this.store.dispatch(
-                	trackersActions.archiveTracker(tracker.uid)
-                );
+				this.archiveTracker(tracker.uid);
 			}
 		});
+	}
+
+
+	createTrackerNotification(tracker, alertConf, uid=uuid()) {
+		this.dispatchAction(
+        	notificationsActions.createNotification({                		
+		        uid: uid,
+		        title: `Train ${alertConf.message}`,		 
+		        body: `Your train from ${tracker.originName} to ${tracker.destinationName} ${alertConf.message}`,
+        	})
+        );
+	}
+
+
+	dispatchAction(action) {
+		this.store.dispatch(action);
+	}
+
+
+
+	getNearestAlertThresholdConfig(tracker) {
+		return this.notificatonTimerConfig.find( config => this.thresholdExceeded( tracker, config.threshold ) );
+	}
+
+
+	isInPast(tracker) {
+		return isPast( Date.parse(`${tracker.date} ${tracker.time}`) );
+	}
+
+	archiveTracker(uid) {
+		this.dispatchAction(
+        	trackersActions.archiveTracker(uid)
+        );
 	}
 
 

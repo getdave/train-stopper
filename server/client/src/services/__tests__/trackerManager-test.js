@@ -1,12 +1,12 @@
 import configureMockStore from 'redux-mock-store';
 import reduxThunk from 'redux-thunk';
 import faker from 'faker';
-import { keyBy, omit, times, filter } from 'lodash';
+import { keyBy, omit, times, filter, get } from 'lodash';
 import format from 'date-fns/format';
 import addHours from 'date-fns/add_hours';
 import addMinutes from 'date-fns/add_minutes'
 import MockDate from 'mockdate';
-
+import * as NOTIFICATION_TYPES from '../../notifications/types';
 import TrackerManager from '../trackerManager';
 
 const middlewares = [ reduxThunk ]
@@ -85,10 +85,51 @@ describe('trackerManager service', () => {
 			const subject = new TrackerManager(store);
 
 			const expected = store.getState();
-
 			const result = subject.getStoreState();
 
 			expect(result).toEqual(expected)
+
+		})
+	});
+
+
+	describe('createTrackerNotification', () => {
+		it('should dispatch createNotification', () => {
+			
+			const subject = new TrackerManager(store);
+
+			const mock = subject.dispatchAction = jest.fn();
+
+			const state = store.getState();
+
+			// Get first item from state
+			const trackersById 	= state.trackers.data.byId;
+			const tracker 		= trackersById[ Object.keys(trackersById)[0] ];
+
+			const alertConf = {
+				threshold: 1000, // 1 sec
+				message: 'has arrived!'
+			};		
+
+			const notificationID = 43;
+			
+			// Call
+			subject.createTrackerNotification(tracker, alertConf, notificationID);
+
+			expect(mock.mock.calls.length).toBe(1);
+
+			// Check that expected Action object is returned
+			// TODO - this knows too much about notifications 
+			// look to mock notificationsActions instead and assert what 
+			// args it was called with
+			expect(mock.mock.calls[0][0]).toEqual({
+				type: NOTIFICATION_TYPES.CREATING_NOTIFICATION_SUCCESS,
+        		payload: {
+        			uid: notificationID,
+        			title: `Train ${alertConf.message}`,		 
+		        	body: `Your train from ${tracker.originName} to ${tracker.destinationName} ${alertConf.message}`,
+        		}
+			});
 
 		})
 	});
