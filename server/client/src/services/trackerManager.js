@@ -97,7 +97,7 @@ class TrackerManager {
 
 	msTillArrival(tracker) {
 		const earlierDate = new Date();
-		const laterDate   = parse(`${tracker.date} ${tracker.time}`);
+		const laterDate   = parse(`${tracker.date} ${tracker.time}`); // TODO - this is ridiculous and should be stored as a datetime stramp!
         const diff 	  	  = differenceInMilliseconds(laterDate, earlierDate);
     	return diff;
 	}

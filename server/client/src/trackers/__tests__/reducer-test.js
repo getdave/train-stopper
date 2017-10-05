@@ -1,9 +1,14 @@
+import { addHours, format } from 'date-fns';
+import { times, filter, keyBy } from 'lodash';
+import faker from 'faker';
+
 import reducer, {
     selectTrackers,
     selectTracker,
     selectCurrentTracker,
     selectIsFetching,
-    selectIsError
+    selectIsError,
+    selectNonArchivedTrackers
 } from '../reducer';
 
 import * as TYPES from '../types';
@@ -20,28 +25,59 @@ const INITIAL_STATE = {
     }
 };
 
-// Approximates fake data from persistent storage
-const fakeTrackersData = [
+// Some random stops based on real data from the API
+const stopData = [
     {
-        uid: '987puofkskdj',
-        name: 'My Tracker'
+        name: 'Frome',
+        code: 'FRO'
     },
     {
-        uid: '7948709834nbmnbc',
-        name: 'My 2nd Tracker'
-    }
+        name: 'Bristol Temple Meads',
+        code: 'BRI'
+    },
+    {
+        name: 'Bradford-upon-Avon',
+        code: 'BOA'
+    },
+    {
+        name: 'Bath Spa',
+        code: 'BTH'
+    },
 ];
 
+// Generate our fake data
+const fakeTrackersData = times(5, () => {
+    const start     = faker.date.future();
+    const end       = addHours(start, 1);
+    const random    = faker.random.number({min:0, max:stopData.length-1});
 
-const fakeTrackersById = {
-    '987puofkskdj' : fakeTrackersData[0],
-    '7948709834nbmnbc': fakeTrackersData[1],
-};
+    // Grab random station from stops data
+    const origin = stopData[ random ];
 
-const fakeTrackersAllIds = [
-    fakeTrackersData[0]['uid'],
-    fakeTrackersData[1]['uid']
-];
+    // Filter out this value to ensure it cannot be selected again as dest
+    const newStopData = filter(stopData, (value, index ) => {
+        return index !== random;
+    })
+
+    // Grab random station
+    const dest = newStopData[ faker.random.number({min:0, max: newStopData.length-1}) ];
+    
+    return {
+        uid: faker.random.uuid(),
+        status: faker.random.arrayElement(['active', 'inactive', 'archived']),
+        data: {},
+        originCode: origin.code,
+        originName: origin.name,
+        destinationCode: dest.code,
+        destinationName: dest.name,
+        date: format( start, 'YYYY-MM-DD'),
+        time: format( start, 'HH:mm')
+    };
+})
+
+// Map fake data as required by store
+const fakeTrackersById     = keyBy(fakeTrackersData, item => item.uid);
+const fakeTrackersAllIds   = fakeTrackersData.map(item => item.uid);
 
 /**
  * REDUCERS
@@ -271,5 +307,21 @@ describe('trackers selectors', () => {
         expect(result).toEqual(currentTracker);
     })
 
+    test('selectNonArchivedTrackers correctly selects all trackers which are not archived', () => {
 
+        const state  = {
+            trackers: Object.assign({}, INITIAL_STATE, {
+                data: {
+                    allIds: fakeTrackersAllIds,
+                    byId: fakeTrackersById // we need this in state to be able to select the current item
+                }
+            })
+        };
+
+        const result = selectNonArchivedTrackers(state);
+        
+        result.forEach(item => {
+            expect(item).not.toHaveProperty( 'status', 'archived' );
+        })
+    })
 })
