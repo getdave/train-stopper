@@ -151,7 +151,7 @@ export function activateTracker(trackerId) {
 
         const newTracker = makeFreshTrackerWithStatus(state, trackerId, 'active');
 
-        const arrivalTS = timeStampFromDateTime(tracker.date, tracker.time);
+        const arrivalTS = timeStampFromDateTime(newTracker.date, newTracker.time);
 
         if (isPast(arrivalTS)) {
             dispatch({ 

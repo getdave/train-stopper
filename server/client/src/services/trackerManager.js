@@ -53,7 +53,7 @@ class TrackerManager {
 
 		trackers.forEach(tracker => {
 
-			const isInPast = this.isInPast(tracker);
+			const isInPast = isPast( tracker.date );
 
 			// Get the first config level where the threshold has been exceeded
 			const alertConf = this.getNearestAlertThresholdConfig(tracker);
@@ -96,10 +96,6 @@ class TrackerManager {
 	}
 
 
-	isInPast(tracker) {
-		return isPast( tracker.date );
-	}
-
 	archiveTracker(uid) {
 		this.dispatchAction(
         	trackersActions.archiveTracker(uid)
@@ -118,9 +114,9 @@ class TrackerManager {
 	}
 
 	msTillArrival(tracker) {
-		const earlierDate = new Date();
-		const laterDate   = tracker.date; // TODO - this is ridiculous and should be stored as a datetime stramp!
-        const diff 	  	  = differenceInMilliseconds(laterDate, earlierDate);
+		const currentTime = new Date();
+		const arrivalTime = tracker.date; // TODO - this is ridiculous and should be stored as a datetime stramp!
+        const diff 	  	  = differenceInMilliseconds(arrivalTime, currentTime);
     	return diff;
 	}
 }

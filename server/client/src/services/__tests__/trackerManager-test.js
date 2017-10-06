@@ -6,6 +6,7 @@ import { format, addHours, addMinutes } from 'date-fns';
 import MockDate from 'mockdate';
 
 import * as NOTIFICATION_TYPES from '../../notifications/types';
+import * as TRACKER_TYPES from '../../trackers/types';
 import TrackerManager from '../trackerManager';
 
 const middlewares = [ reduxThunk ]
@@ -213,6 +214,14 @@ describe('trackerManager service', () => {
 				threshold: 1000 * 60 * 5, // 5 mins
 				message: 'arriving in 5 mins'
 			})
+		})
+	})
+
+	describe('archiveTracker', () => {
+		it('should dispatch the archiveTracker action creater', () => {
+
+			
+			
 		})
 	})
 
