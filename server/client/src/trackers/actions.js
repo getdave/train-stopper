@@ -2,11 +2,10 @@ import * as TYPES from './types';
 import uid from 'uid';
 import { timeStampFromDateTime } from '../helpers';
 import isPast from 'date-fns/is_past';
-import differenceInMilliseconds from 'date-fns/difference_in_milliseconds';
-import { cloneDeep } from 'lodash';
+import { cloneDeep, isNull } from 'lodash';
 import { 
     selectTracker,
-    selectTrackers
+    // selectTrackers
 } from './reducer';
 
 
@@ -19,7 +18,7 @@ export function fetchTrackers() {
 
         
         return api.fetchTrackers().then(response => {
-
+          
             if (response.status !== 200) {
                 throw new Error(`${response.statusText}`);
             }
@@ -29,6 +28,7 @@ export function fetchTrackers() {
             });       
 
         }).catch(function (error) {
+              
             dispatch({ 
                 type: TYPES.FETCHING_TRACKERS_FAILED,
             });
@@ -44,6 +44,7 @@ export function fetchTracker(trackerId) {
 
         
         return api.fetchTracker(trackerId).then(response => {
+
             if (response.status !== 200) {
                 throw new Error(`${response.statusText}`);
             }
@@ -52,6 +53,7 @@ export function fetchTracker(trackerId) {
                 payload: response.data
             });       
         }).catch(function (error) {
+
             dispatch({ 
                 type: TYPES.FETCHING_TRACKER_FAILED,
             });
@@ -80,16 +82,17 @@ export function setCurrentTracker(trackerId) {
 
 export function createTracker(entry) {
     return (dispatch, getState, api) => { 
+
+
         
         // Pull out interesting parts of API response for easier access
         const tracker = prepareTrackerEntry(entry);
-
 
         dispatch({ 
             type: TYPES.CREATING_TRACKER,
         });
 
-        const arrivalTS = timeStampFromDateTime(tracker.date, tracker.time);
+        const arrivalTS = tracker.date;
 
         if (isPast(arrivalTS)) {
             dispatch({ 
@@ -100,7 +103,6 @@ export function createTracker(entry) {
 
 
         return api.createTracker(tracker).then(response => {
-
             if (response.status !== 200) {
                 throw new Error(`${response.statusText}`);
             }
@@ -108,10 +110,8 @@ export function createTracker(entry) {
                 type: TYPES.CREATING_TRACKER_SUCCESS,
                 payload: response.data
             });  
-
-            
-
         }).catch(function (error) {
+
             dispatch({ 
                 type: TYPES.CREATING_TRACKER_FAILED,
             });
@@ -126,7 +126,8 @@ function _updateTracker(dispatch, api, trackerId, newTracker) {
     });
     
     return api.updateTracker(trackerId, newTracker).then(response => {
-       
+                
+
         if (response.status !== 200) {
             throw new Error(`${response.statusText}`);
         }
@@ -135,7 +136,6 @@ function _updateTracker(dispatch, api, trackerId, newTracker) {
             payload: response.data
         });       
     }).catch(function (error) {
-
         dispatch({ 
             type: TYPES.UPDATING_TRACKER_FAILED,
         });
@@ -149,9 +149,9 @@ export function activateTracker(trackerId) {
 
         const state = getState();
 
-        const newTracker = makeFreshTrackerWithStatus(state, trackerId, 'active');
+        const newTracker = generateTrackerWithStatus(state, trackerId, 'active');
 
-        const arrivalTS = timeStampFromDateTime(newTracker.date, newTracker.time);
+        const arrivalTS = newTracker.date;
 
         if (isPast(arrivalTS)) {
             dispatch({ 
@@ -170,7 +170,7 @@ export function deActivateTracker(trackerId) {
 
         const state = getState();
 
-        const newTracker = makeFreshTrackerWithStatus(state, trackerId, 'inactive');
+        const newTracker = generateTrackerWithStatus(state, trackerId, 'inactive');
 
         _updateTracker(dispatch, api, trackerId, newTracker);
     }
@@ -182,7 +182,7 @@ export function archiveTracker(trackerId) {
 
         const state = getState();
         
-        const newTracker = makeFreshTrackerWithStatus(state, trackerId, 'archived');
+        const newTracker = generateTrackerWithStatus(state, trackerId, 'archived');
 
         _updateTracker(dispatch, api, trackerId, newTracker);
     }
@@ -191,25 +191,29 @@ export function archiveTracker(trackerId) {
 
 
 // UTILS
-function makeFreshTrackerWithStatus(state, trackerId, status) {
-    const tracker       = selectTracker(state, trackerId);
+function generateTrackerWithStatus(theState, trackerId, status) {
+    const tracker       = selectTracker(theState, trackerId);
 
     const newTracker    = cloneDeep(tracker);
 
-    newTracker.status   = state;
+    newTracker.status   = status;
 
     return newTracker;
 }
 
 function prepareTrackerEntry(tracker) {
+
     return {
         uid: uid(),
         status: "inactive",
+        trainUid: tracker.trainUid,
         originCode: tracker.origin.station_code,
         originName: tracker.origin.station_name,
         destinationCode: tracker.destination.station_code,
         destinationName: tracker.destination.station_name,
-        date: timeStampFromDateTime( tracker.origin.aimed_arrival_date, tracker.origin.aimed_arrival_time ),
+        departureTime: tracker.origin.aimed_departure_time,
+        arrivalTime: tracker.destination.aimed_arrival_time,
+        date: timeStampFromDateTime( tracker.destination.expected_arrival_date, tracker.destination.expected_arrival_time ),
         // data: tracker, // this is a dump of all the tracker data. Really we should only take what we need...
     };
 }

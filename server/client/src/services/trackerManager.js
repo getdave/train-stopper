@@ -10,12 +10,9 @@ import uuid from 'uuid';
 import { isEmpty } from 'lodash';
 import differenceInMilliseconds from 'date-fns/difference_in_milliseconds';
 import isPast from 'date-fns/is_past';
-import parse from 'date-fns/parse';
-import distanceInWordsToNow from 'date-fns/distance_in_words'
 import * as trackersSelectors from '../trackers/reducer';
 import * as trackersActions from '../trackers/actions';
 import * as notificationsActions from '../notifications/actions';
-import * as TYPES from '../trackers/types';
 
 // TODO - extract as this is not testable
 const NOTIFICATION_TIME_CONFIG_DEFAULTS = [

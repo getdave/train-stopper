@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { BrowserRouter, Route, Switch } from 'react-router-dom';
-import differenceInMilliseconds from 'date-fns/difference_in_milliseconds';
 
 // Pages
 import StationsPage from './scenes/stations/StationsPage';
@@ -11,15 +10,10 @@ import TrackersPage from './scenes/trackers/TrackersPage';
 import TrackerPage from './scenes/trackers/TrackerPage';
 import FourOhFour from './scenes/FourOhFour';
 
-
 import NotificationsContainer from './components/NotificationsContainer';
-
 import * as trackerActions from './trackers/actions';
-import * as trackersSelectors from './trackers/reducer';
 
 
-
-let notificationsAllowed        = false;
 
 class App extends Component {  
 
@@ -30,16 +24,6 @@ class App extends Component {
        
         // Start polling Trackers
         this.props.poller.start();
-
-        // Ask for perms to Notify the user
-        if ("Notification" in window) {
-            Notification.requestPermission(function (permission) {
-              // If the user accepts, let's create a notification
-              if (permission === "granted") {
-                notificationsAllowed = true;
-              }
-            });
-        }
     }
 
 

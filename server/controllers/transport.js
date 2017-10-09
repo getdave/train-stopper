@@ -8,8 +8,9 @@ const uid 			= require('uid');
 const Promise 		= require('promise');
 const axios 		= require('axios');
 const winston 		= require('winston');
-const format 		= require('date-fns/format')
 const _has			= require('lodash.has');
+const format 		= require('date-fns/format');
+const parse 		= require('date-fns/parse');
 
 /**
  * STATIONS
@@ -107,9 +108,14 @@ exports.stationServices = async (req, res) => {
 exports.service = async (req, res) => {
 	
 	const { train_uid, origin, destination, date } = req.query;
-	
-	const url = `https://transportapi.com/v3/uk/train/service/train_uid:${train_uid}/${date}/timetable.json`;
 
+	const dateYYMMDD = format(parseInt(date, 10), 'YYYY-MM-DD');
+
+	
+	
+	const url = `https://transportapi.com/v3/uk/train/service/train_uid:${train_uid}/${dateYYMMDD}/timetable.json`;
+
+	
 	try {		
 		const response = await axios.get(url, {
 			params: {

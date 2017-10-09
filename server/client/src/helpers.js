@@ -1,4 +1,4 @@
-import parse from 'date-fns/parse';
+import { parse, getTime, format } from 'date-fns';
 
 /**
  * UPPERCASE FIRST LETTER
@@ -16,5 +16,14 @@ export const uriEncodeAll = (items=[]) => {
 }
 
 export const timeStampFromDateTime = (date, time) => {
-    return parse(`${date} ${time}`);
+    const newDate = parse(`${date} ${time}`);
+    return getTime(newDate);
+}
+
+export const dateFromTS = (timestamp) => {
+    return format(parseInt(timestamp, 10), 'Do MMMM YYYY');
+}
+
+export const timeFromTS = (timestamp) => {
+    return format(parseInt(timestamp, 10), 'HH:mm');
 }

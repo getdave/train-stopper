@@ -87,7 +87,7 @@ describe('journey action creators', () => {
 				payload: {
 		            originStation,
 		            destinationStation,
-		            date: parse(`${date} ${time}`)
+		            date: parse(`${date} ${time}`).getTime()
 		        }
 			};
 
@@ -185,7 +185,7 @@ describe('journey action creators', () => {
 		});
 
 
-		const dispatchFetchService = makeDispatchWithStore(actions, 'fetchService', ['C29442', 'FRO', 'BRI', '2017-09-23']);
+		const dispatchFetchService = makeDispatchWithStore(actions, 'fetchService', 'C29442', 'FRO', 'BRI', '2017-09-23');
 
 
 		it('should create FETCHING_SERVICE when fetching a Service is started', () => {
@@ -208,7 +208,10 @@ describe('journey action creators', () => {
 			const expectedActions = [
 				{ 
 					type: types.FETCHING_SERVICE_SUCCESS,
-					payload: fakeServiceData
+					payload: {
+						data: fakeServiceData,
+						trainUid: 'C29442',
+					}
 				}
 			]
 			const store = mockSuccessStore()

@@ -47,7 +47,10 @@ export function fetchService(train_uid, origin, destination, date) {
             }
             dispatch({ 
                 type: FETCHING_SERVICE_SUCCESS,
-                payload: response.data
+                payload: {
+                    trainUid: train_uid,
+                    data: response.data,
+                }
             });       
         }).catch(function (error) {
             dispatch({ 

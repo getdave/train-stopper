@@ -2,7 +2,6 @@
  * NOITIFICATIONS REDUCER
  */
 
-import { combineReducers } from 'redux';
 import { omit } from 'lodash';
 import createReducer from '../utils/create-reducer';
 import * as TYPES from './types';

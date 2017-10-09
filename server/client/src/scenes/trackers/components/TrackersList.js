@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
+import { dateFromTS, timeFromTS } from '../../../helpers';
 
 import withConditionalRender from '../../../hoc/withConditionalRender';
 
@@ -18,7 +19,7 @@ class TrackersList extends Component {
 				    </div>
 					<div className="d-flex w-100 justify-content-between">
 				    	<div>
-				    		<small>Leaving on {tracker.date} at {tracker.time}</small>
+				    		<small>Arriving on { dateFromTS(tracker.date) } at { timeFromTS( tracker.date ) }</small>
 				    	</div>
 				    </div>
 				</Link>

@@ -2,8 +2,7 @@ import React, { Component } from 'react';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
-import differenceInMilliseconds from 'date-fns/difference_in_milliseconds';
-import { isEmpty, cloneDeep, bindAll } from 'lodash';
+import { isEmpty, bindAll } from 'lodash';
 
 import * as trackersSelectors from '../../trackers/reducer';
 import * as trackersActions from '../../trackers/actions';
@@ -30,6 +29,12 @@ class TrackerPage extends Component {
 	componentDidMount() {
 		this.doTrackersFetch(this.props);
 
+    }
+
+    componentWillUnmount() {
+    	if (!isEmpty(this.props.trackers)) {
+			this.props.setCurrentTracker(false); // once we unmount there is no current tracker
+		}
     }
 
     componentWillReceiveProps(nextProps) {

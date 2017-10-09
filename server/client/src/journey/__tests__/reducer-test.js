@@ -31,7 +31,8 @@ const INITIAL_STATE = {
     },
     service: {
         origin: '',
-        destination: ''
+        destination: '',
+        trainUid: ''
     }, 
     stationServices: [], 
     ui: {
@@ -119,55 +120,59 @@ describe('journeys reducer', () => {
     describe('service', () => {
         it('handles FETCHING_SERVICE_SUCCESS type', () => {
 
-            const payload = [
-                {
-                    "station_code": "FRO",
-                    "tiploc_code": "FROME",
-                    "station_name": "Frome",
-                    "stop_type": "LI",
-                    "platform": null,
-                    "aimed_departure_date": "2017-09-22",
-                    "aimed_departure_time": "08:02",
-                    "aimed_arrival_date": "2017-09-22",
-                    "aimed_arrival_time": "08:02",
-                    "aimed_pass_date": null,
-                    "aimed_pass_time": null,
-                    "expected_departure_date": null,
-                    "expected_departure_time": null,
-                    "expected_arrival_date": null,
-                    "expected_arrival_time": null,
-                    "expected_pass_date": null,
-                    "expected_pass_time": null,
-                    "status": null
-                },
-                {
-                    "station_code": "BRI",
-                    "tiploc_code": "BRSTLTM",
-                    "station_name": "Bristol Temple Meads",
-                    "stop_type": "LI",
-                    "platform": "5",
-                    "aimed_departure_date": "2017-09-22",
-                    "aimed_departure_time": "09:10",
-                    "aimed_arrival_date": "2017-09-22",
-                    "aimed_arrival_time": "09:06",
-                    "aimed_pass_date": null,
-                    "aimed_pass_time": null,
-                    "expected_departure_date": null,
-                    "expected_departure_time": null,
-                    "expected_arrival_date": null,
-                    "expected_arrival_time": null,
-                    "expected_pass_date": null,
-                    "expected_pass_time": null,
-                    "status": null
-                }
-            ];
+            const payload = {
+                trainUid: 'jbdskk290',
+                data:[
+                    {
+                        "station_code": "FRO",
+                        "tiploc_code": "FROME",
+                        "station_name": "Frome",
+                        "stop_type": "LI",
+                        "platform": null,
+                        "aimed_departure_date": "2017-09-22",
+                        "aimed_departure_time": "08:02",
+                        "aimed_arrival_date": "2017-09-22",
+                        "aimed_arrival_time": "08:02",
+                        "aimed_pass_date": null,
+                        "aimed_pass_time": null,
+                        "expected_departure_date": null,
+                        "expected_departure_time": null,
+                        "expected_arrival_date": null,
+                        "expected_arrival_time": null,
+                        "expected_pass_date": null,
+                        "expected_pass_time": null,
+                        "status": null
+                    },
+                    {
+                        "station_code": "BRI",
+                        "tiploc_code": "BRSTLTM",
+                        "station_name": "Bristol Temple Meads",
+                        "stop_type": "LI",
+                        "platform": "5",
+                        "aimed_departure_date": "2017-09-22",
+                        "aimed_departure_time": "09:10",
+                        "aimed_arrival_date": "2017-09-22",
+                        "aimed_arrival_time": "09:06",
+                        "aimed_pass_date": null,
+                        "aimed_pass_time": null,
+                        "expected_departure_date": null,
+                        "expected_departure_time": null,
+                        "expected_arrival_date": null,
+                        "expected_arrival_time": null,
+                        "expected_pass_date": null,
+                        "expected_pass_time": null,
+                        "status": null
+                    }
+                ]
+            };
 
             
 
             const expected  = Object.assign({}, INITIAL_STATE, {
                 service: {
-                    origin: payload[0],
-                    destination: payload[1]
+                    trainUid: payload.trainUid,
+                    origin: payload.data[0],
+                    destination: payload.data[1]
                 }
             });            
 
@@ -244,7 +249,8 @@ describe('journeys selectors', () => {
 
         expect(result).toEqual({
             origin: '',
-            destination: ''
+            destination: '',
+            trainUid: ''
         });
     })
 })

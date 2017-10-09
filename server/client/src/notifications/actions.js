@@ -1,6 +1,4 @@
 import * as TYPES from './types';
-import uid from 'uid';
-
 
 export function createNotification(notification) {        
     return { 

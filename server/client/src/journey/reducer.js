@@ -31,14 +31,16 @@ const stationServicesReducer = createReducer([], {
  */
 function handleService(state, action) {
     return {
-        origin: action.payload[0],
-        destination: action.payload[1]
+        origin: action.payload.data[0],
+        destination: action.payload.data[1],
+        trainUid: action.payload.trainUid
     }
 }
 
 const serviceReducer = createReducer({
     origin: '',
-    destination: ''
+    destination: '',
+    trainUid: '',
 }, {
     [FETCHING_SERVICE_SUCCESS]: handleService,
 });
