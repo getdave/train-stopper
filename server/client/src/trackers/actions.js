@@ -82,8 +82,6 @@ export function setCurrentTracker(trackerId) {
 
 export function createTracker(entry) {
     return (dispatch, getState, api) => { 
-
-
         
         // Pull out interesting parts of API response for easier access
         const tracker = prepareTrackerEntry(entry);

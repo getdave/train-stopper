@@ -212,6 +212,85 @@ describe('trackers reducer', () => {
         })
     })
 
+    describe('deleting tracker', () => {
+        it('handles DELETING_TRACKER', () => {
+
+            const expected  = Object.assign({}, INITIAL_STATE, {
+                ui: {
+                    isError: false,
+                    isFetching: true
+                }
+            });            
+
+            const result = reducer(INITIAL_STATE, {
+                type: TYPES.DELETING_TRACKER,
+            });
+        
+            expect(result).toEqual(expected);
+        })
+
+        it('handles DELETING_TRACKER_SUCCESS', () => {
+
+
+            const trackerId = fakeTrackersData[0]['uid'];
+            const initial = Object.assign({}, INITIAL_STATE, {
+                data: {
+                    byId: fakeTrackersById,
+                    allIds: fakeTrackersAllIds
+                }
+            });    
+
+            
+            const newById = Object.assign({}, initial.data.byId);
+            
+            Object.keys(newById).forEach(key => {
+                if (key === trackerId) {
+                    delete newById[key];
+                }
+            });
+
+            const newAllIds = initial.data.allIds.filter(itemId => itemId !== trackerId);
+            
+
+            const expected = Object.assign({}, initial, {
+                data: {
+                    byId: newById,
+                    allIds: newAllIds
+                }
+            });        
+
+
+
+
+            const result = reducer(initial, {
+                type: TYPES.DELETING_TRACKER_SUCCESS,
+                payload: trackerId
+            });
+        
+            expect(result).toEqual(expected);
+        })
+
+
+        // it('handles DELETING_TRACKER_FAILED', () => {
+        //     const expected  = Object.assign({}, INITIAL_STATE, {
+        //         data: {
+        //             byId: {},
+        //             allIds: []
+        //         },
+        //         ui: {
+        //             isError: true,
+        //             isFetching: false
+        //         }
+        //     });            
+
+        //     const result = reducer(INITIAL_STATE, {
+        //         type: TYPES.DELETING_TRACKER_FAILED,
+        //     });
+        
+        //     expect(result).toEqual(expected);
+        // })
+    })
+
     describe('setting current tracker', () => {
         it('handles SETTING_CURRENT_TRACKER_SUCCESS', () => {
 

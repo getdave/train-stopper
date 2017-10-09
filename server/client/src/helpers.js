@@ -27,3 +27,16 @@ export const dateFromTS = (timestamp) => {
 export const timeFromTS = (timestamp) => {
     return format(parseInt(timestamp, 10), 'HH:mm');
 }
+
+
+export const omitByKey = (keyToOmit, obj) => {
+	const newObj = Object.assign({}, obj);
+            
+    Object.keys(newObj).forEach(key => {
+        if (key === keyToOmit) {
+            delete newObj[key];
+        }
+    });
+
+    return newObj;
+}

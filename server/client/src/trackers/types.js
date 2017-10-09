@@ -9,6 +9,11 @@ export const CREATING_TRACKER 			= 'creating_tracker';
 export const CREATING_TRACKER_SUCCESS 	= 'creating_tracker_success';
 export const CREATING_TRACKER_FAILED 	= 'creating_tracker_failed';
 
+// Deleting Single
+export const DELETING_TRACKER 			= 'deleting_tracker';
+export const DELETING_TRACKER_SUCCESS 	= 'deleting_tracker_success';
+export const DELETING_TRACKER_FAILED 	= 'deleting_tracker_failed';
+
 
 // Fetching Tracker
 export const FETCHING_TRACKER 			= 'fetching_tracker';

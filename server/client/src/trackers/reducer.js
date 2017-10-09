@@ -1,11 +1,12 @@
 /**
- * STATION REDUCER
+ * TRACKERS REDUCER
  */
 
 import { combineReducers } from 'redux';
 import createReducer from '../utils/create-reducer';
 import { keyBy } from 'lodash';
 import * as TYPES from './types';
+import { omitByKey } from '../helpers';
 
 
 const getInitialDataState = () => ({
@@ -27,7 +28,7 @@ function handFetchingTrackersSuccess(state, action) {
         allIds: payload.map(keyByUid)
     }
 
-    return newState; // Array
+    return newState; 
 }
 
 // CREATING
@@ -40,7 +41,7 @@ function handleCreatingTrackerSuccess(state, action) {
         allIds: payload.map(keyByUid)
     }
 
-    return newState; // Array
+    return newState; 
 }
 
 
@@ -56,7 +57,26 @@ function handleUpdatingTrackerSuccess(state, action) {
         }
     }
 
-    return newState; // Array
+    return newState; 
+}
+
+// DELETING
+function handleDeletingTrackerSuccess(state, action) { 
+    const { payload } = action;
+
+    const trackerId = payload;
+
+    // Immutable update
+    const newById   = omitByKey(trackerId, state.byId);
+    const newAllIds = state.allIds.filter(itemId => itemId !== trackerId);
+
+
+    const newState = {
+        allIds: newAllIds,
+        byId: newById
+    }
+
+    return newState; 
 }
 
 
@@ -66,6 +86,7 @@ const trackersReducer = createReducer(getInitialDataState(), {
     [TYPES.CREATING_TRACKER_SUCCESS]: handleCreatingTrackerSuccess,
     [TYPES.CREATING_TRACKER_FAILED]: getInitialDataState,
     [TYPES.UPDATING_TRACKER_SUCCESS]: handleUpdatingTrackerSuccess,
+    [TYPES.DELETING_TRACKER_SUCCESS]: handleDeletingTrackerSuccess,
 });
 
 
@@ -80,6 +101,12 @@ function handleSettingCurrentTrackerSuccess(state, action) {
 const currentReducer = createReducer(false, {
     [TYPES.SETTING_CURRENT_TRACKER_SUCCESS]: handleSettingCurrentTrackerSuccess,
 });
+
+
+
+
+
+
 
 
 
@@ -120,7 +147,11 @@ const uiReducer = createReducer({
     [TYPES.CREATING_TRACKER_FAILED] : handleUIError,
     [TYPES.UPDATING_TRACKER] : handleUIFetching,
     [TYPES.UPDATING_TRACKER_FAILED]: handleUIError,
-    [TYPES.UPDATING_TRACKER_SUCCESS]: handleUISuccess
+    [TYPES.UPDATING_TRACKER_SUCCESS]: handleUISuccess,
+    [TYPES.DELETING_TRACKER] : handleUIFetching,
+    [TYPES.DELETING_TRACKER_FAILED]: handleUIError,
+    [TYPES.DELETING_TRACKER_SUCCESS]: handleUISuccess,
+
 });
 
 
