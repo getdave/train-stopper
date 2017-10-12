@@ -11,6 +11,8 @@ const TrackerDetail = props => {
 
 	const isEnabled = (tracker.status === 'archived' ? true : false);
 
+
+
     return (
     	<div>
 	    	<h1>{tracker.originName} to {tracker.destinationName}</h1>
@@ -21,6 +23,12 @@ const TrackerDetail = props => {
 
 	    	<button disabled={isEnabled} className="btn btn-primary" type="button" onClick={btnMethod}>
 	    		{btnText}
+	    	</button>
+
+
+
+	    	<button className="float-right btn btn-danger" type="button" onClick={props.onDelete}>
+	    		Delete Tracker
 	    	</button>
 
 	    </div>

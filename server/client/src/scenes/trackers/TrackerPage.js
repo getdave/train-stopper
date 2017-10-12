@@ -20,7 +20,8 @@ class TrackerPage extends Component {
 
 		bindAll(this, [
 			'handleTrackerActivation',
-			'handleTrackerDeactivation'
+			'handleTrackerDeactivation',
+			'handleTrackerDeletion'
 		]);
 
 	}
@@ -70,6 +71,17 @@ class TrackerPage extends Component {
 		this.props.deActivateTracker(tracker.uid);
 	}
 
+	handleTrackerDeletion(e) {
+		e.preventDefault();
+
+		const {tracker} = this.props;
+
+		this.props.deleteTracker(tracker.uid);
+
+		// TODO - add UI to indicate Tracker was deleted
+		this.props.history.push(`/trackers/`);
+	}
+
 
 	render() {
 		const { tracker, isFetching, isError } = this.props;
@@ -77,7 +89,7 @@ class TrackerPage extends Component {
 		// TODO - if Tracker is in past then show warning
 		// ...and don't track!
 	    return (
-	    	<TrackerDetail isFetching={isFetching} isError={isError} tracker={tracker} onStart={this.handleTrackerActivation} onStop={this.handleTrackerDeactivation} />
+	    	<TrackerDetail isFetching={isFetching} isError={isError} tracker={tracker} onStart={this.handleTrackerActivation} onStop={this.handleTrackerDeactivation} onDelete={ this.handleTrackerDeletion} />
 	    )
 	}
 

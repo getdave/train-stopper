@@ -11,18 +11,18 @@ class TrackersList extends Component {
 		return this.props.trackers.map( (tracker ) => {
 			return (
 				<li key={tracker.uid} className="list-group-item flex-column align-items-start">
-				<Link to={`/trackers/${tracker.uid}`} className="w-100">
-					
-					<div className="d-flex w-100 justify-content-between">
-				      	<h5 className="mb-1">{tracker.originName} to {tracker.destinationName}</h5>
-				      	<span className="align-right badge badge-default badge-pill">{tracker.status}</span>
-				    </div>
-					<div className="d-flex w-100 justify-content-between">
-				    	<div>
-				    		<small>Arriving on { dateFromTS(tracker.date) } at { timeFromTS( tracker.date ) }</small>
-				    	</div>
-				    </div>
-				</Link>
+					<Link to={`/trackers/${tracker.uid}`} className="w-100">
+						
+						<div className="d-flex w-100 justify-content-between">
+					      	<h5 className="mb-1">{tracker.originName} to {tracker.destinationName}</h5>
+					      	<span className="align-right badge badge-default badge-pill">{tracker.status}</span>
+					    </div>
+						<div className="d-flex w-100 justify-content-between">
+					    	<div>
+					    		<small>Arriving on { dateFromTS(tracker.date) } at { timeFromTS( tracker.date ) }</small>
+					    	</div>
+					    </div>
+					</Link>
 				</li>
 			);			
 		});

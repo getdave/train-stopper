@@ -105,10 +105,11 @@ export const updateTracker = (id, newTracker) => {
  */
 export const deleteTracker = (trackerId) => {
     return new Promise( (resolve, reject) => {
+        debugger;
        let data = fetchTrackersFromStorage();
 
 
-       const newData = data.filter(tracker => tracker.uid === trackerId);
+       const newData = data.filter(tracker => tracker.uid !== trackerId);
        
        // Update
        persistTrackersToStorage(newData);       
