@@ -1,17 +1,19 @@
 import faker from 'faker';
-
+import { keyBy } from 'lodash';
 import { 
 	createStoreWithFakeAPI,
 	makeDispatchWithStore,
-		rejectedPromise
+	rejectedPromise
 } from '../../tests/helpers';
 
 import * as ACTIONS from '../actions';
 import * as TYPES 	from '../types';
+import { omitByKey } from '../../helpers';
 
 
 const fakeTrackersData = [
 	{
+		uid: faker.random.uuid(),
 		origin: {
 			station_code: 'FRO',
 			station_name: 'Frome',
@@ -25,11 +27,17 @@ const fakeTrackersData = [
 	}
 ];
 
+// Map fake data as required by store
+const fakeTrackersById     = keyBy(fakeTrackersData, item => item.uid);
+const fakeTrackersAllIds   = fakeTrackersData.map(item => item.uid);
+
+
+
 
 
 describe('tracker action creators', () => {
 
-	describe('fetch trackers', () => {
+	describe('fetchTrackers', () => {
 
 		const mockSuccessStore   = createStoreWithFakeAPI({
 		  	fetchTrackers: () => {
@@ -99,7 +107,7 @@ describe('tracker action creators', () => {
 	})	
 
 
-	describe('set tracker', () => {
+	describe('createTracker', () => {
 
 		const mockSuccessStore   = createStoreWithFakeAPI({
 		  	createTracker: () => {
@@ -166,4 +174,81 @@ describe('tracker action creators', () => {
 			})
 		})
 	})
+
+
+	describe('deleteTracker', () => {
+
+		const fakeTrackerId = fakeTrackersData[0]['uid'];
+
+		const mockSuccessStore = createStoreWithFakeAPI({
+		  	deleteTracker: () => {
+		  		return Promise.resolve({
+					status: 200,
+					data: fakeTrackerId
+				})
+		  	}
+		});
+
+
+		const mockErrorStore   = createStoreWithFakeAPI({
+		  	deleteTracker: rejectedPromise
+		});
+
+		const dispatchWithStore = makeDispatchWithStore(ACTIONS, 'deleteTracker', [fakeTrackerId]);
+
+
+
+
+		it('should create DELETING_TRACKER when deleting Tracker is started', () => {
+
+			const expectedActions = [
+				{ 
+					type: TYPES.DELETING_TRACKER
+				}
+			]
+			const store = mockSuccessStore();
+
+			
+
+			// Note: we are testing the actual action here not a fake action!
+			return dispatchWithStore(store).then(() => {
+				expect(store.getActions()).toEqual(expect.arrayContaining(expectedActions))
+			})
+		})
+
+		it('should create DELETING_TRACKER_SUCCESS when deleting a Tracker is successful', () => {
+
+
+			const expectedActions = [
+				{ 
+					type: TYPES.DELETING_TRACKER_SUCCESS,
+					payload: fakeTrackerId
+				}
+			]
+			const store = mockSuccessStore();
+
+
+			// Note: we are testing the actual action here not a fake action!
+			return dispatchWithStore(store).then(() => {
+				expect(store.getActions()).toEqual(expect.arrayContaining(expectedActions))
+			})
+		})
+
+		it('should create DELETING_TRACKER_FAILED when deleting a Tracker is unsuccessful', () => {
+
+			const expectedActions = [
+				{ 
+					type: TYPES.DELETING_TRACKER_FAILED
+				}
+			]
+			const store = mockErrorStore();
+			
+
+			// Note: we are testing the actual action here not a fake action!
+			return dispatchWithStore(store).then(() => {
+				expect(store.getActions()).toEqual(expect.arrayContaining(expectedActions))
+			})
+		})
+	})	
+
 })

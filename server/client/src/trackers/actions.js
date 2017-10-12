@@ -76,7 +76,27 @@ export function setCurrentTracker(trackerId) {
 
 
 
+export function deleteTracker(trackerId) {
+    return (dispatch, getState, api) => { 
+        dispatch({ 
+            type: TYPES.DELETING_TRACKER,
+        })
 
+        return api.deleteTracker(trackerId).then(response => {
+            if (response.status !== 200) {
+                throw new Error(`${response.statusText}`);
+            }
+            dispatch({ 
+                type: TYPES.DELETING_TRACKER_SUCCESS,
+                payload: response.data
+            });  
+        }).catch(function (error) {
+            dispatch({ 
+                type: TYPES.DELETING_TRACKER_FAILED,
+            });
+        }); 
+    }
+}
 
 
 

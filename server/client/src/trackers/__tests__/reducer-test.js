@@ -271,24 +271,28 @@ describe('trackers reducer', () => {
         })
 
 
-        // it('handles DELETING_TRACKER_FAILED', () => {
-        //     const expected  = Object.assign({}, INITIAL_STATE, {
-        //         data: {
-        //             byId: {},
-        //             allIds: []
-        //         },
-        //         ui: {
-        //             isError: true,
-        //             isFetching: false
-        //         }
-        //     });            
+        it('handles DELETING_TRACKER_FAILED', () => {
 
-        //     const result = reducer(INITIAL_STATE, {
-        //         type: TYPES.DELETING_TRACKER_FAILED,
-        //     });
+            const initial = Object.assign({}, INITIAL_STATE, {
+                data: {
+                    byId: fakeTrackersById,
+                    allIds: fakeTrackersAllIds
+                }
+            });     
+
+            const expected = Object.assign({}, initial, {
+                ui: {
+                    isError: true,
+                    isFetching: false
+                }
+            })
+
+            const result = reducer(initial, {
+                type: TYPES.DELETING_TRACKER_FAILED,
+            });
         
-        //     expect(result).toEqual(expected);
-        // })
+            expect(result).toEqual(expected);
+        })
     })
 
     describe('setting current tracker', () => {

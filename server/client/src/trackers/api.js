@@ -100,6 +100,29 @@ export const updateTracker = (id, newTracker) => {
 };
 
 
+/**
+ * DELETE TRACKER
+ */
+export const deleteTracker = (trackerId) => {
+    return new Promise( (resolve, reject) => {
+       let data = fetchTrackersFromStorage();
+
+
+       const newData = data.filter(tracker => tracker.uid === trackerId);
+       
+       // Update
+       persistTrackersToStorage(newData);       
+
+       // Return success and new journeys
+       resolve({
+            status: 200,
+            data: trackerId,
+       })
+
+    })
+};
+
+
 
 
 
