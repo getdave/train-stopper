@@ -37,12 +37,12 @@ class App extends Component {
                 <BrowserRouter>
                     <div>
                         <Switch>
-                        <Route exact path="/" component={StationsPage} />
-                        <Route exact path="/journey/:originStation/:destinationStation/:date/:time" component={JourneyPage} />
-                        <Route exact path="/journey/service/:trainUId" component={ServicePage} />
-                        <Route exact path="/trackers/" component={TrackersPage} />
-                        <Route exact path="/trackers/:trackerId" component={TrackerPage} />
-                        <Route component={FourOhFour} />
+                            <Route exact path="/" component={StationsPage} />
+                            <Route exact path="/journey/:originStation/:destinationStation/:date/:time" component={JourneyPage} />
+                            <Route exact path="/journey/service/:trainUId" component={ServicePage} />
+                            <Route exact path="/trackers/" component={TrackersPage} />
+                            <Route exact path="/trackers/:trackerId" component={TrackerPage} />
+                            <Route component={FourOhFour} />
                         </Switch>
                     </div>
                 </BrowserRouter>

@@ -34,6 +34,8 @@ exports.stations = async (req, res) => {
 			throw new Error(response.statusText);
 		}
 
+
+
 		const data = response.data.member.map( (station, index) => {
 			return {
 				id: index,
@@ -48,6 +50,8 @@ exports.stations = async (req, res) => {
 		return res.status(500).send({ error: e })
 	}
 };
+
+
 
 
 

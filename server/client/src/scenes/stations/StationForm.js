@@ -6,6 +6,8 @@ import { withRouter } from 'react-router-dom';
 import bindAll from 'lodash/bindAll';
 import isObject from 'lodash/isObject';
 import { isValid } from 'date-fns';
+import { Button, Form } from 'semantic-ui-react'
+
 
 import AutoSuggest from '../../components/AutoSuggest';
 import * as stationsActions from '../../stations/actions';
@@ -51,9 +53,10 @@ class StationForm extends Component {
 		const { valid, handleSubmit, pristine, reset, submitting } = this.props;		
 		
 	    return (
-	    	<div>    		
-	    		<form onSubmit={handleSubmit(this.handleFormSubmit)}>
-					<div className="form-group">				
+	    	<div>    	
+
+	    		<Form onSubmit={handleSubmit(this.handleFormSubmit)}>
+					<Form.Field>			
 						<Field
 							labelName="Origin Station"
 							placeholder="eg: Bristol..."
@@ -65,9 +68,9 @@ class StationForm extends Component {
 							handleInputChanged={this.handleInputChanged}
 							busy={this.props.isFetching}
 				         />
-					</div>
+					</Form.Field>
 
-					<div className="form-group">	
+					<Form.Field>	
 						<Field
 							labelName="Destination Station"
 							placeholder="eg: Bath Spa..."
@@ -79,24 +82,27 @@ class StationForm extends Component {
 							handleInputChanged={this.handleInputChanged}
 							busy={this.props.isFetching}
 				         />
-					</div>
+					</Form.Field>
 
-					<div className="form-group">	
+					<Form.Field>	
+						<label>Date of Travel</label>
 						<Field name="date" component="input" type="text" placeholder="YYYY-MM-DD"/>
-					</div>
+					</Form.Field>
 
-					<div className="form-group">	
+					<Form.Field>	
+						<label>Time of travel</label>
 						<Field name="time" component="input" type="text" placeholder="HH:MM" />
-					</div>
+					</Form.Field>
 
 					
 			      
 					<div className="form-group">	
-						<button className="btn btn-primary mr-2" type="submit" disabled={pristine || !valid || submitting}>Submit</button>
-						<button className="btn btn-default" type="button" disabled={pristine || submitting} onClick={reset}>Reset Values
-						</button>
+
+						<Button primary type="submit" disabled={pristine || !valid || submitting}>Submit</Button>
+						<Button secondary type="button" disabled={pristine || submitting} onClick={reset}>Reset Values
+						</Button>
 					</div>
-			    </form>
+			    </Form>
 	    	</div>
 	    )
 	}

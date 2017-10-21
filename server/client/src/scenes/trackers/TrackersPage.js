@@ -3,10 +3,10 @@ import { compose } from 'redux';
 import { connect } from 'react-redux';
 import { withRouter } from 'react-router-dom';
 import { isEmpty } from 'lodash';
-
 import * as trackersSelectors from '../../trackers/reducer';
 import * as trackersActions from '../../trackers/actions';
 
+import { Container } from 'semantic-ui-react';
 import TrackersList from './components/TrackersList';
 
 class TrackersPage extends Component {
@@ -21,10 +21,10 @@ class TrackersPage extends Component {
 
 	render() {
 		return (
-			<div>
+			<Container>
 				<h1>Your Trackers</h1>
 				<TrackersList {...this.props} />
-			</div>
+			</Container>
 		);		
 	}
 

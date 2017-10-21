@@ -2,7 +2,7 @@ import * as TYPES from './types';
 import uid from 'uid';
 import { timeStampFromDateTime } from '../helpers';
 import isPast from 'date-fns/is_past';
-import { cloneDeep, isNull } from 'lodash';
+import { cloneDeep } from 'lodash';
 import { 
     selectTracker,
     // selectTrackers
@@ -207,6 +207,26 @@ export function archiveTracker(trackerId) {
 }
 
 
+export function setAlertThresholdComplete(trackerId, threshold) {
+    return (dispatch, getState, api) => {     
+
+        const state         = getState();
+        
+        const tracker       = selectTracker(state, trackerId);
+
+        const newTracker    = cloneDeep(tracker);
+        
+        // Set the desired alert threshold as have been passed
+        newTracker.alerts[threshold] = true;
+
+        _updateTracker(dispatch, api, trackerId, newTracker);
+    }
+}
+
+
+
+
+
 
 // UTILS
 function generateTrackerWithStatus(theState, trackerId, status) {
@@ -219,11 +239,17 @@ function generateTrackerWithStatus(theState, trackerId, status) {
     return newTracker;
 }
 
+
 function prepareTrackerEntry(tracker) {
 
     return {
         uid: uid(),
         status: "inactive",
+        alerts: {
+            '1000': false,
+            '60000': false,
+            '300000': false
+        },
         trainUid: tracker.trainUid,
         originCode: tracker.origin.station_code,
         originName: tracker.origin.station_name,

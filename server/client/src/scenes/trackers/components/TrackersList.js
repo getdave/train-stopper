@@ -38,5 +38,8 @@ class TrackersList extends Component {
 	}
 };
 
-export default withConditionalRender(TrackersList, 'trackers');
+export default withConditionalRender({
+	requiredProp: 'trackers',
+	missingDataMsg: `You currently don't have any Trackers.`,
+})(TrackersList);
 

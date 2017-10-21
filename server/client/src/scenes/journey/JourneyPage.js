@@ -1,11 +1,11 @@
 import React, { Component } from 'react';
 import { compose } from 'redux';
 import { connect } from 'react-redux';
-import { withRouter, Link } from 'react-router-dom';
+import { withRouter } from 'react-router-dom';
 import * as journeyActions from '../../journey/actions';
 import * as journeySelectors from '../../journey/reducer';
 
-import { ListGroup } from 'reactstrap';
+import ServiceList from './components/ServiceList';
 
 class JourneyPage extends Component {
 
@@ -36,52 +36,12 @@ class JourneyPage extends Component {
 	}
 
 	render() {
-
 	    return (
 	    	<div>
 		    	<h1>Select a Journey</h1>
-		    	<p>Pick a journey...</p>
-		    	{this.renderJourneys()}
+		    	<ServiceList isFetching={this.props.isFetching} isError={this.props.isError} stationServices={this.props.stationServices} originStation={this.props.originStation}/>
 		    </div>
 	    )
-	}
-
-	renderJourneys() {
-		if (this.props.isError) {
-			return (
-				<p className="alert alert-warning">
-					We encountered an error when attempting to load train journeys.
-				</p>
-			)
-		}
-
-		if (this.props.isFetching) {
-			return (
-				<p className="alert alert-info">
-					Loading Train journey times...
-				</p>
-			)
-		}
-
-		const stationServices = this.props.stationServices.map( service => {
-
-			return (
-				<Link key={service.train_uid} to={`/journey/service/${service.train_uid}`} className="list-group-item list-group-item-action flex-column align-items-start">
-					<div className="d-flex w-100 justify-content-between">
-						<h5 className="mb-1">{service.origin_name} - {service.destination_name}</h5>
-					</div>
-					<p className="mb-1">this train departs from <strong>{this.props.originStation}</strong> at {service.aimed_departure_time}</p>
-				</Link>
-			);
-
-			
-		});
-
-		return (
-			<ListGroup>
-			{stationServices}
-        	</ListGroup>
-		)
 	}
 };
 

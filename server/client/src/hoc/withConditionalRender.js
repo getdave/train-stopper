@@ -2,34 +2,42 @@ import React from 'react';
 import { Alert } from 'reactstrap';
 import { isEmpty } from 'lodash';
 
-function withConditionalRender(Component, dataProp='data', errorMsg='There was a problem. Please try again.') {
-  return function EnhancedComponent(props) {
+
+const withConditionalRender = options => Component => props => {
+    
+      options = Object.assign({},{
+        requiredProp: 'data', // eg: props.data
+        missingDataMsg: 'No data found do something else',
+        errorMsg: 'There was a problem. Please try again.',
+        fetchingMsg: 'Loading...',
+      }, options);
+
+      
       if (props.isFetching) {
           return (
-              <p>Loading...</p>
+              <p>{options.fetchingMsg}</p>
           );
       }
 
       if (props.isError) {
           return (
               <Alert color="warning">
-                  { errorMsg }
+                  { options.errorMsg }
               </Alert>
           );
       }
 
       // Don't allow <Component>'s render() method to be called
       // unless the data prop is available      
-      if ( isEmpty( props[dataProp] ) ) {
+      if ( isEmpty( props[options.requiredProp] ) ) {
           return ( 
             <Alert color="info">
-              No data found.
+              { options.missingDataMsg }
             </Alert>
           )
       }
     
       return <Component { ...props } />;
-  };
 };
 
 export default withConditionalRender;

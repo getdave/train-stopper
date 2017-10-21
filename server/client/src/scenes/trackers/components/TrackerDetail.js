@@ -1,5 +1,6 @@
 import React from 'react';
 import withConditionalRender from '../../../hoc/withConditionalRender';
+import { Container } from 'semantic-ui-react';
 
 
 const TrackerDetail = props => {
@@ -12,9 +13,8 @@ const TrackerDetail = props => {
 	const isEnabled = (tracker.status === 'archived' ? true : false);
 
 
-
     return (
-    	<div>
+    	<Container>
 	    	<h1>{tracker.originName} to {tracker.destinationName}</h1>
 
 	    	<span className="badge badge-default badge-pill">{tracker.status}</span>
@@ -25,14 +25,15 @@ const TrackerDetail = props => {
 	    		{btnText}
 	    	</button>
 
-
-
 	    	<button className="float-right btn btn-danger" type="button" onClick={props.onDelete}>
 	    		Delete Tracker
 	    	</button>
 
-	    </div>
+	    </Container>
     )
 };
 
-export default withConditionalRender(TrackerDetail, 'tracker');
+export default withConditionalRender({
+	requiredProp: 'tracker',
+	missingDataMsg: `Uh oh, it looks like the Tracker you were looking for no longer exists.`
+})(TrackerDetail);

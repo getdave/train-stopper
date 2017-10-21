@@ -6,6 +6,7 @@ import { isEmpty, bindAll } from 'lodash';
 
 import * as trackersSelectors from '../../trackers/reducer';
 import * as trackersActions from '../../trackers/actions';
+
 import TrackerDetail from './components/TrackerDetail';
 
 

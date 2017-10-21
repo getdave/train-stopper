@@ -26,6 +26,7 @@
     "npm-run-all": "^4.1.1",
     "promise": "^8.0.0",
     "react-web-notification": "^0.2.4",
+    "semantic-ui-react": "^0.74.2",
     "uid": "0.0.2",
     "winston": "^2.3.1"
   },

@@ -7,9 +7,9 @@
  */
 
 import uuid from 'uuid';
-import { isEmpty } from 'lodash';
-import differenceInMilliseconds from 'date-fns/difference_in_milliseconds';
-import isPast from 'date-fns/is_past';
+import { isEmpty, last } from 'lodash';
+import { differenceInMilliseconds, isPast, getTime } from 'date-fns';
+
 import * as trackersSelectors from '../trackers/reducer';
 import * as trackersActions from '../trackers/actions';
 import * as notificationsActions from '../notifications/actions';
@@ -54,14 +54,22 @@ class TrackerManager {
 
 			// Get the first config level where the threshold has been exceeded
 			const alertConf = this.getNearestAlertThresholdConfig(tracker);
+
+			// Check whether the Trackers has already been alerted for the given threshold
+			const hasAlerted = tracker.alerts[alertConf.threshold];
 			
 			// If the Tracker journey is not in the past then...
-			if ( !isInPast && !isEmpty(alertConf) ) {
+			if ( !isInPast && !isEmpty(alertConf) && !hasAlerted ) {
 
 				// Notify user for active Trackers only!
 				if(tracker.status === 'active') {
 					this.createTrackerNotification(tracker, alertConf);  
 				}
+
+				// update tracker alert
+				this.dispatchAction(
+		        	trackersActions.setAlertThresholdComplete(tracker.uid, alertConf.threshold)
+		        );
 			}
 
 			// Archive any Trackers that are in the past	
@@ -89,7 +97,21 @@ class TrackerManager {
 
 
 	getNearestAlertThresholdConfig(tracker) {
-		return this.notificatonTimerConfig.find( config => this.thresholdExceeded( tracker, config.threshold ) );
+		let level;
+
+		level = this.notificatonTimerConfig.find( config => { 
+			const bool = this.thresholdExceeded( tracker, config.threshold );
+			return bool;
+		});
+
+		
+		if (level !== undefined) {
+			return level;
+		}
+
+		// If we haven't exceeded any thresholds
+		// then return the highest threshold
+		return last(this.notificatonTimerConfig);
 	}
 
 
@@ -111,8 +133,9 @@ class TrackerManager {
 	}
 
 	msTillArrival(tracker) {
-		const currentTime = new Date();
-		const arrivalTime = tracker.date; // TODO - this is ridiculous and should be stored as a datetime stramp!
+		const currentTime = getTime(new Date()); // datetimestamp
+		const arrivalTime = tracker.date; // datetimestamp
+
         const diff 	  	  = differenceInMilliseconds(arrivalTime, currentTime);
     	return diff;
 	}
