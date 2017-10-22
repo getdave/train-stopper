@@ -25,7 +25,7 @@ class ServicePage extends Component {
 		const { originStation, destinationStation, date } = this.props;
 
 		if (originStation && destinationStation && date) {
-			this.props.fetchService(trainUId, originStation, destinationStation, date);		
+			this.props.fetchService(trainUId, originStation, destinationStation, date);	
 		}		
 	}
 
@@ -87,7 +87,7 @@ function mapStateToProps(state) {
 function mapDispatchToProps(dispatch) {
   return bindActionCreators({
     ...journeyActions,
-    ...trackerActions
+    ...trackerActions,
   }, dispatch);
 }
 

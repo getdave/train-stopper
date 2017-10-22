@@ -16,7 +16,7 @@ const router 		= express.Router();
 router.get('/api/transport/stations', controllers.transport.stations);
 router.get('/api/transport/station-services', controllers.transport.stationServices);
 router.get('/api/transport/service', controllers.transport.service);
-
+router.get('/api/transport/station-geolocation', controllers.transport.stationGeoLocation);
 
 
 

@@ -250,6 +250,10 @@ function prepareTrackerEntry(tracker) {
             '60000': false,
             '300000': false
         },
+        geoLocationInfo: {
+            latitude: tracker.geoLocation.latitude,
+            longitude: tracker.geoLocation.longitude,
+        },
         trainUid: tracker.trainUid,
         originCode: tracker.origin.station_code,
         originName: tracker.origin.station_name,

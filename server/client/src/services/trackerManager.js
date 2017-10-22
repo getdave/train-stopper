@@ -9,6 +9,9 @@
 import uuid from 'uuid';
 import { isEmpty, last } from 'lodash';
 import { differenceInMilliseconds, isPast, getTime } from 'date-fns';
+import geo from 'node-geo-distance';
+
+
 
 import * as trackersSelectors from '../trackers/reducer';
 import * as trackersActions from '../trackers/actions';
@@ -33,14 +36,52 @@ const NOTIFICATION_TIME_CONFIG_DEFAULTS = [
 class TrackerManager {
 
 	constructor(store, notificatonTimerConfig=NOTIFICATION_TIME_CONFIG_DEFAULTS) {
+			
+		this.geoWatcher = false;
+
 		// The Redux store
 		this.store = store;
 
 		this.notificatonTimerConfig = notificatonTimerConfig;
+
+		this.initGeoTracking();
+	}
+
+	initGeoTracking() {
+        if ("geolocation" in navigator) {
+            this.geoWatcher = navigator.geolocation.watchPosition( position => {
+            	return this.handleTrackerGeolocation(position); 
+            });
+        }
+	}
+
+	handleTrackerGeolocation(position) {
+
+		const state = this.getStoreState();
+
+		// Get all non-archived Trackers
+		const trackers = trackersSelectors.selectNonArchivedTrackers(state);
+
+
+		trackers.forEach(tracker => {
+			this.distanceBetweenCoords(position.coords, tracker.geoLocationInfo).then( distanceInMetres => {
+				// console.log(distanceInMetres)
+				
+			})
+		});
 	}
 
 
-	handleTrackerNotifications() {
+	distanceBetweenCoords(coords1, coords2) {
+		return new Promise( (resolve, reject) => {
+			geo.vincenty(coords1, coords2, dist => {
+				resolve(dist);
+			})
+		})
+	}
+
+
+	handleTrackerTimings() {
 		
 		const state = this.getStoreState();
 
@@ -66,7 +107,8 @@ class TrackerManager {
 					this.createTrackerNotification(tracker, alertConf);  
 				}
 
-				// update tracker alert
+				// Update tracker alerts log so we know this particular
+				// alert has already been triggered
 				this.dispatchAction(
 		        	trackersActions.setAlertThresholdComplete(tracker.uid, alertConf.threshold)
 		        );

@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 /**
- * FETCH JOURNEYS
+ * FETCH STATIONS
  */
 export const fetchStations = (query) => {
 
@@ -13,4 +13,6 @@ export const fetchStations = (query) => {
         }
     });
 };
+
+
 

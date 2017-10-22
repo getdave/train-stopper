@@ -34,8 +34,6 @@ exports.stations = async (req, res) => {
 			throw new Error(response.statusText);
 		}
 
-
-
 		const data = response.data.member.map( (station, index) => {
 			return {
 				id: index,
@@ -119,6 +117,7 @@ exports.service = async (req, res) => {
 	
 	const url = `https://transportapi.com/v3/uk/train/service/train_uid:${train_uid}/${dateYYMMDD}/timetable.json`;
 
+
 	
 	try {		
 		const response = await axios.get(url, {
@@ -144,6 +143,42 @@ exports.service = async (req, res) => {
 
 		// Filter out all but origin and destination
 		data = data.filter(stop => stop.station_code.toLowerCase() === origin.toLowerCase() || stop.station_code.toLowerCase() === destination.toLowerCase());
+
+		return res.json(data);
+	} catch(e) {
+		winston.info(e);
+		return res.status(500).send({ error: e })
+	}
+};
+
+
+
+/**
+ * STATIONS GEOLOCATION
+ */
+exports.stationGeoLocation = async (req, res) => {
+	
+	const url = `https://transportapi.com/v3/uk/places.json`;
+	
+	try {		
+		const response = await axios.get(url, {
+			params: {
+				app_id: process.env.TRANSPORT_API_ID,
+				app_key: process.env.TRANSPORT_API_KEY,
+				query: req.query.query,
+				type: 'train_station'
+			}
+		});
+		
+		if (response.status !== 200) {
+			throw new Error(response.statusText);
+		}
+
+		if (!response.data.member.length) {
+			throw new Error('No train station Geolocation data found');
+		}
+
+		const data = response.data.member[0];
 
 		return res.json(data);
 	} catch(e) {

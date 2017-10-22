@@ -1552,6 +1552,10 @@ node-fetch@^1.0.1:
     encoding "^0.1.11"
     is-stream "^1.0.1"
 
+node-geo-distance@^1.2.0:
+  version "1.2.0"
+  resolved "https://registry.yarnpkg.com/node-geo-distance/-/node-geo-distance-1.2.0.tgz#0841f5d8d018f04767883b3fb0371b3375bb27b1"
+
 node-gyp@^3.3.1:
   version "3.6.2"
   resolved "https://registry.yarnpkg.com/node-gyp/-/node-gyp-3.6.2.tgz#9bfbe54562286284838e750eac05295853fa1c60"
@@ -1845,6 +1849,10 @@ preserve@^0.2.0:
 process-nextick-args@~1.0.6:
   version "1.0.7"
   resolved "https://registry.yarnpkg.com/process-nextick-args/-/process-nextick-args-1.0.7.tgz#150e20b756590ad3f91093f25a4f2ad8bff30ba3"
+
+promise-sequential@^1.1.1:
+  version "1.1.1"
+  resolved "https://registry.yarnpkg.com/promise-sequential/-/promise-sequential-1.1.1.tgz#f79e8950ef86e7a7a85bf320452643592f6d2fb2"
 
 promise@^7.1.1:
   version "7.3.1"

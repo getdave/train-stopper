@@ -24,6 +24,7 @@ class App extends Component {
        
         // Start polling Trackers
         this.props.poller.start();
+
     }
 
 

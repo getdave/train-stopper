@@ -32,15 +32,21 @@ export function fetchService(train_uid, origin, destination, date) {
             type: TYPES.FETCHING_SERVICE,
         });
         
-        return api.fetchService(train_uid, origin, destination, date).then(response => {
-            if (response.status !== 200) {
-                throw new Error(`Transport API: ${response.statusText}`);
-            }
+        return api.fetchService(train_uid, origin, destination, date).then(responses => {
+            
+            // if (responses.status !== 200) {
+            //     throw new Error(`Transport API: ${responses.statusText}`);
+            // }
+
+            const data = responses[0].data;
+            const geoLocation = responses[1].data;
+
             dispatch({ 
                 type: TYPES.FETCHING_SERVICE_SUCCESS,
                 payload: {
                     trainUid: train_uid,
-                    data: response.data,
+                    data: data,
+                    geoLocation: geoLocation
                 }
             });       
         }).catch(function (error) {
@@ -54,7 +60,6 @@ export function fetchService(train_uid, origin, destination, date) {
 
 export function setUserInput({originStation, destinationStation, date, time}) {
 
-    // TODO - convert data and time into a single timestamp
     const dateTimeStamp = timeStampFromDateTime(date,time);
 
     return { 
@@ -66,3 +71,36 @@ export function setUserInput({originStation, destinationStation, date, time}) {
         }
     };
 }
+
+
+
+export function fetchServiceGeoLocationInfo(origin, destination) {
+    return (dispatch, getState, api) => { 
+        dispatch({ 
+            type: TYPES.FETCHING_SERVICE_GEOLOCATION_INFO,
+        });
+
+        // Creates an array of Fetch Promises
+        const results = [origin, destination].map(place => {
+            return api.fetchPlaceGeoLocation(place);
+        });
+
+        return Promise.all(results).then(responses => {
+            const data = responses.map(response => response.data);
+
+            dispatch({ 
+                type: TYPES.FETCHING_SERVICE_GEOLOCATION_INFO_SUCCESS,
+                payload: data
+            });
+        }).catch(function (error) {
+            dispatch({ 
+                type: TYPES.FETCHING_SERVICE_GEOLOCATION_INFO_FAILED,
+            });
+        }); 
+    }
+}
+
+
+
+
+

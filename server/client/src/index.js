@@ -36,7 +36,7 @@ const store = createStore(
 
 
 const trackerManager 	= new TrackerManager(store);
-const boundHandler 		= trackerManager.handleTrackerNotifications.bind(trackerManager);
+const boundHandler 		= trackerManager.handleTrackerTimings.bind(trackerManager);
 
 const poller = new Poller( boundHandler );
 

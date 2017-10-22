@@ -16,3 +16,8 @@ export const SETTING_DATETIME_SUCCESS = 'setting_datetime_success';
 
 
 export const SETTING_USERINPUT_SUCCESS = 'setting_userinput_success';
+
+
+export const FETCHING_SERVICE_GEOLOCATION_INFO 			= 'fetching_service_geolocation_info';
+export const FETCHING_SERVICE_GEOLOCATION_INFO_SUCCESS 	= 'fetching_service_geolocation_info_success';
+export const FETCHING_SERVICE_GEOLOCATION_INFO_FAILED 	= 'fetching_service_geolocation_info_failed';

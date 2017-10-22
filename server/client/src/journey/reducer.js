@@ -5,25 +5,19 @@
 import { combineReducers } from 'redux';
 import createReducer from '../utils/create-reducer';
 
-import {
-    FETCHING_STATION_SERVICES,
-    FETCHING_STATION_SERVICES_SUCCESS,
-    FETCHING_STATION_SERVICES_FAILED,
-    FETCHING_SERVICE_SUCCESS,
-    SETTING_USERINPUT_SUCCESS
-} from './types';
+import * as TYPES from './types';
 
 
 
 /**
- * JOURNEYS
+ * STATION SERVICES
  */
 function setStationServices(state, action) {
     return action.payload;
 }
 
 const stationServicesReducer = createReducer([], {
-    [FETCHING_STATION_SERVICES_SUCCESS]: setStationServices,
+    [TYPES.FETCHING_STATION_SERVICES_SUCCESS]: setStationServices,
 });
 
 /**
@@ -33,7 +27,8 @@ function handleService(state, action) {
     return {
         origin: action.payload.data[0],
         destination: action.payload.data[1],
-        trainUid: action.payload.trainUid
+        trainUid: action.payload.trainUid,
+        geoLocation: action.payload.geoLocation
     }
 }
 
@@ -42,8 +37,10 @@ const serviceReducer = createReducer({
     destination: '',
     trainUid: '',
 }, {
-    [FETCHING_SERVICE_SUCCESS]: handleService,
+    [TYPES.FETCHING_SERVICE_SUCCESS]: handleService,
 });
+
+
 
 
 
@@ -63,7 +60,7 @@ const userInputReducer = createReducer({
     destinationStation: '',
     date: ''
 }, {
-    [SETTING_USERINPUT_SUCCESS]: handleUserInput,
+    [TYPES.SETTING_USERINPUT_SUCCESS]: handleUserInput,
 });
 
 
@@ -96,9 +93,9 @@ const uiReducer = createReducer({
     isFetching: false,
     isError: false
 }, {
-    [FETCHING_STATION_SERVICES] : handleUIFetching,
-    [FETCHING_STATION_SERVICES_SUCCESS]: handleUISuccess,
-    [FETCHING_STATION_SERVICES_FAILED] : handleUIError,
+    [TYPES.FETCHING_STATION_SERVICES] : handleUIFetching,
+    [TYPES.FETCHING_STATION_SERVICES_SUCCESS]: handleUISuccess,
+    [TYPES.FETCHING_STATION_SERVICES_FAILED] : handleUIError,
 });
 
 
@@ -121,7 +118,6 @@ export const selectService = state => state.journey.service;
 
 export const selectDate = state => state.journey.userInput.date;
 
-// export const selectTime = state => state.journey.userInput.time;
 
 
 // Export combined reducer
